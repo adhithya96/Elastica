@@ -1,2 +1,2 @@
-# Textile-Composites-FEM
-This is a FEM library to model textile composites
+# Textile-Composites
+This is a library to model textile composites
