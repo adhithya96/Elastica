@@ -9,8 +9,9 @@ CONFIG -= app_bundle
 
 SOURCES += \
         BarElement.cpp \
-        EulerBernouli.cpp \
+        EulerBernouli2D.cpp \
         ReadInpFile.cpp \
+        VAMBeamElement.cpp \
         main.cpp
 
 # Default rules for deployment.

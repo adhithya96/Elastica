@@ -1,6 +1,18 @@
 #include<Eigen/Dense>
 #include<Eigen/Sparse>
 
+struct LOAD
+{
+    char* name[50];
+    double loadval;
+};
+
+struct ELSET
+{
+    char* elset;
+    Eigen::VectorXd elements;
+};
+
 struct Mesh
 {
 //Number of Materials
@@ -31,22 +43,49 @@ struct Mesh
     //Element used
     //1. Euler Benoulli Beam
     int choice;
-//Max no. of iterations
-    int maxiter;
-    int iter, fiter;
+//Loading
+    //struct LOAD load;
+    //struct ELSET elset;
+    double vf;
+    double af;
 };
 
-Mesh ReadInpFile();
-void StiffnessEulerBernoulli(Eigen::MatrixXd &k, double xa, double xb,double E, double nu, double b1, double h1, Eigen::VectorXd U, int a, int b);
-void TangentStiffnessEulerBernoulli(Eigen::MatrixXd &t, Eigen::MatrixXd &k, double xa, double xb,double E, double nu, double base, double height, Eigen::VectorXd U, int a, int b);
-void RearrangeElementStiffness(Eigen::MatrixXd &k);
 
-//void BarElement(double A, double E, double l, Eigen::SparseMatrix<double, Eigen::RowMajor>& K,std::vector<Eigen::Triplet<double>>matTriplets, int StartNode, int EndNode);
-//f Vector
-void ForceVector(Eigen::VectorXd& F, int StartNode, int EndNode, double h);
-//Local Stiffness matrix (non linear case)
+/*struct GaussPoints
+{
+    double x1;
+    double x2;
+    double x3;
+    double w1;
+    double w2;
+    double w3;
+};*/
+
+//Functions in ReadInpFile.cpp
+Mesh ReadInpFile();
+
+
+//Functions in EulerBernoulli2D.cpp
+double Jacobian(double xa, double xb);
+double HC(double exi, int num, double xa, double xb);
+double DDHC(double exi, int num, double xa, double xb);
+double SDHC(double exi, int num, double xa, double xb);
+double HF(double exi, double num);
+double SDHF(double num);
+void RearrangeElementMatrices(Eigen::MatrixXd &k, Eigen::MatrixXd &t, Eigen::VectorXd &f);
+double dw0dx(Eigen::VectorXd &U, double x, int a, int b,double xa,double xb);
+double dU0dx(Eigen::VectorXd &U, int a, int b);
+void TangentStiffnessEulerBernoulli(Eigen::MatrixXd &t, Eigen::MatrixXd &k, double xa, double xb,double E, double nu, double base, double height, Eigen::VectorXd &U, int a, int b);
+void StiffnessEulerBernoulli(Eigen::MatrixXd &k, double xa, double xb,double E, double nu, double base, double height, Eigen::VectorXd &U, int a, int b);
+void ForceVec(Eigen::VectorXd &f, double xa, double xb, int a, int b, double vf, double af);
+void ApplyConstraints2DEB(Eigen::SparseMatrix<double, Eigen::ColMajor>& T, Eigen::VectorXd& U, Eigen::MatrixXd &CNODE, int NNODE, Eigen::VectorXd& R);
+//GaussPoints GaussQuadraturePoints();
+
+//Functions in BarElement.cpp
 void NonLinearStiffnessMatrix(Eigen::MatrixXd& k,Eigen::VectorXd U, int StartNode, int EndNode, double h);
-//Apply boundary conditions
-void ApplyConstraints(Eigen::SparseMatrix<double, Eigen::RowMajor>& T, Eigen::VectorXd &U, Eigen::VectorXd &R, int NNODE, int cNODE, double value);
-//Tangent Stiffness Matrix
 void TangentStiffnessMatrix(Eigen::MatrixXd& t, Eigen::VectorXd U, int StartNode, int EndNode, double h);
+void ForceVector(Eigen::VectorXd& f, int StartNode, int EndNode, double h);
+void ApplyConstraints(Eigen::SparseMatrix<double, Eigen::RowMajor>& T, Eigen::VectorXd &U, Eigen::VectorXd &R, int NNODE, int cNODE, double value);
+
+//Functions for VAM Beam Element
+
