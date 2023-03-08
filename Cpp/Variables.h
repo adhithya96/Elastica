@@ -11,6 +11,7 @@
 #include<math.h>
 #include<cassert>
 
+#define M_PI 3.14159265358979323846
 
 struct Stiffness
 {
@@ -51,6 +52,9 @@ struct Variables
 {
     Bar B;
     DoubleBar BB;
+    Eigen::MatrixXd Amat;
+    Eigen::MatrixXd Bmat;
+    Eigen::MatrixXd Dmat;
 };
 /*
 struct ELSET
@@ -78,10 +82,22 @@ struct Material
     double nu;
 };
 
-struct CrossSection
+struct Rectangle
 {
     double height;
     double width;
+};
+
+struct Circle
+{
+    double radius;
+};
+
+struct CrossSection
+{
+    struct Rectangle Rect;
+    struct Circle Cir;
+    std::string choice;
 };
 
 struct CompositeMaterialProperties
@@ -98,7 +114,6 @@ struct CompositeMaterialProperties
     double nu13;
     double nu23;
     double G23;
-
 };
 
 struct Loading
@@ -108,8 +123,10 @@ struct Loading
 
 struct Boundary
 {
-    Eigen::VectorXd F1, FN, M1, MN;
-    Eigen::VectorXd u1, uN, theta1, thetaN;
+    Eigen::VectorXd a1, b1;
+    int x1, y1;
+    Eigen::VectorXd aN, bN;
+    int xN, yN;
 };
 
 struct LinearBarElement
@@ -173,6 +190,8 @@ struct NonLinearEulerBernouliBeamElement
     int NDOF;
 
     int NLS;
+
+    int NDM;
 
     Eigen::MatrixXd NODE;
 
@@ -240,30 +259,46 @@ void LocalForceVec_NLBE(Eigen::VectorXd& f, int StartNode, int EndNode, double h
 void ApplyConstraints_NLBE(Eigen::SparseMatrix<double, Eigen::RowMajor>& T, Eigen::VectorXd& U, Eigen::VectorXd& R, int NNODE, Eigen::MatrixXd CNODE);
 
 //Functions in EulerBernoulli2D.cpp
-void StiffnessMatrix_NLEBBE(Eigen::MatrixXd& k, double xa, double xb, double E, double nu, double base, double height,
-    Eigen::VectorXd& U, int a, int b);
-void LocalFoceVec_NLEBBE(Eigen::VectorXd& f, double xa, double xb, int a, int b, double vf, double af);
-void TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& t, Eigen::MatrixXd& k, double xa, double xb, double E, double nu,
-    double base, double height, Eigen::VectorXd& U, int a, int b);
+Eigen::MatrixXd StiffnessMatrix_NLEBBE(double xa, double xb, double E, double nu, double base, double height, Eigen::VectorXd& U, int a, int b);
+Eigen::VectorXd LocalFoceVec_NLEBBE(double xa, double xb, int a, int b, double vf, double af, Eigen::VectorXd& U, double E, double nu);
+Eigen::MatrixXd TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& k, double xa, double xb, double E, double nu, double base, double height, Eigen::VectorXd& U, int a, int b);
 void ApplyConstraints_NLEBBE(Eigen::SparseMatrix<double, Eigen::ColMajor>& T, Eigen::VectorXd& U, Eigen::MatrixXd& CNODE,
     int NNODE, Eigen::VectorXd& R);
 void RearrangeElementStiffness_NLEBBE(Eigen::MatrixXd& k, Eigen::MatrixXd& t, Eigen::VectorXd& f);
+double Area(struct CrossSection* CS);
+double MomentOfInertia(struct CrossSection* CS);
+void PostProcessing(Eigen::VectorXd U, NonLinearEulerBernouliBeamElement NLEBBE, int fiter);
+
 //GaussPoints GaussQuadraturePoints();
 
 //Functions for VAM Beam Element
-Stiffness StiffnessMatrix_VAM(double E1, double E2, double nu12, double  G12, double nu21, double width, double height,
-    double k1, Eigen::VectorXd Orient, int np, std::fstream& file1);
-Eigen::MatrixXd Equivalent_ClassicalStiffnessModel_VAM(Stiffness S, Eigen::VectorXd Strain, std::fstream& file1);
+Variables StiffnessMatrix_VAM(double E1, double E2, double nu12, double  G12, double nu21, double width, double height,
+    Eigen::VectorXd Orient, int np, std::fstream& file1);
+Eigen::MatrixXd Equivalent_StiffnessMatrix_FirstOrder(Eigen::VectorXd Strain, Eigen::VectorXd inittwist, double b, std::fstream& file1);
+Eigen::MatrixXd Equivalent_StiffnessMatrix_ZerothOrder();
 
 //Functions from GEBT.cpp
 Eigen::VectorXd Element_Residual(Eigen::VectorXd U1, Eigen::VectorXd U2, Eigen::VectorXd F1, Eigen::VectorXd F2, double h,
     Eigen::MatrixXd S1, Eigen::MatrixXd S2, double Theta);
 Eigen::VectorXd Element_Residual(Eigen::VectorXd U1, Eigen::VectorXd F1, double h,
-    Eigen::MatrixXd S1, double Theta, int nodenum, Boundary B);
+    Eigen::MatrixXd S1, double Theta, int nodenum, Boundary B, Eigen::VectorXd U0);
 
 Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd U2, Eigen::VectorXd F1, Eigen::VectorXd F2, double h,
     Eigen::MatrixXd S1, Eigen::MatrixXd S2, double Theta, std::fstream& file1);
 Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd F1, double h, Eigen::MatrixXd S1, double Theta, int nodenum,
     std::fstream& file1);
-void Update_Strains(Eigen::VectorXd& Tau, int nnode, Stiffness S, Eigen::VectorXd U, std::fstream &file1);
+Eigen::VectorXd Update_Strains(VAMBeamElement VAMBE, Eigen::VectorXd* U, std::fstream& file1);
 // VARIABLES_H
+
+//Functions from Contact.cpp
+Eigen::VectorXd ContactPoints(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, int nbodies);
+double MinimumDistance(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
+Eigen::MatrixXd EvaluateAMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
+Eigen::MatrixXd EvaluateBMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
+Eigen::MatrixXd EvaluateCMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
+Eigen::MatrixXd EvaluateDMatrix(Eigen::MatrixXd A, Eigen::MatrixXd B, Eigen::MatrixXd C, Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
+Eigen::VectorXd EvaluateNormalVector(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
+Eigen::MatrixXd EvaluateEMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db);
+Eigen::MatrixXd EvaluateHTildeMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
+Eigen::MatrixXd EvaluateFMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db);
+Eigen::MatrixXd EvaluateGMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db, Eigen::MatrixXd HTilde);

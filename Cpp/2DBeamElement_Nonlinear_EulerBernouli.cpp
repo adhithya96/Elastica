@@ -3,6 +3,15 @@
 
 #include "Variables.h"
 
+struct ForceVector_IntConstants
+{
+    double Q1;
+    double Q2;
+    double Q3;
+    double Q4;
+    double Q5;
+    double Q6;
+};
 
 //Jacobian
 double Jacobian(double xa, double xb)
@@ -12,73 +21,104 @@ double Jacobian(double xa, double xb)
     return J;
 }
 
-//Hermite Cubics
-double HC(double exi, int num, double xa, double xb)
+double Area(struct CrossSection* CS)
 {
-    double h = 2;
-    double N1_x = 4 - 6 * exi + 2 * pow(exi, 3);
-    double N2_x = (h * (pow(exi, 2) - 1) * (exi - 1)) * Jacobian(xa, xb);
-    double N3_x = 4 + 6 * exi - 2 * pow(exi, 3);
-    double N4_x = h * (pow(exi, 2) - 1) * (exi + 1) * Jacobian(xa, xb);
+    if ((*CS).choice == "RECT")
+    {
+        double h = (*CS).Rect.height;
+        double b = (*CS).Rect.width;
+        return (b * h);
+    }
+    else if ((*CS).choice == "CIRCLE")
+    {
+        double r = (*CS).Cir.radius;
+        return (M_PI * pow(r, 2));
+    }
+    else
+        return -99;
+}
+
+double MomentOfInertia(struct CrossSection* CS)
+{
+    if ((*CS).choice == "RECT")
+    {
+        double h = (*CS).Rect.height;
+        double b = (*CS).Rect.width;
+        return (b * pow(h, 3) / 12);
+    }
+    else if ((*CS).choice == "CIRCLE")
+    {
+        double r = (*CS).Cir.radius;
+        return (M_PI * pow(r, 4) / 4);
+    }
+    else
+        return -99;
+}
+
+//Hermite Cubics
+double HC(double x, int num, double xa, double xb)
+{
+    double h = xb - xa;
     if (num == 1)
-        return N1_x / 8.0;
+        return 1 - 3 * pow((x - xa) / h, 2) + 2 * pow((x - xa) / h, 3);
     else if (num == 2)
-        return N2_x / 8.0;
+        return -(x - xa) * pow((1 - (x - xa) / h), 2);
     else if (num == 3)
-        return N3_x / 8.0;
+        return 3 * pow((x - xa) / h, 2) - 2 * pow((x - xa) / h, 3);
     else if (num == 4)
-        return  N4_x / 8.0;
+        return -(x - xa) * (pow((x - xa) / h, 2) - (x - xa) / h);
     else
         return -99;
 }
 
 //Function to calculate double derivative of Hermite Cubic Functions
-double DDHC(double exi, int num, double xa, double xb)
+double DDHC(double x, int num, double xa, double xb)
 {
-    double h = 2;
+    double h = xb - xa;
     if (num == 1)
-        return 6 * exi / pow(h, 2);
+        return -(6 / pow(h, 2)) * (1 - 2 * (x - xa) / h);
     else if (num == 2)
-        return (3 * exi - 1) * Jacobian(xa, xb) / h;
+        return -(2 / h) * (3 * (x - xa) / h - 2);
     else if (num == 3)
-        return -6 * exi / pow(h, 2);
+        return (6 / pow(h, 2)) * (1 - 2 * (x - xa) / h);
     else if (num == 4)
-        return (3 * exi + 1) * Jacobian(xa, xb) / h;
+        return -(2 / h) * (3 * (x - xa) / h - 1);
     else
         return -99;
 }
 
 //Function to calculate single derivative of Hermite Cubic functions
-double SDHC(double exi, int num, double xa, double xb)
+double SDHC(double x, int num, double xa, double xb)
 {
-    double h = 2;
+    double h = xb - xa;
     if (num == 1)
-        return 6 * (pow(exi, 2) - 1) / (4 * h);
+        return -(6 * (x - xa) / pow(h, 2)) * (1 - (x - xa) / h);
     else if (num == 2)
-        return (3 * pow(exi, 2) - 2 * exi - 1) * Jacobian(xa, xb) / 4;
+        return -(1 + 3 * pow((x - xa) / h, 2) - 4 * (x - xa) / h);
     else if (num == 3)
-        return 6 * (1 - pow(exi, 2)) / (4 * h);
+        return (6 * (x - xa) / pow(h, 2)) * (1 - (x - xa) / h);
     else if (num == 4)
-        return (3 * pow(exi, 2) + 2 * exi - 1) * Jacobian(xa, xb) / 4;
+        return -((x - xa) / h) * (3 * (x - xa) / h - 2);
     else
         return -99;
 }
 
 //Hat functions
-double HF(double exi, double num)
+double HF(double x, double num, double xa, double xb)
 {
+    double h = xb - xa;
     if (num == 1)
-        return (1 - exi) / 2;
+        return (xb - x) / h;
     else if (num == 2)
-        return (1 + exi) / 2;
+        return (x - xa) / h;
     else
         return -99;
 }
 
 //Function to evaluate single derivative of hat functions
-double SDHF(double num)
+double SDHF(double num, double xa, double xb)
 {
-    double h = 2;
+    double h = xb - xa;
     if (num == 1)
         return -1 / h;
     else if (num == 2)
@@ -149,31 +189,44 @@ double dw0dx(Eigen::VectorXd& U, double x, int a, int b, double xa, double xb)
     double theta_a = U(3 * a + 2);
     double theta_b = U(3 * b + 2);
     dwdx = wa * SDHC(x, 1, xa, xb) + theta_a * SDHC(x, 2, xa, xb) + wb * SDHC(x, 3, xa, xb) + theta_b * SDHC(x, 4, xa, xb);
+
     return dwdx;
 }
 
-double dU0dx(Eigen::VectorXd& U, int a, int b)
+double dU0dx(Eigen::VectorXd& U, int a, int b, double xa, double xb)
 {
     double dudx;
     double ua = U(3 * a);
     double ub = U(3 * b);
-    dudx = ua * SDHF(1) + ub * SDHF(2);
+    dudx = ua * SDHF(1, xa, xb) + ub * SDHF(2, xa, xb);
+
     return dudx;
 }
 
-void TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& t, Eigen::MatrixXd& k, double xa, double xb, double E, double nu, double base, double height, Eigen::VectorXd& U, int a, int b)
+double ddw0dx(Eigen::VectorXd& U, double x, int a, int b, double xa, double xb)
 {
-    //GaussPoints
-    double x1 = -sqrt(3.0 / 5);
-    double x2 = 0;
-    double x3 = sqrt(3.0 / 5);
-    double w1 = 5.0 / 9;
-    double w2 = 8.0 / 9;
-    double w3 = 5.0 / 9;
+    double ddwdx;
+    double wa = U(3 * a + 1);
+    double wb = U(3 * b + 1);
+    double theta_a = U(3 * a + 2);
+    double theta_b = U(3 * b + 2);
+    ddwdx = wa * DDHC(x, 1, xa, xb) + theta_a * DDHC(x, 2, xa, xb) + wb * DDHC(x, 3, xa, xb) + theta_b * DDHC(x, 4, xa, xb);
+
+    return ddwdx;
+}
+
+Eigen::MatrixXd TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& k, double xa, double xb, double E, double nu, double A, double I, Eigen::VectorXd& U, int a, int b)
+{
+    //One point Gauss Quadrature rule
+    double ow1 = 2;
+    double ox1 = 0;
     //Calculate Axx, Dxx
     double Axx, Dxx;
-    Axx = E * base * height;
-    Dxx = E * base * pow(height, 3) / 12;
+    Axx = E * A;
+    Dxx = E * I;
+
+    double x0 = (xb - xa) / 2 * ox1 + (xb + xa) / 2;
+    Eigen::MatrixXd t = Eigen::MatrixXd::Zero(6, 6);
 
     //T11
     for (int i = 0; i < 2; i++)
@@ -194,78 +247,89 @@ void TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& t, Eigen::MatrixXd& k, doubl
             //Integration points
             //This is used to indicate the map between x and exi
             //A subparametric map (in this case a linear map) is used to convert x to exi.
-            double fxa = Axx * (dU0dx(U, a, b) + pow(dw0dx(U, x1, a, b, xa, xb), 2)) * SDHC(x1, i - 1, xa, xb) * SDHC(x1, j - 1, xa, xb);
-            double fxb = Axx * (dU0dx(U, a, b) + pow(dw0dx(U, x2, a, b, xa, xb), 2)) * SDHC(x2, i - 1, xa, xb) * SDHC(x2, j - 1, xa, xb);
-            double fxc = Axx * (dU0dx(U, a, b) + pow(dw0dx(U, x3, a, b, xa, xb), 2)) * SDHC(x3, i - 1, xa, xb) * SDHC(x3, j - 1, xa, xb);
-            t(i, j) = k(i, j) + w1 * fxa + w2 * fxb + w3 * fxc;
+            double fxa = Axx * (dU0dx(U, a, b, xa, xb) + pow(dw0dx(U, x0, a, b, xa, xb), 2)) * SDHC(x0, i - 1, xa, xb) * SDHC(x0, j - 1, xa, xb);
+            t(i, j) = k(i, j) + ow1 * fxa * Jacobian(xa, xb);
         }
+
+    return t;
 }
 
 
-void StiffnessMatrix_NLEBBE(Eigen::MatrixXd& k, double xa, double xb, double E, double nu, double base, double height, Eigen::VectorXd& U, int a, int b)
+Eigen::MatrixXd StiffnessMatrix_NLEBBE(double xa, double xb, double E, double nu, double A, double I, Eigen::VectorXd& U, int a, int b)
 {
-    //GaussPoints
-    double x1 = -sqrt(3.0 / 5);
-    double x2 = 0;
-    double x3 = sqrt(3.0 / 5);
-    double w1 = 5.0 / 9;
-    double w2 = 8.0 / 9;
-    double w3 = 5.0 / 9;
+    //Two Point Gauss Quadrature
+    double tx1 = -0.577350269;
+    double tx2 = 0.577350269;
+    double tw1 = 1;
+    double tw2 = 1;
+    //One point Gauss Quadrature
+    double ox1 = 0;
+    double ow1 = 2;
     //Calculate Axx, Dxx
     double Axx, Dxx;
-    Axx = E * base * height;
-    Dxx = E * base * pow(height, 3) / 12;
+    Axx = E * A;
+    Dxx = E * I;
 
+    Eigen::MatrixXd k = Eigen::MatrixXd::Zero(6, 6);
+
+    double x1 = (xb - xa) / 2 * tx1 + (xb + xa) / 2;
+    double x2 = (xb - xa) / 2 * tx2 + (xb + xa) / 2;
+    double x0 = (xb - xa) / 2 * ox1 + (xb + xa) / 2;
     //Stiffness matrix elements
     //K11
     for (int i = 0; i < 2; i++)
         for (int j = 0; j < 2; j++)
             //constant function
             //Exact integral can be evaluated since Axx is a constant
-            k(i, j) = 2 * Axx * SDHF(i + 1) * SDHF(j + 1) / Jacobian(xa, xb);
+            k(i, j) = 2 * Axx * SDHF(i + 1, xa, xb) * SDHF(j + 1, xa, xb) * Jacobian(xa, xb);
     //K12
     for (int i = 0; i < 2; i++)
         for (int j = 2; j < 6; j++)
         {
             //Quadrature
-            double fxa = 0.5 * Axx * dw0dx(U, x1, a, b, xa, xb) * SDHF(i + 1) * SDHC(x1, j - 1, xa, xb) / pow(Jacobian(xa, xb), 2);
-            double fxb = 0.5 * Axx * dw0dx(U, x2, a, b, xa, xb) * SDHF(i + 1) * SDHC(x2, j - 1, xa, xb) / pow(Jacobian(xa, xb), 2);
-            double fxc = 0.5 * Axx * dw0dx(U, x3, a, b, xa, xb) * SDHF(i + 1) * SDHC(x3, j - 1, xa, xb) / pow(Jacobian(xa, xb), 2);
-            k(i, j) = fxa * w1 + fxb * w2 + fxc * w3;
+            double fxa = 0.5 * Axx * dw0dx(U, x0, a, b, xa, xb) * SDHF(i + 1, xa, xb) * SDHC(x0, j - 1, xa, xb);
+            k(i, j) = fxa * ow1 * Jacobian(xa, xb);
         }
     //K21
     for (int i = 2; i < 6; i++)
         for (int j = 0; j < 2; j++)
-            k(i, j) = 2 * k(j, i);
+        {
+            //Quadrature
+            double fxa = Axx * dw0dx(U, x0, a, b, xa, xb) * SDHF(j + 1, xa, xb) * SDHC(x0, i - 1, xa, xb);
+            k(i, j) = fxa * ow1 * Jacobian(xa, xb);
+        }
     //K22
     for (int i = 2; i < 6; i++)
         for (int j = 2; j < 6; j++)
         {
-            double gxa = Dxx * DDHC(x1, i - 1, xa, xb) * DDHC(x1, j - 1, xa, xb) / pow(Jacobian(xa, xb), 3);
-            double gxb = Dxx * DDHC(x2, i - 1, xa, xb) * DDHC(x2, j - 1, xa, xb) / pow(Jacobian(xa, xb), 3);
-            double gxc = Dxx * DDHC(x3, i - 1, xa, xb) * DDHC(x3, j - 1, xa, xb) / pow(Jacobian(xa, xb), 3);
-            double fxa = 0.5 * Axx * pow(dw0dx(U, x1, a, b, xa, xb), 2) * SDHC(x1, i - 1, xa, xb) * SDHC(x1, j - 1, xa, xb) / pow(Jacobian(xa, xb), 3);
-            double fxb = 0.5 * Axx * pow(dw0dx(U, x2, a, b, xa, xb), 2) * SDHC(x2, i - 1, xa, xb) * SDHC(x2, j - 1, xa, xb) / pow(Jacobian(xa, xb), 3);
-            double fxc = 0.5 * Axx * pow(dw0dx(U, x3, a, b, xa, xb), 2) * SDHC(x3, i - 1, xa, xb) * SDHC(x3, j - 1, xa, xb) / pow(Jacobian(xa, xb), 3);
-            k(i, j) = (gxa + fxa) * w1 + (gxb + fxb) * w2 + (gxc + fxc) * w3;
+            double gxa = Dxx * DDHC(x1, i - 1, xa, xb) * DDHC(x1, j - 1, xa, xb);
+            double gxb = Dxx * DDHC(x2, i - 1, xa, xb) * DDHC(x2, j - 1, xa, xb);
+            double fxa = 0.5 * Axx * pow(dw0dx(U, x0, a, b, xa, xb), 2) * SDHC(x0, i - 1, xa, xb) * SDHC(x0, j - 1, xa, xb);
+            k(i, j) = (gxa * tw1 + gxb * tw2 + fxa * ow1) * Jacobian(xa, xb);
         }
     //TangentStiffnessEulerBernoulli(t,k,xa,xb,E,nu,base,height,U,a,b);
+
+    return k;
 }
 
 //Local Force Vector
-void LocalFoceVec_NLEBBE(Eigen::VectorXd& f, double xa, double xb, int a, int b, double vf, double af)
+Eigen::VectorXd LocalFoceVec_NLEBBE(double xa, double xb, int a, int b, double vf, double af, Eigen::VectorXd& U, double E, double nu)
 {
-    //GaussPoints
-    double x1 = -sqrt(3.0 / 5);
-    double x2 = 0;
-    double x3 = sqrt(3.0 / 5);
-    double w1 = 5.0 / 9;
-    double w2 = 8.0 / 9;
-    double w3 = 5.0 / 9;
+    //Two Point Gauss Quadrature
+    double tx1 = -0.577350269;
+    double tx2 = 0.577350269;
+    double tw1 = 1;
+    double tw2 = 1;
+
+    Eigen::VectorXd f(6);
+    for (int i = 0; i < 6; i++)
+        f(i) = 0;
     //Two things have to be done. Input axial load and transverse load in ReadInp File and use it in this function
     //For now q is taken as 1
-    //3 point gaussian quadrature.
+    //2 point gaussian quadrature.
     //Axial load acting
+    double x1 = ((xb - xa) / 2) * tx1 + (xb + xa) / 2;
+    double x2 = ((xb - xa) / 2) * tx2 + (xb + xa) / 2;
     for (int i = 0; i < 2; i++)
     {
         //        std::cout<<x1<<std::endl;
@@ -274,10 +338,9 @@ void LocalFoceVec_NLEBBE(Eigen::VectorXd& f, double xa, double xb, int a, int b,
         //        std::cout<<w1<<std::endl;
         //        std::cout<<w2<<std::endl;
         //        std::cout<<w3<<std::endl;
-        double fxa = af * HF(x1, i - 1);
-        double fxb = af * HF(x2, i - 1);
-        double fxc = af * HF(x3, i - 1);
-        f(i) = (w1 * fxa + w2 * fxb + w3 * fxc) * Jacobian(xa, xb);
+        double fxa = af * HF(x1, i + 1, xa, xb);
+        double fxb = af * HF(x2, i + 1, xa, xb);
+        f(i) = (tw1 * fxa + tw2 * fxb) * Jacobian(xa, xb);
     }
 
     //Transverse load
@@ -285,9 +348,10 @@ void LocalFoceVec_NLEBBE(Eigen::VectorXd& f, double xa, double xb, int a, int b,
     {
         double fxa = vf * HC(x1, i - 1, xa, xb);
         double fxb = vf * HC(x2, i - 1, xa, xb);
-        double fxc = vf * HC(x3, i - 1, xa, xb);
-        f(i) = (w1 * fxa + w2 * fxb + w3 * fxc) * Jacobian(xa, xb);
+        f(i) = (tw1 * fxa + tw2 * fxb) * Jacobian(xa, xb);
     }
+
+    return f;
 }
 
 void ApplyConstraints_NLEBBE(Eigen::SparseMatrix<double, Eigen::ColMajor>& T, Eigen::VectorXd& U, Eigen::MatrixXd& CNODE, int NNODE, Eigen::VectorXd& R)
@@ -303,4 +367,42 @@ void ApplyConstraints_NLEBBE(Eigen::SparseMatrix<double, Eigen::ColMajor>& T, Ei
     }
 }
 
+void PostProcessing(Eigen::VectorXd U, NonLinearEulerBernouliBeamElement NLEBBE, int fiter)
+{
+    std::fstream file1;
+    std::string filename, temp; 
+    std::stringstream s1;
+    s1 << fiter;
+    temp = s1.str();
+    filename = "G:/MTech_Aerospace/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/Displacement.vtu." + temp;
+    std::cout << filename << std::endl;
+    file1.open(filename.c_str(), std::ios::out);
+    if (file1.is_open())
+    {
+        file1 << "# vtk DataFile Version 2.0" << std::endl;
+        file1 << "Cantilever Beam " << std::endl;
+        file1 << "ASCII" << std::endl;
+        file1 << "DATASET STRUCTURED_POINTS" << std::endl;
+        file1 << "POINTS " << NLEBBE.NNODE * 2 << " float" << std::endl;
+        for (int i = 0; i < NLEBBE.NNODE; i++)
+        {
+            file1 << NLEBBE.NODE(i, 0) << " " << NLEBBE.NODE(i, 1) << std::endl;
+        }
+        file1 << "CELLS " << NLEBBE.NELEM * 3 << std::endl;
+        for (int i = 0; i < NLEBBE.NELEM; i++)
+        {
+            file1 << "3 " << NLEBBE.ELEM(i, 1) - 1 << " " << NLEBBE.ELEM(i, 2) - 1 << std::endl;
+        }
+        file1 << "POINTDATA " << std::endl;
+        for (int i = 0; i < NLEBBE.NNODE; i++)
+        {
+            file1 << U(i) << U(i + 1) << U(i + 2) << std::endl;
+        }
+    }
+    else
+        std::cout << " File is not open " << std::endl;
+
+}
+
 #endif
+

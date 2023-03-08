@@ -193,37 +193,38 @@ LinearBarElement ReadLBEFile()
     LBE.NELEM = 4;
     LBE.NMAT = 2;
     LBE.NDOF = 1;
-  
-    LBE.NODE = Eigen::MatrixXd::Zero(LBE.NNODE,LBE.NDOF);
+
+    LBE.NODE = Eigen::MatrixXd::Zero(LBE.NNODE, LBE.NDOF);
     LBE.ELEM = Eigen::MatrixXd::Zero(LBE.NELEM, 3);
     LBE.MAT = Eigen::MatrixXd::Zero(LBE.NMAT, 2);
 
-    LBE.MAT(0,0) = 30e6;
+    LBE.MAT(0, 0) = 30e6;
     LBE.MAT(0, 1) = 0.33;
     LBE.MAT(1, 0) = 30e6;
     LBE.MAT(1, 1) = 0.33;
 
-    LBE.CS.height = 1;
-    LBE.CS.height = 1;
+    LBE.CS.choice = "RECT";
+    LBE.CS.Rect.height = 1;
+    LBE.CS.Rect.height = 1;
 
-    LBE.NODE(0,0) = 0;
-    LBE.NODE(1,0) = 0.25;
-    LBE.NODE(2,0) = 0.5;
-    LBE.NODE(3,0) = 0.75;
-    LBE.NODE(4,0) = 1;
+    LBE.NODE(0, 0) = 0;
+    LBE.NODE(1, 0) = 0.25;
+    LBE.NODE(2, 0) = 0.5;
+    LBE.NODE(3, 0) = 0.75;
+    LBE.NODE(4, 0) = 1;
 
-    LBE.ELEM(0,0) = 1;
-    LBE.ELEM(0,1) = 1;
-    LBE.ELEM(0,2) = 2;
-    LBE.ELEM(1,0) = 1;
-    LBE.ELEM(1,1) = 2;
-    LBE.ELEM(1,2) = 3;
-    LBE.ELEM(2,0) = 1;
-    LBE.ELEM(2,1) = 3;
-    LBE.ELEM(2,2) = 4;
-    LBE.ELEM(3,0) = 2;
-    LBE.ELEM(3,1) = 4;
-    LBE.ELEM(3,2) = 5;
+    LBE.ELEM(0, 0) = 1;
+    LBE.ELEM(0, 1) = 1;
+    LBE.ELEM(0, 2) = 2;
+    LBE.ELEM(1, 0) = 1;
+    LBE.ELEM(1, 1) = 2;
+    LBE.ELEM(1, 2) = 3;
+    LBE.ELEM(2, 0) = 1;
+    LBE.ELEM(2, 1) = 3;
+    LBE.ELEM(2, 2) = 4;
+    LBE.ELEM(3, 0) = 2;
+    LBE.ELEM(3, 1) = 4;
+    LBE.ELEM(3, 2) = 5;
 
     LBE.CNODE = Eigen::MatrixXd::Zero(1, 2);
     LBE.CNODE(0, 0) = 1;
@@ -246,12 +247,13 @@ NonLinearBarElement ReadNLBEFile()
     NLBE.NELEM = 2;
     NLBE.NMAT = 1;
     NLBE.NDOF = 1;
-   
+
     NLBE.NODE = Eigen::MatrixXd::Zero(NLBE.NNODE, 2);
     NLBE.ELEM = Eigen::MatrixXd::Zero(NLBE.NELEM, 2);
 
-    NLBE.CS.height = 1;
-    NLBE.CS.width = 1;
+    NLBE.CS.choice = "RECT";
+    NLBE.CS.Rect.height = 1;
+    NLBE.CS.Rect.width = 1;
 
     NLBE.NODE(0, 0) = 0;
     NLBE.NODE(0, 1) = 0;
@@ -272,6 +274,7 @@ NonLinearBarElement ReadNLBEFile()
     return NLBE;
 }
 
+//Single Body
 NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
 {
     struct NonLinearEulerBernouliBeamElement NLEBBE;
@@ -281,8 +284,8 @@ NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
     NLEBBE.NELEM = 4;
     NLEBBE.NMAT = 2;
     NLEBBE.NDOF = 3;
-    NLEBBE.NLS = 1;
- 
+    NLEBBE.NLS = 10;
+
     NLEBBE.NODE = Eigen::MatrixXd::Zero(NLEBBE.NNODE,3);
     NLEBBE.ELEM = Eigen::MatrixXd::Zero(NLEBBE.NELEM, 3);
     NLEBBE.MAT = Eigen::MatrixXd::Zero(NLEBBE.NMAT, 2);
@@ -292,8 +295,12 @@ NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
     NLEBBE.MAT(1,0) = 30e6;
     NLEBBE.MAT(1,1) = 0.33;
 
-    NLEBBE.CS.height = 1;
-    NLEBBE.CS.width = 1;
+    NLEBBE.CS.choice = "RECT";
+    NLEBBE.CS.Rect.height = 1;
+    NLEBBE.CS.Rect.width = 1;
+    NLEBBE.CS.choice = "CIRCLE";
+    NLEBBE.CS.Cir.radius = 1;
+
 
     NLEBBE.NODE(0,0) = 0;
     NLEBBE.NODE(0,1) = 0;
@@ -325,7 +332,88 @@ NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
     NLEBBE.ELEM(3,2) = 5;
 
     NLEBBE.CNODE = Eigen::MatrixXd::Zero(3, 2);
-    NLEBBE.CNODE(0,0) = 1;
+    NLEBBE.CNODE(0, 0) = 1;
+    NLEBBE.CNODE(0, 1) = 2;
+    NLEBBE.CNODE(1, 0) = 5;
+    NLEBBE.CNODE(1, 1) = 1;
+    NLEBBE.CNODE(2, 0) = 5;
+    NLEBBE.CNODE(2, 1) = 3;
+
+    NLEBBE.vf = 1;
+    NLEBBE.af = 0;
+
+    return NLEBBE;
+}
+
+//Multiple Bodies
+/*NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
+{
+    struct NonLinearEulerBernouliBeamElement NLEBBE;
+
+    NLEBBE.NBODIES = 2;
+    NLEBBE.NNODE = 8;
+    NLEBBE.NELEM = 6;
+    NLEBBE.NMAT = 2;
+    NLEBBE.NDOF = 3;
+    NLEBBE.NLS = 1;
+    NLEBBE.NDM = 2;
+
+    NLEBBE.NODE = Eigen::MatrixXd::Zero(NLEBBE.NNODE, 2);
+    NLEBBE.ELEM = Eigen::MatrixXd::Zero(NLEBBE.NELEM, 3);
+    NLEBBE.MAT = Eigen::MatrixXd::Zero(NLEBBE.NMAT, 2);
+
+    NLEBBE.MAT(0, 0) = 30e6;
+    NLEBBE.MAT(0, 1) = 0.33;
+    NLEBBE.MAT(1, 0) = 30e6;
+    NLEBBE.MAT(1, 1) = 0.33;
+
+    NLEBBE.CS.choice = "CIRCLE";
+    NLEBBE.CS.Cir.radius = 1;
+
+    //Beam 1
+    NLEBBE.NODE(0, 0) = 0;
+    NLEBBE.NODE(0, 1) = 0;
+    NLEBBE.NODE(1, 0) = 0.25;
+    NLEBBE.NODE(1, 1) = 0.25;
+    NLEBBE.NODE(2, 0) = 0.75;
+    NLEBBE.NODE(2, 1) = 0.75;
+    NLEBBE.NODE(3, 0) = 1;
+    NLEBBE.NODE(3, 1) = 1;
+
+    //Beam 2
+    NLEBBE.NODE(4, 0) = 0;
+    NLEBBE.NODE(4, 1) = 1;
+    NLEBBE.NODE(5, 0) = 0.25;
+    NLEBBE.NODE(5, 1) = 0.75;
+    NLEBBE.NODE(6, 0) = 0.75;
+    NLEBBE.NODE(6, 1) = 0.25;
+    NLEBBE.NODE(7, 0) = 1;
+    NLEBBE.NODE(7, 1) = 0;
+
+    //Connectivity 1
+    NLEBBE.ELEM(0, 0) = 1;
+    NLEBBE.ELEM(0, 1) = 1;
+    NLEBBE.ELEM(0, 2) = 2;
+    NLEBBE.ELEM(1, 0) = 1;
+    NLEBBE.ELEM(1, 1) = 2;
+    NLEBBE.ELEM(1, 2) = 3;
+    NLEBBE.ELEM(2, 0) = 1;
+    NLEBBE.ELEM(2, 1) = 3;
+    NLEBBE.ELEM(2, 2) = 4;
+
+    //Connectivity 2
+    NLEBBE.ELEM(3, 0) = 2;
+    NLEBBE.ELEM(3, 1) = 5;
+    NLEBBE.ELEM(3, 2) = 6;
+    NLEBBE.ELEM(4, 0) = 2;
+    NLEBBE.ELEM(4, 1) = 6;
+    NLEBBE.ELEM(4, 2) = 7;
+    NLEBBE.ELEM(5, 0) = 2;
+    NLEBBE.ELEM(5, 1) = 7;
+    NLEBBE.ELEM(5, 2) = 8;
+
+    NLEBBE.CNODE = Eigen::MatrixXd::Zero(3, 2);
+    NLEBBE.CNODE(0, 0) = 1;
     NLEBBE.CNODE(0, 1) = 1;
     NLEBBE.CNODE(1, 0) = 1;
     NLEBBE.CNODE(1, 1) = 2;
@@ -336,85 +424,175 @@ NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
     NLEBBE.af = 0;
 
     return NLEBBE;
-}
+}*/
+
 
 VAMBeamElement ReadVAMBEFile()
 {
     struct VAMBeamElement M;
     M.NBODIES = 1;
-    M.NNODE = 3;
-    M.NELEM = 2;
+    M.NNODE = 12;
+    M.NELEM = 11;
     M.NMAT = 1;
     M.NDOF = 12;
     M.NLS = 20;
-    M.CMP.np = 6;
+    //M.CMP.np = 16;
     M.NCS = 1;
 
     M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
     M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 3);
-    M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
+    //M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
     M.CMP.inittwist = Eigen::VectorXd::Zero(3);
     //M.LOAD = Eigen::MatrixXd::Zero(1,3);
 //    Nodal Information
     M.NODE(0, 0) = 0;
     M.NODE(0, 1) = 0;
     M.NODE(0, 2) = 0;
-    M.NODE(1, 0) = 127e-3;
+    M.NODE(1, 0) = 1.97;
     M.NODE(1, 1) = 0;
     M.NODE(1, 2) = 0;
-    M.NODE(2, 0) = 254e-3;
+    M.NODE(2, 0) = 3.94;
     M.NODE(2, 1) = 0;
     M.NODE(2, 2) = 0;
-    //    Connectivity information
+    M.NODE(3, 0) = 5.91;
+    M.NODE(3, 1) = 0;
+    M.NODE(3, 2) = 0;
+    M.NODE(4, 0) = 7.88;
+    M.NODE(4, 1) = 0;
+    M.NODE(4, 2) = 0;
+    M.NODE(5, 0) = 9.85;
+    M.NODE(5, 1) = 0;
+    M.NODE(5, 2) = 0;
+    M.NODE(6, 0) = 11.82;
+    M.NODE(6, 1) = 0;
+    M.NODE(6, 2) = 0;
+    M.NODE(7, 0) = 13.79;
+    M.NODE(7, 1) = 0;
+    M.NODE(7, 2) = 0;
+    M.NODE(8, 0) = 15.76;
+    M.NODE(8, 1) = 0;
+    M.NODE(8, 2) = 0;
+    M.NODE(9, 0) = 17.73;
+    M.NODE(9, 1) = 0;
+    M.NODE(9, 2) = 0;
+    M.NODE(10, 0) = 19.7;
+    M.NODE(10, 1) = 0;
+    M.NODE(10, 2) = 0;
+    M.NODE(11, 0) = 21.67;
+    M.NODE(11, 1) = 0;
+    M.NODE(11, 2) = 0;
+
     M.ELEM(0, 0) = 1;
     M.ELEM(0, 1) = 1;
     M.ELEM(0, 2) = 2;
     M.ELEM(1, 0) = 1;
     M.ELEM(1, 1) = 2;
     M.ELEM(1, 2) = 3;
+    M.ELEM(2, 0) = 1;
+    M.ELEM(2, 1) = 3;
+    M.ELEM(2, 2) = 4;
+    M.ELEM(3, 0) = 1;
+    M.ELEM(3, 1) = 4;
+    M.ELEM(3, 2) = 5;
+    M.ELEM(4, 0) = 1;
+    M.ELEM(4, 1) = 5;
+    M.ELEM(4, 2) = 6;
+    M.ELEM(5, 0) = 1;
+    M.ELEM(5, 1) = 6;
+    M.ELEM(5, 2) = 7;
+    M.ELEM(6, 0) = 1;
+    M.ELEM(6, 1) = 7;
+    M.ELEM(6, 2) = 8;
+    M.ELEM(7, 0) = 1;
+    M.ELEM(7, 1) = 8;
+    M.ELEM(7, 2) = 9;
+    M.ELEM(8, 0) = 1;
+    M.ELEM(8, 1) = 9;
+    M.ELEM(8, 2) = 10;
+    M.ELEM(9, 0) = 1;
+    M.ELEM(9, 1) = 10;
+    M.ELEM(9, 2) = 11;
+    M.ELEM(10, 0) = 1;
+    M.ELEM(10, 1) = 11;
+    M.ELEM(10, 2) = 12;
+
+    /*M.NODE(0, 0) = 0;
+    M.NODE(0, 1) = 0;
+    M.NODE(0, 2) = 0;
+    M.NODE(1, 0) = 84.67e-3;
+    M.NODE(1, 1) = 0;
+    M.NODE(1, 2) = 0;
+    M.NODE(2, 0) = 169.33e-3;
+    M.NODE(2, 1) = 0;
+    M.NODE(2, 2) = 0;
+    M.NODE(3, 0) = 254e-3;
+    M.NODE(3, 1) = 0;
+    M.NODE(3, 2) = 0;
+
+
+    M.ELEM(0, 0) = 1;
+    M.ELEM(0, 1) = 1;
+    M.ELEM(0, 2) = 2;
+    M.ELEM(1, 0) = 1;
+    M.ELEM(1, 1) = 2;
+    M.ELEM(1, 2) = 3;
+    M.ELEM(2, 0) = 1;
+    M.ELEM(2, 1) = 3;
+    M.ELEM(2, 2) = 4;*/
     //    Beam material information
         //M.MAT(0,0) = 30e6;
         //M.MAT(0,1) = 0.33;
-    M.CMP.E11 = 135.6e9;
+    /*M.CMP.E11 = 135.6e9;
     M.CMP.E22 = 9.9e9;
     M.CMP.E33 = 9.9e9;
     M.CMP.G12 = 4.2e9;
     M.CMP.G13 = 4.2e9;
-    M.CMP.G23 = 2.3e9;
+    M.CMP.G23 = 3.3e9;
     M.CMP.nu12 = 0.3;
     M.CMP.nu13 = 0.3;
     M.CMP.nu23 = 0.5;
 
     M.CMP.Orient(0) = 20;
-    M.CMP.Orient(1) = -70;
-    M.CMP.Orient(2) = 20;
-    M.CMP.Orient(3) = -20;
-    M.CMP.Orient(4) = 70;
-    M.CMP.Orient(5) = -20;
+    M.CMP.Orient(1) = 20;
+    M.CMP.Orient(2) = -70;
+    M.CMP.Orient(3) = -70;
+    M.CMP.Orient(4) = -70;
+    M.CMP.Orient(5) = -70;
+    M.CMP.Orient(6) = 20;
+    M.CMP.Orient(7) = 20;
+    M.CMP.Orient(8) = -20;
+    M.CMP.Orient(9) = -20;
+    M.CMP.Orient(10) = 70;
+    M.CMP.Orient(11) = 70;
+    M.CMP.Orient(12) = 70;
+    M.CMP.Orient(13) = 70;
+    M.CMP.Orient(14) = -20;
+    M.CMP.Orient(15) = -20;*/
 
-    M.CMP.inittwist(0) = -0.0003436;
+    M.CMP.inittwist(0) = 0;
     M.CMP.inittwist(1) = 0;
     M.CMP.inittwist(2) = 0;
 
     //    Beam cross section information
-    M.CS.width = 25.4e-3;
-    M.CS.height = 1.168e-3;
+    /*M.CS.Rect.width = 0.0254;
+    M.CS.Rect.height = 1.168e-3;*/
 
     //Loading
-    M.B.F1 = Eigen::VectorXd::Zero(3);
-    M.B.FN = Eigen::VectorXd::Zero(3);
-    M.B.M1 = Eigen::VectorXd::Zero(3);
-    M.B.MN = Eigen::VectorXd::Zero(3);
+    M.B.a1 = Eigen::VectorXd::Zero(3);
+    M.B.b1 = Eigen::VectorXd::Zero(3);
+    M.B.aN = Eigen::VectorXd::Zero(3);
+    M.B.bN = Eigen::VectorXd::Zero(3);
 
-    M.B.u1 = Eigen::VectorXd::Zero(3);
-    M.B.uN = Eigen::VectorXd::Zero(3);
-    M.B.theta1 = Eigen::VectorXd::Zero(3);
-    M.B.thetaN = Eigen::VectorXd::Zero(3);
+    M.B.x1 = 1;
+    M.B.y1 = 2;
+    M.B.xN = 3;
+    M.B.yN = 4;
 
-    M.B.FN(0) = 200;
+    M.B.aN(1) = 0;
 
     return M;
 }
+
 
 /*
 Mesh ReadInpFile(std::string filename)

@@ -12,7 +12,7 @@ void StiffnessMatrix_LBE(double A, double E, double xa, double xb, Eigen::Matrix
     k(1, 1) = A * E / h;
 }
 
-void LocalForceVec_LBE(double f1, double f2, Eigen::VectorXd &f)
+void LocalForceVec_LBE(double f1, double f2, Eigen::VectorXd& f)
 {
     f(0) = f1;
     f(1) = f2;
