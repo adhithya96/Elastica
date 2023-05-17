@@ -593,6 +593,133 @@ VAMBeamElement ReadVAMBEFile()
     return M;
 }
 
+NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
+{
+    struct NonLinearEulerBernouliBeamElement3D M;
+    M.NNODE = 17;
+    M.NELEM = 16;
+    M.NDOF = 6;
+    M.NLS = 12;
+    //M.CMP.np = 16;
+
+    M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
+    M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 3);
+    //M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
+    //M.LOAD = Eigen::MatrixXd::Zero(1,3);
+
+    //Nodal Information
+    M.NODE(0, 0) = 0;
+    M.NODE(0, 1) = 0;
+    M.NODE(0, 2) = 0;
+    M.NODE(1, 0) = 0.1204;
+    M.NODE(1, 1) = 4.9067;
+    M.NODE(1, 2) = 0;
+    M.NODE(2, 0) = 0.4815;
+    M.NODE(2, 1) = 9.8017;
+    M.NODE(2, 2) = 0;
+    M.NODE(3, 0) = 1.082;
+    M.NODE(3, 1) = 14.673;
+    M.NODE(3, 2) = 0;
+    M.NODE(4, 0) = 1.9214;
+    M.NODE(4, 1) = 19.509;
+    M.NODE(4, 2) = 0;
+    M.NODE(5, 0) = 2.9968;
+    M.NODE(5, 1) = 24.298;
+    M.NODE(5, 2) = 0;
+    M.NODE(6, 0) = 4.306;
+    M.NODE(6, 1) = 29.03;
+    M.NODE(6, 2) = 0;
+    M.NODE(7, 0) = 5.845;
+    M.NODE(7, 1) = 33.69;
+    M.NODE(7, 2) = 0;
+    M.NODE(8, 0) = 7.612;
+    M.NODE(8, 1) = 38.27;
+    M.NODE(8, 2) = 0;
+    M.NODE(9, 0) = 9.601;
+    M.NODE(9, 1) = 42.75;
+    M.NODE(9, 2) = 0;
+    M.NODE(10, 0) = 11.807;
+    M.NODE(10, 1) = 47.14;
+    M.NODE(10, 2) = 0;
+    M.NODE(11, 0) = 14.23;
+    M.NODE(11, 1) = 51.41;
+    M.NODE(11, 2) = 0;
+    M.NODE(12, 0) = 16.853;
+    M.NODE(12, 1) = 55.56;
+    M.NODE(12, 2) = 0;
+    M.NODE(13, 0) = 19.68;
+    M.NODE(13, 1) = 59.57;
+    M.NODE(13, 2) = 0;
+    M.NODE(14, 0) = 22.698;
+    M.NODE(14, 1) = 63.44;
+    M.NODE(14, 2) = 0;
+    M.NODE(15, 0) = 25.9;
+    M.NODE(15, 1) = 67.15;
+    M.NODE(15, 2) = 0;
+    M.NODE(16, 0) = 29.3;
+    M.NODE(16, 1) = 70.71;
+    M.NODE(16, 2) = 0;
+
+    //Element connectivity
+    M.ELEM(0, 0) = 1;
+    M.ELEM(0, 1) = 1;
+    M.ELEM(0, 2) = 2;
+    M.ELEM(1, 0) = 1;
+    M.ELEM(1, 1) = 2;
+    M.ELEM(1, 2) = 3;
+    M.ELEM(2, 0) = 1;
+    M.ELEM(2, 1) = 3;
+    M.ELEM(2, 2) = 4;
+    M.ELEM(3, 0) = 1;
+    M.ELEM(3, 1) = 4;
+    M.ELEM(3, 2) = 5;
+    M.ELEM(4, 0) = 1;
+    M.ELEM(4, 1) = 5;
+    M.ELEM(4, 2) = 6;
+    M.ELEM(5, 0) = 1;
+    M.ELEM(5, 1) = 6;
+    M.ELEM(5, 2) = 7;
+    M.ELEM(6, 0) = 1;
+    M.ELEM(6, 1) = 7;
+    M.ELEM(6, 2) = 8;
+    M.ELEM(7, 0) = 1;
+    M.ELEM(7, 1) = 8;
+    M.ELEM(7, 2) = 9;
+    M.ELEM(8, 0) = 1;
+    M.ELEM(8, 1) = 9;
+    M.ELEM(8, 2) = 10;
+    M.ELEM(9, 0) = 1;
+    M.ELEM(9, 1) = 10;
+    M.ELEM(9, 2) = 11;
+    M.ELEM(10, 0) = 1;
+    M.ELEM(10, 1) = 11;
+    M.ELEM(10, 2) = 12;
+    M.ELEM(11, 0) = 1;
+    M.ELEM(11, 1) = 12;
+    M.ELEM(11, 2) = 13;
+    M.ELEM(12, 0) = 1;
+    M.ELEM(12, 1) = 13;
+    M.ELEM(12, 2) = 14;
+    M.ELEM(13, 0) = 1;
+    M.ELEM(13, 1) = 14;
+    M.ELEM(13, 2) = 15;
+    M.ELEM(14, 0) = 1;
+    M.ELEM(14, 1) = 15;
+    M.ELEM(14, 2) = 16;
+    M.ELEM(15, 0) = 1;
+    M.ELEM(15, 1) = 16;
+    M.ELEM(15, 2) = 17;
+
+    M.E = 1e7;
+    M.nu = 0.0001;
+    M.Bp = 1;
+    M.Hp = 1;
+    M.Zx = 0;
+    M.Zy = 0;
+    M.Zz = 1;
+
+    return M;
+}
 
 /*
 Mesh ReadInpFile(std::string filename)

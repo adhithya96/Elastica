@@ -211,6 +211,49 @@ struct NonLinearEulerBernouliBeamElement
     double af;
 };
 
+struct NonLinearEulerBernouliBeamElement3D
+{
+    int NDOF;
+
+    int NNODE;
+
+    int NELEM;
+
+    int NLS;
+
+    Eigen::MatrixXd NODE;
+
+    Eigen::MatrixXd ELEM;
+
+    double E, nu, Bp, Hp, Zx, Zy, Zz;
+};
+
+struct BeamContact3D
+{
+    int* NDOF;
+
+    int* NNODE;
+
+    int* NELEM;
+
+    int NLS;
+
+    int NBODIES;
+
+    Eigen::MatrixXd CP;
+
+    Eigen::MatrixXd NODE;
+
+    Eigen::MatrixXd ELEM;
+
+    double E, nu, Bp, Hp, Zx, Zy, Zz;
+};
+
+
+
+
+
+
 struct VAMBeamElement
 {
     //Number of Materials
@@ -302,3 +345,7 @@ Eigen::MatrixXd EvaluateEMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::V
 Eigen::MatrixXd EvaluateHTildeMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
 Eigen::MatrixXd EvaluateFMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db);
 Eigen::MatrixXd EvaluateGMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db, Eigen::MatrixXd HTilde);
+
+//Functions from 3DBeamElement_NonLinear_EulerBernoulli
+void RKt(double D[7], double X[2][3], double U[2][6], double** T, double* R);
+NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement();

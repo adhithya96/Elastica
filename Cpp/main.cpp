@@ -13,7 +13,7 @@ int main()
 //    std::cout<<"Enter the name of the input file"<<std::endl;
 //    std::cin>>filename;
    // struct Mesh M = ReadInpFile(filename);
-    int choice = 3;
+    int choice = 6;
     //LoadVector(M.LOAD,M.ELSET,LOAD,M.NNODE);
     // -------------------------------------
     //--------------------------------------
@@ -235,7 +235,7 @@ int main()
         double max = 1;
         int iter = 1;
         int fiter = 1;
-        int maxiter = 100;
+        int maxiter = 20;
         //Initialize Reference and current configuration
         //for (int i = 0; i < (int)NLEBBE.NNODE; i++)
         //{
@@ -1109,12 +1109,380 @@ int main()
     //----------3D EulerBernouli Beam Element-----------------//
     //-----------------Large displacement---------------------//
     //-----------------Updated Lagrangian---------------------//
-    //--------------------------------------------------------//
+    //----------------------Linear----------------------------//
     else if (choice == 5)
     {
+        NonLinearEulerBernouliBeamElement3D EBBE3D = ReadEBBE3DElement();
 
+        Eigen::VectorXd dGU = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::VectorXd GU = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::VectorXd error = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::VectorXd GU_new = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::VectorXd GR = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::SparseMatrix<double, Eigen::ColMajor> GT(EBBE3D.NDOF* EBBE3D.NNODE, EBBE3D.NDOF* EBBE3D.NNODE);
 
+        double max;
+        int iter = 1;
+        int fiter = 1;
+        int maxiter = 20;
+
+        std::fstream file1, file2;
+        file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Result_Log.txt", std::fstream::in | std::fstream::out);
+        file2.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Results.txt", std::fstream::in | std::fstream::out);
+    
+        //declare and initialize material parameters and other input variables
+        double *D = new double[7];
+        D[0] = EBBE3D.E;
+        D[1] = EBBE3D.nu;
+        D[2] = EBBE3D.Bp;
+        D[3] = EBBE3D.Hp;
+        D[4] = EBBE3D.Zx;
+        D[5] = EBBE3D.Zy;
+        D[6] = EBBE3D.Zz;
+        /*for (int i = 0; i < 7; i++)
+            std::cout << D << std::endl;*/
+        double load = 0;
+
+        if (file1.is_open() && file2.is_open())
+        {
+            do
+            {
+                iter = 0;
+                do
+                {
+                    //Initialize all matrices to zero
+                    GU_new.setZero();
+                    GR.setZero();
+                    GT.setZero();
+                    
+                    //declare local tangent stiffness matrix and residual vector
+                    double** T;
+                    T = new double* [12];
+                    for (int i = 0; i < 12; i++)
+                        T[i] = new double[12];
+                    double* R = new double[12];
+
+                    for (int i = 0; i < EBBE3D.NELEM; i++)
+                    {
+                        int a = (int)EBBE3D.ELEM(i, 1) - 1;
+                        int b = (int)EBBE3D.ELEM(i, 2) - 1;
+
+                        //declare and initialize position vectors
+                        /*double* X[2];
+                        for (int j = 0; j < 2; j++)
+                            X[j] = new double[3];*/
+                        double X[2][3];
+
+                        for (int j = 0; j < 3; j++)
+                        {
+                            X[0][j] = EBBE3D.NODE(a, j);
+                            X[1][j] = EBBE3D.NODE(b, j);
+                        }
+                        double h = X[1][0] - X[0][0];
+
+                        //declare and initialize dofs
+                        /*double* U[2];
+                        for (int j = 0; j < 2; j++)
+                            U[j] = new double[6];*/
+                        double U[2][6];
+
+                        for (int j = 0; j < 6; j++)
+                        {
+                            U[0][j] = GU(6 * a + j);
+                            U[1][j] = GU(6 * b + j);
+                        }
+
+                        for (int j = 0; j < 12; j++)
+                        {
+                            R[j] = 0;
+                            for (int k = 0; k < 12; k++)
+                                T[j][k] = 0;
+                        }
+                        RKt(D, X, U, T, R);
+
+                        /*for (int i = 0; i < 12; i++)
+                            std::cout << R[i] << std::endl;
+
+                        for (int j = 0; j < 12; j++)
+                        {
+                            for (int k = 0; k < 12; k++)
+                                std::cout << T[j][k] << "   ";
+                            std::cout << std::endl;
+                        }*/
+
+                        //Assembly
+                        for (int j = 0; j < 12; j++)
+                        {
+                            GR(6 * a + j) += R[j];
+                            for (int k = 0; k < 12; k++)
+                                GT.coeffRef(6 * a + j, 6 * a + k) += T[j][k];
+                        }
+                    }
+
+                    //Assign Boundary conditions
+                    for (int j = 0; j < 6; j++)
+                    {
+                        for (int k = 0; k < EBBE3D.NNODE * EBBE3D.NDOF; k++)
+                            GT.coeffRef(j, k) = 0;
+                        GR(j) = 0;
+                        GT.coeffRef(j, j) = 1;
+                    }
+                    GR(EBBE3D.NNODE*EBBE3D.NDOF - 4) -= load;
+                    
+                    //Solve the equation
+                    GT.makeCompressed();
+
+                    Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor>> solver;
+                    solver.analyzePattern(GT);
+                    solver.factorize(GT); //LU decomposition
+
+                    //std::cout<<J<<std::endl;
+
+                    assert(solver.info() == Eigen::Success);
+
+                    dGU = solver.solve(-GR);
+
+                    //Calculate errors and update for next iteration
+                    for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                        GU_new(j) = GU(j) + dGU(j);
+
+                    //Error calculation
+                    for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                        error(j) = abs(GU_new(j) - GU(j));
+
+                    max = error(0);
+                    for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                        if (max < error(j))
+                            max = error(j);
+
+                    //Assignment for next iteration
+                    for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                        GU(j) = 0.5 * GU_new(j) + 0.5 * GU(j);
+                    iter++;
+
+                    //Free memory
+                    for (int i = 0; i < 12; i++)
+                        delete T[i];
+                    delete[] R;
+
+                    std::cout << max << std::endl;
+                } while (max > pow(10, -6) && iter < maxiter);
+                if (iter < maxiter)
+                {
+                    fiter++;
+                    load += 4.167;
+                    /*for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                    {
+                        //file2 << "Displacements of node " << j + 1 << std::endl;
+                        //for (int k = 0; k < 3; k++)
+                            //file2 << U(12 * (j - 1) + 6 + k) << std::endl;
+                        file2 << GU(j) << std::endl;
+                    }*/
+                    file2 << GU(EBBE3D.NNODE * EBBE3D.NDOF - 4) << std::endl;
+                }
+                else
+                {
+                    std::cout << "Code didn't converge" << std::endl;
+                    break;
+                }
+            } while (fiter < EBBE3D.NLS);
+        }
     }
+    //--------------------------------------------------------//
+    //----------3D EulerBernouli Beam Element-----------------//
+    //-----------------Large displacement---------------------//
+    //-----------------Updated Lagrangian---------------------//
+    //----------------------Linear----------------------------//
+    //---------------Node to Node Contact---------------------//
+    else if (choice == 6)
+    {
+        NonLinearEulerBernouliBeamElement3D EBBE3D = ReadEBBE3DElement();
+
+        Eigen::VectorXd dGU = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::VectorXd GU = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::VectorXd error = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::VectorXd GU_new = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::VectorXd GR = Eigen::VectorXd::Zero(EBBE3D.NDOF * EBBE3D.NNODE);
+        Eigen::SparseMatrix<double, Eigen::ColMajor> GT(EBBE3D.NDOF * EBBE3D.NNODE, EBBE3D.NDOF * EBBE3D.NNODE);
+
+        double max;
+        int iter = 1;
+        int fiter = 1;
+        int maxiter = 20;
+
+        std::fstream file1, file2;
+        file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Result_Log.txt", std::fstream::in | std::fstream::out);
+        file2.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Results.txt", std::fstream::in | std::fstream::out);
+
+        //declare and initialize material parameters and other input variables
+        double* D = new double[7];
+        D[0] = EBBE3D.E;
+        D[1] = EBBE3D.nu;
+        D[2] = EBBE3D.Bp;
+        D[3] = EBBE3D.Hp;
+        D[4] = EBBE3D.Zx;
+        D[5] = EBBE3D.Zy;
+        D[6] = EBBE3D.Zz;
+        /*for (int i = 0; i < 7; i++)
+            std::cout << D << std::endl;*/
+        double load = 0;
+
+        if (file1.is_open() && file2.is_open())
+        {
+            do
+            {
+                iter = 0;
+                do
+                {
+                    //Initialize all matrices to zero
+                    GU_new.setZero();
+                    GR.setZero();
+                    GT.setZero();
+
+                    //declare local tangent stiffness matrix and residual vector
+                    double** T;
+                    T = new double* [12];
+                    for (int i = 0; i < 12; i++)
+                        T[i] = new double[12];
+                    double* R = new double[12];
+
+                    //ContactSearch
+
+
+                    for (int i = 0; i < EBBE3D.NELEM; i++)
+                    {
+                        int a = (int)EBBE3D.ELEM(i, 1) - 1;
+                        int b = (int)EBBE3D.ELEM(i, 2) - 1;
+
+                        //declare and initialize position vectors
+                        /*double* X[2];
+                        for (int j = 0; j < 2; j++)
+                            X[j] = new double[3];*/
+                        double X[2][3];
+
+                        for (int j = 0; j < 3; j++)
+                        {
+                            X[0][j] = EBBE3D.NODE(a, j);
+                            X[1][j] = EBBE3D.NODE(b, j);
+                        }
+                        double h = X[1][0] - X[0][0];
+
+                        //declare and initialize dofs
+                        /*double* U[2];
+                        for (int j = 0; j < 2; j++)
+                            U[j] = new double[6];*/
+                        double U[2][6];
+
+                        for (int j = 0; j < 6; j++)
+                        {
+                            U[0][j] = GU(6 * a + j);
+                            U[1][j] = GU(6 * b + j);
+                        }
+
+                        for (int j = 0; j < 12; j++)
+                        {
+                            R[j] = 0;
+                            for (int k = 0; k < 12; k++)
+                                T[j][k] = 0;
+                        }
+
+                        //Local Residual and tangent matrix
+                        RKt(D, X, U, T, R);
+
+                        /*for (int i = 0; i < 12; i++)
+                            std::cout << R[i] << std::endl;
+
+                        for (int j = 0; j < 12; j++)
+                        {
+                            for (int k = 0; k < 12; k++)
+                                std::cout << T[j][k] << "   ";
+                            std::cout << std::endl;
+                        }*/
+                        
+                        //Apply contact constraint
+                        
+
+
+                        //Assembly
+                        for (int j = 0; j < 12; j++)
+                        {
+                            GR(6 * a + j) += R[j];
+                            for (int k = 0; k < 12; k++)
+                                GT.coeffRef(6 * a + j, 6 * a + k) += T[j][k];
+                        }
+
+                        //Contact Search
+                    }
+
+                    //Assign Boundary conditions
+                    for (int j = 0; j < 6; j++)
+                    {
+                        for (int k = 0; k < EBBE3D.NNODE * EBBE3D.NDOF; k++)
+                            GT.coeffRef(j, k) = 0;
+                        GR(j) = 0;
+                        GT.coeffRef(j, j) = 1;
+                    }
+                    GR(EBBE3D.NNODE * EBBE3D.NDOF - 4) -= load;
+
+                    //Solve the equation
+                    GT.makeCompressed();
+
+                    Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor>> solver;
+                    solver.analyzePattern(GT);
+                    solver.factorize(GT); //LU decomposition
+
+                    //std::cout<<J<<std::endl;
+
+                    assert(solver.info() == Eigen::Success);
+
+                    dGU = solver.solve(-GR);
+
+                    //Calculate errors and update for next iteration
+                    for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                        GU_new(j) = GU(j) + dGU(j);
+
+                    //Error calculation
+                    for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                        error(j) = abs(GU_new(j) - GU(j));
+
+                    max = error(0);
+                    for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                        if (max < error(j))
+                            max = error(j);
+
+                    //Assignment for next iteration
+                    for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                        GU(j) = 0.5 * GU_new(j) + 0.5 * GU(j);
+                    iter++;
+
+                    //Free memory
+                    for (int i = 0; i < 12; i++)
+                        delete T[i];
+                    delete[] R;
+
+                    std::cout << max << std::endl;
+                } while (max > pow(10, -6) && iter < maxiter);
+                if (iter < maxiter)
+                {
+                    fiter++;
+                    load += 4.167;
+                    /*for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
+                    {
+                        //file2 << "Displacements of node " << j + 1 << std::endl;
+                        //for (int k = 0; k < 3; k++)
+                            //file2 << U(12 * (j - 1) + 6 + k) << std::endl;
+                        file2 << GU(j) << std::endl;
+                    }*/
+                    file2 << GU(EBBE3D.NNODE * EBBE3D.NDOF - 4) << std::endl;
+                }
+                else
+                {
+                    std::cout << "Code didn't converge" << std::endl;
+                    break;
+                }
+            } while (fiter < EBBE3D.NLS);
+        }
+        }
     else
         std::cout << "Wrong option" << std::endl;
 }

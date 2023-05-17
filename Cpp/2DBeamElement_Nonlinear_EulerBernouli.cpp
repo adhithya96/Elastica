@@ -374,29 +374,41 @@ void PostProcessing(Eigen::VectorXd U, NonLinearEulerBernouliBeamElement NLEBBE,
     std::stringstream s1;
     s1 << fiter;
     temp = s1.str();
-    filename = "G:/MTech_Aerospace/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/Displacement.vtu." + temp;
+    filename = "E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/2DBeam/Displacement" + temp + ".vtk";
     std::cout << filename << std::endl;
     file1.open(filename.c_str(), std::ios::out);
     if (file1.is_open())
     {
         file1 << "# vtk DataFile Version 2.0" << std::endl;
-        file1 << "Cantilever Beam " << std::endl;
+        file1 << "# Cantilever Beam " << std::endl;
         file1 << "ASCII" << std::endl;
-        file1 << "DATASET STRUCTURED_POINTS" << std::endl;
-        file1 << "POINTS " << NLEBBE.NNODE * 2 << " float" << std::endl;
+        file1 << "DATASET UNSTRUCTURED_GRID" << std::endl;
+        file1 << "POINTS " << NLEBBE.NNODE << " float" << std::endl;
         for (int i = 0; i < NLEBBE.NNODE; i++)
         {
             file1 << NLEBBE.NODE(i, 0) << " " << NLEBBE.NODE(i, 1) << std::endl;
         }
-        file1 << "CELLS " << NLEBBE.NELEM * 3 << std::endl;
+        file1 << std::endl;
+        file1 << "CELLS " << NLEBBE.NELEM << " " << NLEBBE.NELEM * 3 << std::endl;
         for (int i = 0; i < NLEBBE.NELEM; i++)
         {
-            file1 << "3 " << NLEBBE.ELEM(i, 1) - 1 << " " << NLEBBE.ELEM(i, 2) - 1 << std::endl;
+            file1 << "2 " << NLEBBE.ELEM(i, 1) - 1 << " " << NLEBBE.ELEM(i, 2) - 1 << std::endl;
         }
-        file1 << "POINTDATA " << std::endl;
+        file1 << std::endl;
+        file1 << "CELL_TYPES " << NLEBBE.NELEM << std::endl;
+        for (int i = 0; i < NLEBBE.NELEM; i++)
+            file1 << "3 " << std::endl;
+        file1 << std::endl;
+        file1 << "POINT_DATA" << " " << NLEBBE.NNODE << std::endl;
+        file1 << "VECTORS " << "U " <<"float " << std::endl;
         for (int i = 0; i < NLEBBE.NNODE; i++)
         {
-            file1 << U(i) << U(i + 1) << U(i + 2) << std::endl;
+            file1 << U(i) << " " << U(i + 1) << std::endl;
+        }
+        file1 << "SCALARS " << "Theta " << "float " << std::endl;
+        for (int i = 0; i < NLEBBE.NNODE; i++)
+        {
+            file1 << U(i + 2) << std::endl;
         }
     }
     else
