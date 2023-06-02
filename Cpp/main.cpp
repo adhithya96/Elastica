@@ -594,83 +594,6 @@ int main()
         std::fstream file1, file2;
         file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Result_Log.txt", std::fstream::in | std::fstream::out);
         file2.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Results.txt", std::fstream::in | std::fstream::out);
-        /*
-          file1 << "        Printing input values needed to calculate the 9*9 stiffness matrix" << std::endl;
-          file1 << "            E11: " << VAMBE.CMP.E11 << std::endl;
-          file1 << "            E22: " << VAMBE.CMP.E22 << std::endl;
-          file1 << "            nu12: " << VAMBE.CMP.nu12 << std::endl;
-          file1 << "            G12: " << VAMBE.CMP.G12 << std::endl;
-          file1 << "            nu21: " << VAMBE.CMP.E22 * VAMBE.CMP.nu12 / VAMBE.CMP.E11 << std::endl;
-          file1 << "            width of the laminate: " << VAMBE.CS.width << std::endl;
-          file1 << "            height of laminate: " << VAMBE.CS.height << std::endl;
-          file1 << "            Initial twist vector: " << VAMBE.CMP.inittwist(0) << std::endl;
-          for (int j = 0; j < 5; j++)
-          {
-              file1 << "            " << VAMBE.CMP.Orient(j) << std::endl;
-          }
-          file1 << "            " << VAMBE.CMP.np << std::endl;
-          */
-        /*struct Variables V;
-        V = StiffnessMatrix_VAM(VAMBE.CMP.E11, VAMBE.CMP.E22, VAMBE.CMP.nu12, VAMBE.CMP.G12,
-            VAMBE.CMP.E22 * VAMBE.CMP.nu12 / VAMBE.CMP.E11, VAMBE.CS.Rect.width, VAMBE.CS.Rect.height,
-           VAMBE.CMP.Orient, (int)VAMBE.CMP.np, file1);
-
-        file1 << "            Values of variables from appendix" << std::endl;
-        file1 << "                A11:  " << V.B.A11 << std::endl;
-        file1 << "                B11:  " << V.B.B11 << std::endl;
-        file1 << "                B12:  " << V.B.B12 << std::endl;
-        file1 << "                B16:  " << V.B.B16 << std::endl;
-        file1 << "                D11:  " << V.B.D11 << std::endl;
-        file1 << "                D12:  " << V.B.D12 << std::endl;
-        file1 << "                D22:  " << V.B.D22 << std::endl;
-        file1 << "                D16:  " << V.B.D16 << std::endl;
-        file1 << "                D26:  " << V.B.D26 << std::endl;
-        file1 << "                D66:  " << V.B.D66 << std::endl;
-        file1 << "            Values of variables with double bar from appendix" << std::endl;
-        file1 << "                A11:  " << V.BB.A11 << std::endl;
-        file1 << "                B11:  " << V.BB.B11 << std::endl;
-        file1 << "                B16:  " << V.BB.B16 << std::endl;
-        file1 << "                D11:  " << V.BB.D11 << std::endl;
-        file1 << "                D16:  " << V.BB.D16 << std::endl;
-        file1 << "                D66:  " << V.BB.D66 << std::endl;*/
-
-        /*
-        file1 << "                Printing linear stiffness matrix Sl" << std::endl;
-        for (int i = 0; i < 4; i++)
-        {
-            file1 << "                    ";
-            for (int j = 0; j < 4; j++)
-            {
-                file1 << S1.Sl(i, j) << "  ";
-            }
-            file1 << std::endl;
-        }
-        file1 << "                Printing non-linear stiffness matrix Sln" << std::endl;
-        for (int i = 0; i < 4; i++)
-        {
-            file1 << "                    ";
-            for (int j = 0; j < 5; j++)
-            {
-                file1 << S1.Sln(i, j) << "  ";
-            }
-            file1 << std::endl;
-        }
-        file1 << "                Printing non-linear stiffness matrix Sn" << std::endl;
-        for (int i = 0; i < 5; i++)
-        {
-            file1 << "                    ";
-            for (int j = 0; j < 5; j++)
-            {
-                file1 << S1.Sn(i, j) << "  ";
-            }
-            file1 << std::endl;
-        }*/
-        /*for (int j = 0; j < (VAMBE.NNODE - 1) * VAMBE.NDOF; j++)
-            U(j) = 1;*/
-            /*for (int i = 0; i < 6 * VAMBE.NNODE; i++)
-            {
-                Tau(i) = 1;
-            }*/
 
         //Don't know what Theta means but it is used in C_ab formula
         double Theta = 90 * M_PI / 180;
@@ -678,16 +601,11 @@ int main()
         //Loop for force iterations.
         if (file1.is_open() && file2.is_open())
         {
-            file1 << "Evaluating for force " << VAMBE.B.aN(0) << std::endl;
             do
             {
-                file1 << "    Evaluating primary unkowns" << std::endl;
-                file1 << "    Displacements, Rotations, Internal forces and moments" << std::endl;
                 iter = 0;
                 VAMBE.B.aN(0) = fiter * load / VAMBE.NLS;
                 std::cout << VAMBE.B.aN(0) << std::endl;
-                //for (int i = 0; i < (VAMBE.NNODE - 1) * VAMBE.NDOF; i++)
-                //    U(i) = 1;
                 do
                 {
                     //Initialize all matrices to zero
@@ -724,13 +642,6 @@ int main()
                                     U0(j) = U(j);
                                 }
 
-                                file1 << "            Nodal displacements and rotations" << std::endl;
-                                for (int j = 0; j < 6; j++)
-                                    file1 << "            " << U1(j) << std::endl;
-                                file1 << "            Internal forces and moments" << std::endl;
-                                for (int j = 0; j < 6; j++)
-                                    file1 << "            " << F1(j) << std::endl;
-
                                 Eigen::VectorXd Strain(6);
                                 for (int j = 0; j < 6; j++)
                                 {
@@ -740,22 +651,6 @@ int main()
 
                                 Element_R = Element_Residual(U1, F1, h, Seq_1, Theta, 0, VAMBE.B, U0);
                                 Element_J = Element_Jacobian(U1, F1, h, Seq_1, Theta, 0, file1);
-
-                                file1 << "        Element Residual Vector for node " << i + 1 << std::endl;
-                                for (int j = 0; j < 12; j++)
-                                {
-                                    file1 << "            " << Element_R(j) << std::endl;
-                                }
-                                file1 << "        Element Jacobian Matrix for node " << i + 1 << std::endl;
-                                for (int j = 0; j < 12; j++)
-                                {
-                                    file1 << "            ";
-                                    for (int k = 0; k < 18; k++)
-                                    {
-                                        file1 << Element_J(j, k) << "  ";
-                                    }
-                                    file1 << std::endl;
-                                }
 
                                 //Assembly of Node 0 into Global Stiffness matrix
                                 //fu1 - F1 = 0
@@ -770,20 +665,6 @@ int main()
                                         J.coeffRef(j, k) += Element_J(j, k);
                                     }
                                 }
-
-                                file1 << "        Global Jacobian Matrix " << std::endl;
-                                for (int j = 0; j < VAMBE.NNODE * VAMBE.NDOF; j++)
-                                {
-                                    file1 << "            ";
-                                    for (int k = 0; k < VAMBE.NNODE * VAMBE.NDOF; k++)
-                                    {
-                                        file1 << J.coeffRef(j, k) << "           ";
-                                    }
-                                    file1 << std::endl;
-                                }
-
-                                file1 << "        Global Residual Vector" << std::endl;
-                                file1 << R << std::endl;
                             }
 
                             for (int j = 0; j < 6; j++)
@@ -793,21 +674,6 @@ int main()
                                 U2(j) = U(b * 12 + 6 + j);
                                 F2(j) = U(b * 12 + 12 + j);
                             }
-                            
-                            file1 << "        Printing nodal values for node" << i << std::endl;
-                            file1 << "            Nodal displacements and rotations" << std::endl;
-                            for (int j = 0; j < 6; j++)
-                                file1 << "            " << U1(j) << std::endl;
-                            file1 << "            Internal forces and moments" << std::endl;
-                            for (int j = 0; j < 6; j++)
-                                file1 << "            " << F1(j) << std::endl;
-                            file1 << "        Printing nodal values for node" << i + 1 << std::endl;
-                            file1 << "            Nodal displacements and rotations" << std::endl;
-                            for (int j = 0; j < 6; j++)
-                                file1 << "            " << U2(j) << std::endl;
-                            file1 << "            Internal forces and moments" << std::endl;
-                            for (int j = 0; j < 6; j++)
-                                file1 << "            " << F2(j) << std::endl;
 
                             Eigen::VectorXd Strain1(6), Strain2(6);
                             for (int j = 0; j < 6; j++)
@@ -819,30 +685,6 @@ int main()
                             Seq_1 = Equivalent_StiffnessMatrix_FirstOrder(Strain1, VAMBE.CMP.inittwist, VAMBE.CS.Rect.width, file1);
                             Seq_2 = Equivalent_StiffnessMatrix_FirstOrder(Strain2, VAMBE.CMP.inittwist, VAMBE.CS.Rect.width, file1);
 
-                            //Seq_1 = Equivalent_StiffnessMatrix_ZerothOrder();
-                            //Seq_2 = Equivalent_StiffnessMatrix_ZerothOrder();
-
-                            file1 << "        Printing equivalent cross-sectional stiffness matrix for node " << i << std::endl;
-                            for (int j = 0; j < 6; j++)
-                            {
-                                file1 << "            ";
-                                for (int k = 0; k < 6; k++)
-                                {
-                                    file1 << Seq_1(j, k) << "  ";
-                                }
-                                file1 << std::endl;
-                            }
-                            file1 << "        Printing equivalent cross-sectional stiffness matrix for node " << i + 1 << std::endl;
-                            for (int j = 0; j < 6; j++)
-                            {
-                                file1 << "            ";
-                                for (int k = 0; k < 6; k++)
-                                {
-                                    file1 << Seq_2(j, k) << "  ";
-                                }
-                                file1 << std::endl;
-                            }
-
                             Eigen::VectorXd Element_R = Eigen::VectorXd::Zero(12);
                             Eigen::MatrixXd Element_J = Eigen::MatrixXd::Zero(12, 24);
 
@@ -850,22 +692,6 @@ int main()
                             Element_R = Element_Residual(U1, U2, F1, F2, h, Seq_1, Seq_2, Theta);
                             //Element Jacobian
                             Element_J = Element_Jacobian(U1, U2, F1, F2, h, Seq_1, Seq_2, Theta, file1);
-
-                            file1 << "        Element Residual Vector for element " << i + 1 << std::endl;
-                            for (int j = 0; j < 12; j++)
-                            {
-                                file1 << "            " << Element_R(j) << std::endl;
-                            }
-                            file1 << "        Element Jacobian Matrix for element " << i + 1 << std::endl;
-                            for (int j = 0; j < 12; j++)
-                            {
-                                file1 << "            ";
-                                for (int k = 0; k < 24; k++)
-                                {
-                                    file1 << Element_J(j, k) << "  ";
-                                }
-                                file1 << std::endl;
-                            }
 
                             //Assembly
                             //Solve for intermediate nodes
@@ -879,19 +705,6 @@ int main()
                                 for (int k = 0; k < 24; k++)
                                     J.coeffRef(12 * b + j, 12 * a + 6 + k) += Element_J(j, k);
                             }
-                            file1 << "        Global Jacobian Matrix " << std::endl;
-                            for (int j = 0; j < VAMBE.NNODE * VAMBE.NDOF; j++)
-                            {
-                                file1 << "            ";
-                                for (int k = 0; k < (VAMBE.NNODE - 1) * VAMBE.NDOF; k++)
-                                {
-                                    file1 << J.coeffRef(j, k) << "           ";
-                                }
-                                file1 << std::endl;
-                            }
-
-                            file1 << "        Global Residual Vector" << std::endl;
-                            file1 << R << std::endl;
                         }
                         else if (i == VAMBE.NELEM - 1)
                         {
@@ -908,13 +721,6 @@ int main()
                                 U0(j) = U(12 * b + 6 + j);
                             }
 
-                            file1 << "            Nodal displacements and rotations" << std::endl;
-                            for (int j = 0; j < 6; j++)
-                                file1 << "            " << U1(j) << std::endl;
-                            file1 << "            Internal forces and moments" << std::endl;
-                            for (int j = 0; j < 6; j++)
-                                file1 << "            " << F1(j) << std::endl;
-
                             Eigen::VectorXd Strain = Eigen::VectorXd::Zero(6);
                             for (int j = 0; j < 6; j++)
                             {
@@ -926,22 +732,6 @@ int main()
                             Element_R = Element_Residual(U1, F1, h, Seq_1, Theta, VAMBE.NNODE - 1, VAMBE.B, U0);
                             Element_J = Element_Jacobian(U1, F1, h, Seq_1, Theta, VAMBE.NNODE - 1, file1);
 
-                            file1 << "        Element Residual Vector for element " << i + 1 << std::endl;
-                            for (int j = 0; j < 12; j++)
-                            {
-                                file1 << "            " << Element_R(j) << std::endl;
-                            }
-                            file1 << "        Element Jacobian Matrix for element " << i + 1 << std::endl;
-                            for (int j = 0; j < 12; j++)
-                            {
-                                file1 << "            ";
-                                for (int k = 0; k < 18; k++)
-                                {
-                                    file1 << Element_J(j, k) << "  ";
-                                }
-                                file1 << std::endl;
-                            }
-
                             //fuN - FN+1 = 0
                             //fpsiN - MN+1 = 0
                             //fFN + uN+1 = 0
@@ -952,53 +742,8 @@ int main()
                                 for (int k = 0; k < 18; k++)
                                     J.coeffRef(12 * b + j, 12 * a + 6 + k) += Element_J(j, k);
                             }
-
-                            file1 << "        Global Jacobian Matrix " << std::endl;
-                             for (int j = 0; j < VAMBE.NNODE * VAMBE.NDOF; j++)
-                             {
-                                 file1 << "            ";
-                                 for (int k = 0; k < VAMBE.NNODE * VAMBE.NDOF; k++)
-                                 {
-                                     file1 << J.coeffRef(j, k) << "           ";
-                                 }
-                                 file1 << std::endl;
-                             }
-
-                             file1 << "        Global Residual Vector" << std::endl;
-                             file1 << R << std::endl;
-                        }                      
-                    }
-
-                    file1 << "            Global Jacobian Matrix Before applying boundary conditions" << std::endl;
-                    for (int j = 0; j < VAMBE.NNODE * VAMBE.NDOF; j++)
-                    {
-                        file1 << "                ";
-                        for (int k = 0; k < VAMBE.NNODE * VAMBE.NDOF; k++)
-                        {
-                            file1 << J.coeffRef(j, k) << "    ";
                         }
-                        file1 << std::endl;
                     }
-                    file1 << "            Global Residual Vector before applying boundary conditions" << std::endl;
-                    for (int j = 0; j < VAMBE.NNODE * VAMBE.NDOF; j++)
-                    {
-                        file1 << "                " << R.coeffRef(j) << std::endl;
-                    }
-
-                    //Prescribed boundary conditions
-                    //  1. Displacements
-                    //  2. Rotations
-                    //  3. External Forces
-                    //  4. External Moments
-                    //  Only two of the four can be prescribed at the boundary
-                    //  Based on the integer values of x1 and y1, the unkonwn quantities are decided.
-                    //  By default the case considered is that of a cantilever beam fixed at one end and an axial load at the other end.
-                    //Check struct boundary
-
-                    file1 << "        Global Jacobian/Tangent Matrix" << std::endl;
-                    file1 << J << std::endl;
-                    file1 << "        Global Residual Vector" << std::endl;
-                    file1 << R << std::endl;
 
                     //Solve the equation
                     J.makeCompressed();
@@ -1007,45 +752,23 @@ int main()
                     solver.analyzePattern(J);
                     solver.factorize(J); //LU decomposition
 
-                    //std::cout<<J<<std::endl;
-
                     assert(solver.info() == Eigen::Success);
 
                     dU = solver.solve(-R);
-
-                    //file1 << "            Change in displacements after " << iter << " iteration" << std::endl;
-                    for (int j = 0; j < VAMBE.NDOF * VAMBE.NNODE; j++)
-                    {
-                        file1 << "                " << dU(j) << std::endl;
-                    }
 
                     //Calculate errors and update for next iteration
                     for (int j = 0; j < VAMBE.NDOF * VAMBE.NNODE; j++)
                         U_new(j) = U(j) + dU(j);
 
-                    /*file1 << "            Corrected Displacements After " << iter << " iteration" << std::endl;
-                    for (int j = 0; j < VAMBE.NNODE * VAMBE.NDOF; j++)
-                    {
-                        file1 << "                " << U_new(j) << std::endl;
-                    }*/
-
                     //Error calculation
                     for (int j = 0; j < VAMBE.NDOF * VAMBE.NNODE; j++)
                         error(j) = abs(U_new(j) - U(j));
-
-                    /*file1 << "            Error " << iter << " iteration" << std::endl;
-                    for (int j = 0; j < VAMBE.NNODE * VAMBE.NDOF; j++)
-                    {
-                        file1 << "                " << error(j) << std::endl;
-                    }*/
 
                     max = error(0);
                     for (int j = 0; j < VAMBE.NDOF * VAMBE.NNODE; j++)
                         if (max < error(j))
                             max = error(j);
 
-                    //file1 << "            Maximum Error " << std::endl;
-                    //file1 << "                " << max << std::endl;
                     //Assignment for next iteration
                     for (int j = 0; j < VAMBE.NDOF * VAMBE.NNODE; j++)
                         U(j) = U_new(j);
@@ -1068,18 +791,8 @@ int main()
                     file2 << VAMBE.B.aN(1) << "     " << U((VAMBE.NNODE - 1) * 12 - 18) << "    " << iter << std::endl;
                     std::cout << VAMBE.B.aN(1) << "     " << U(12 * (VAMBE.NNODE - 2) + 6 + 2) << "    " << iter << std::endl;
                     file2 << "Converged Displacements for load " << VAMBE.B.aN(1) << std::endl;
-                    for (int j = 0; j < (VAMBE.NNODE-1)*VAMBE.NDOF; j++)
-                    {
-                        //file2 << "Displacements of node " << j + 1 << std::endl;
-                        //for (int k = 0; k < 3; k++)
-                            //file2 << U(12 * (j - 1) + 6 + k) << std::endl;
+                    for (int j = 0; j < VAMBE.NNODE * VAMBE.NDOF; j++)
                         file2 << U(j) << std::endl;
-                    }
-                    /*file2 << "Values at the end of " << fiter << " iteration" << std::endl;
-                    for (int j = 0; j < (VAMBE.NNODE - 1) * VAMBE.NDOF; j++)
-                    {
-                        file2 << U(j) << std::endl;
-                    }*/
                 }
                 else
                 {

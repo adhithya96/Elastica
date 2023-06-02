@@ -34,20 +34,6 @@ Eigen::MatrixXd Rot_Mat(Eigen::VectorXd theta)
 {
     Eigen::MatrixXd C = Eigen::MatrixXd::Zero(3, 3);
 
-    /*double theta1 = theta(0);
-    double theta2 = theta(1);
-    double theta3 = theta(2);
-
-    C(0, 0) = 1 + (1.0 / 4) * pow(theta1, 2);
-    C(0, 1) = theta3 + (1.0 / 2) * theta1 * theta2;
-    C(0, 2) = -theta2 + (1.0 / 2) * theta1 * theta3;
-    C(1, 0) = -theta3 + (1.0 / 2) * theta1 * theta2;
-    C(1, 1) = 1 + (1.0 / 4) * pow(theta2, 2);
-    C(1, 2) = theta1 + (1.0 / 2) * theta2 * theta3;
-    C(2, 0) = theta2 + (1.0 / 2) * theta3 * theta1;
-    C(2, 1) = -theta1 + (1.0 / 2) * theta2 * theta3;
-    C(2, 2) = 1 + (1.0 / 4) * pow(theta3, 2);*/
-
     C = ((1.0 - 0.25 * theta.transpose() * theta) * Eigen::MatrixXd::Identity(3, 3) + 0.5 * theta * theta.transpose() - Dyadic(theta)) / (1.0 + 0.25 * theta.transpose() * theta);
 
     return C;
@@ -63,8 +49,6 @@ Eigen::MatrixXd Transform_Mat(double theta)
     C_ab(0, 1) = -cos(theta);
     C_ab(1, 1) = sin(theta);
     C_ab(2, 2) = 1;
-
-    //std::cout << C_ab << std::endl;
 
     return C_ab;
 }
@@ -332,37 +316,6 @@ Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd U2, Eigen::
     gamma1 << Strain1(0), Strain1(1), Strain1(2);
     kappa1 << Strain1(3), Strain1(4), Strain1(5);
     e_1 << 1, 0, 0;
-    /*
-    file1 << "                Internal Force Vector" << std::endl;
-    for (int j = 0; j < 3; j++)
-    {
-        file1 << "                    " << F_1(j) << std::endl;
-    }
-    file1 << "                Internal Moment Vector" << std::endl;
-    for (int j = 0; j < 3; j++)
-    {
-        file1 << "                    " << M_1(j) << std::endl;
-    }
-    file1 << "                Displacement Vector" << std::endl;
-    for (int j = 0; j < 3; j++)
-    {
-        file1 << "                    " << u1(j) << std::endl;
-    }
-    file1 << "                Rotation Vector" << std::endl;
-    for (int j = 0; j < 3; j++)
-    {
-        file1 << "                    " << theta1(j) << std::endl;
-    }
-    file1 << "                Inverse of stiffness matrix" << std::endl;
-    for (int j = 0; j < 3; j++)
-    {
-        file1 << "                    " ;
-        for (int k = 0; k < 3; k++)
-        {
-            file1 << Sinv1(j, k) << " ";
-        }
-        file1 << std::endl;
-    }*/
 
     for (int i = 0; i < 3; i++)
     {
@@ -374,52 +327,7 @@ Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd U2, Eigen::
             dkappadM(i, j) = Sinv1(i + 3, j + 3);
         }
     }
-    /*
-    for (int i = 1; i < 4; i++)
-        for (int j = 1; j < 4; j++)
-            dkappadM(i - 1, j - 1) = Sinv1(i, j);
-
-    file1 << "                dgammadF" << std::endl;
-    for (int j = 0; j < 3; j++)
-    {
-        file1 << "                    ";
-        for (int k = 0; k < 3; k++)
-        {
-            file1 << dgammadF(j, k) << " ";
-        }
-        file1 << std::endl;
-    }
-    file1 << "                dgammadM" << std::endl;
-    for (int j = 0; j < 3; j++)
-    {
-        file1 << "                    " ;
-        for (int k = 0; k < 3; k++)
-        {
-            file1 << dgammadM(j, k) << " ";
-        }
-        file1 << std::endl;
-    }
-    file1 << "                dkappadF" << std::endl;
-    for (int j = 0; j < 3; j++)
-    {
-        file1 << "                    ";
-        for (int k = 0; k < 3; k++)
-        {
-            file1 << dkappadF(j, k) << " ";
-        }
-        file1 << std::endl;
-    }
-    file1 << "                dkappadM" << std::endl;
-    for (int j = 0; j < 3; j++)
-    {
-        file1 << "                    ";
-        for (int k = 0; k < 3; k++)
-        {
-            file1 << dkappadM(j, k) << " ";
-        }
-        file1 << std::endl;
-    }
-    */
+ 
     //Node i
     //f_u
     dfu_dFi = (Rot_Mat(theta1).transpose()) * Transform_Mat(Theta);
@@ -470,18 +378,6 @@ Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd U2, Eigen::
         for (int j = 0; j < 3; j++)
             dfM_dthetai(i, j) = temp(j);
     }
-
-    file1 << "                dfM_dtheta node i" << std::endl;
-    for (int i = 0; i < 3; i++)
-    {
-        file1 << "                     ";
-        for (int j = 0; j < 3; j++)
-        {
-            file1 << " " << dfM_dthetai(i, j);
-        }
-        file1 << std::endl;
-    }
-
 
     //Node i + 1
     F_2 << F2(0), F2(1), F2(2);
@@ -555,17 +451,6 @@ Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd U2, Eigen::
         temp = e - 0.5 * h * (0.5 * Dyadic(e) + 0.25 * (e * theta2.transpose() + theta2 * e.transpose())) * Transform_Mat(Theta) * kappa2;
         for (int j = 0; j < 3; j++)
             dfM_dthetaj(i, j) = temp(j);
-    }
-
-    file1 << "                dfM_dtheta node i+1" << std::endl;
-    for (int i = 0; i < 3; i++)
-    {
-        file1 << "                     ";
-        for (int j = 0; j < 3; j++)
-        {
-            file1 << " " << dfM_dthetaj(i, j);
-        }
-        file1 << std::endl;
     }
 
     //Assembly
@@ -724,17 +609,6 @@ Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd F1, double 
                 dfM_dthetaj(i, j) = temp(j);
         }
 
-        /*file1 << "                dfM_dtheta node " << 1 << std::endl;
-        for (int i = 0; i < 3; i++)
-        {
-            file1 << "                     ";
-            for (int j = 0; j < 3; j++)
-            {
-                file1 << " " << dfM_dthetaj(i, j);
-            }
-            file1 << std::endl;
-        }*/
-
         //Assembly
         Eigen::MatrixXd J = Eigen::MatrixXd::Zero(12, 18);
         for (int i = 0; i < 3; i++)
@@ -836,17 +710,6 @@ Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd F1, double 
 
         dfM_duj = Eigen::MatrixXd::Zero(3, 3);
         dfM_dthetaj = Eigen::MatrixXd::Identity(3, 3);
-        /*
-        file1 << "                dfM_dtheta node i+1" << std::endl;
-        for (int i = 0; i < 3; i++)
-        {
-            file1 << "                     ";
-            for (int j = 0; j < 3; j++)
-            {
-                file1 << " " << dfM_dthetai(i, j);
-            }
-            file1 << std::endl;
-        }*/
 
         //Assembly
         Eigen::MatrixXd J = Eigen::MatrixXd::Zero(12, 18);
@@ -927,12 +790,8 @@ Eigen::VectorXd Update_Strains(VAMBeamElement VAMBE, Eigen::VectorXd* U, std::fs
         } while (maxerror > pow(10, -6) && iter < 10);
         if (iter < 10)
         {
-            file1 << "                Strains of node " << i << std::endl;
             for (int j = 0; j < 6; j++)
-            {
                 Tau(6 * i + j) = Strain(j);
-                file1 << "                    " << Strain(j) << std::endl;
-            }
         }
         else
         {
