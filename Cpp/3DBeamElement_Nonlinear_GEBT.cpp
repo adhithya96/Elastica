@@ -3,6 +3,15 @@
 #define VARIABLES_H
 #include"Variables.h"
 
+//1D Non Linear Beam Analysis
+//Implemented from "GEBT: A general-purpose nonlinear analysis tool for composite beams"
+//by Wenbin Yu et. al
+//The Geometrically Exact Beam Theory equation can be found in Eq. 5.50 of
+//"Non linear Composite beam theory by Hodges"
+//This equation is simplified using Finite elements in the paper by Wenbin Yu et. al
+//The equations required for implementation are (45), (46) and (47) from the paper.
+//They are solved using Newton Raphson method.
+
 Eigen::MatrixXd Dyadic(Eigen::VectorXd x)
 {
     Eigen::MatrixXd x_tilde = Eigen::MatrixXd::Zero(3, 3);
@@ -44,6 +53,7 @@ Eigen::MatrixXd Rot_Mat(Eigen::VectorXd theta)
     return C;
 }
 
+
 Eigen::MatrixXd Transform_Mat(double theta)
 {
     Eigen::MatrixXd C_ab = Eigen::MatrixXd::Zero(3, 3);
@@ -59,6 +69,7 @@ Eigen::MatrixXd Transform_Mat(double theta)
     return C_ab;
 }
 
+//Rotation matrix for beams with initial pretwist/curvature
 Eigen::MatrixXd Transform_Mat(double theta, Eigen::VectorXd k, double x1)
 {
     Eigen::MatrixXd Cba = Eigen::MatrixXd::Zero(3, 3);
@@ -235,13 +246,10 @@ Eigen::VectorXd Element_Residual(Eigen::VectorXd U1, Eigen::VectorXd F1, double 
         for (int i = 0; i < 3; i++)
         {
             //Prescribing displacements and rotations at node 0
-            if (B.x1 == 1 && B.y1 == 2)
-            {
-                R(i) = fu_minus(i) + U0(i);
-                R(i + 3) = fpsi_minus(i) + U0(i + 3);
-                R(i + 6) = fF_minus(i) - B.a1(i);
-                R(i + 9) = fM_minus(i) - B.b1(i);
-            }
+            R(i) = fu_minus(i) + U0(i);
+            R(i + 3) = fpsi_minus(i) + U0(i + 3);
+            R(i + 6) = fF_minus(i) - B.a1(i);
+            R(i + 9) = fM_minus(i) - B.b1(i);
         }
 
         return R;
@@ -274,15 +282,12 @@ Eigen::VectorXd Element_Residual(Eigen::VectorXd U1, Eigen::VectorXd F1, double 
         for (int i = 0; i < 3; i++)
         {
             //Prescribing forces and moments at the node
-            if (B.xN == 3 && B.yN == 4)
-            {
-                R(i) = fu_plus(i) - B.aN(i);
-                R(i + 3) = fpsi_plus(i) - B.bN(i);
-                R(i + 6) = fF_plus(i) + U0(i);
-                R(i + 9) = fM_plus(i) + U0(i + 3);
-            }
+            R(i) = fu_plus(i) - B.aN(i);
+            R(i + 3) = fpsi_plus(i) - B.bN(i);
+            R(i + 6) = fF_plus(i) + U0(i);
+            R(i + 9) = fM_plus(i) + U0(i + 3);
         }
-        //std::cout << B.FN << std::endl;
+        //std::cout << B.aN << std::endl;
         return R;
     }
 }
@@ -907,7 +912,6 @@ Eigen::VectorXd Update_Strains(VAMBeamElement VAMBE, Eigen::VectorXd* U, std::fs
         do
         {
             Seq = Equivalent_StiffnessMatrix_FirstOrder(Strain, VAMBE.CMP.inittwist, VAMBE.CS.Rect.width, file1);
-            //Seq = Equivalent_StiffnessMatrix_VAM_Numerical(V, Strain, VAMBE.CMP.inittwist, VAMBE.CS.width, file1);
             Sinv = Seq.inverse();
             Strain_new = Sinv * Force;
             Eigen::VectorXd error(6);
@@ -918,10 +922,10 @@ Eigen::VectorXd Update_Strains(VAMBeamElement VAMBE, Eigen::VectorXd* U, std::fs
                 if (error(j) > maxerror)
                     maxerror = error(j);
             for (int j = 0; j < 6; j++)
-                Strain(j) = 0.8 * Strain_new(j) + 0.2 * Strain(j);
+                Strain(j) = Strain_new(j);
             iter++;
-        } while (maxerror > pow(10, -6) && iter < 100);
-        if (iter < 100)
+        } while (maxerror > pow(10, -6) && iter < 10);
+        if (iter < 10)
         {
             file1 << "                Strains of node " << i << std::endl;
             for (int j = 0; j < 6; j++)

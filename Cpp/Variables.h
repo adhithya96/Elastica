@@ -213,6 +213,8 @@ struct NonLinearEulerBernouliBeamElement
 
 struct NonLinearEulerBernouliBeamElement3D
 {
+    int NEN;
+
     int NDOF;
 
     int NNODE;
@@ -238,8 +240,6 @@ struct BeamContact3D
 
     int NLS;
 
-    int NBODIES;
-
     Eigen::MatrixXd CP;
 
     Eigen::MatrixXd NODE;
@@ -248,11 +248,6 @@ struct BeamContact3D
 
     double E, nu, Bp, Hp, Zx, Zy, Zz;
 };
-
-
-
-
-
 
 struct VAMBeamElement
 {
@@ -346,6 +341,8 @@ Eigen::MatrixXd EvaluateHTildeMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eig
 Eigen::MatrixXd EvaluateFMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db);
 Eigen::MatrixXd EvaluateGMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db, Eigen::MatrixXd HTilde);
 
-//Functions from 3DBeamElement_NonLinear_EulerBernoulli
-void RKt(double D[7], double X[2][3], double U[2][6], double** T, double* R);
+//Functions from 3DBeamElement_NonLinear_EulerBernoulli_QuadraticInterpolation
+void RKt(double D[7], double X[3][3], double U[3][6], double** T, double* R);
+double GaussIntegrationPoints(int i, int j);
 NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement();
+NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms);

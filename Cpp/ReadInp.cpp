@@ -431,11 +431,11 @@ VAMBeamElement ReadVAMBEFile()
 {
     struct VAMBeamElement M;
     M.NBODIES = 1;
-    M.NNODE = 12;
-    M.NELEM = 11;
+    M.NNODE = 3;
+    M.NELEM = 2;
     M.NMAT = 1;
     M.NDOF = 12;
-    M.NLS = 20;
+    M.NLS = 10;
     //M.CMP.np = 16;
     M.NCS = 1;
 
@@ -448,39 +448,12 @@ VAMBeamElement ReadVAMBEFile()
     M.NODE(0, 0) = 0;
     M.NODE(0, 1) = 0;
     M.NODE(0, 2) = 0;
-    M.NODE(1, 0) = 1.97;
+    M.NODE(1, 0) = 0.127;
     M.NODE(1, 1) = 0;
     M.NODE(1, 2) = 0;
-    M.NODE(2, 0) = 3.94;
+    M.NODE(2, 0) = 0.254;
     M.NODE(2, 1) = 0;
     M.NODE(2, 2) = 0;
-    M.NODE(3, 0) = 5.91;
-    M.NODE(3, 1) = 0;
-    M.NODE(3, 2) = 0;
-    M.NODE(4, 0) = 7.88;
-    M.NODE(4, 1) = 0;
-    M.NODE(4, 2) = 0;
-    M.NODE(5, 0) = 9.85;
-    M.NODE(5, 1) = 0;
-    M.NODE(5, 2) = 0;
-    M.NODE(6, 0) = 11.82;
-    M.NODE(6, 1) = 0;
-    M.NODE(6, 2) = 0;
-    M.NODE(7, 0) = 13.79;
-    M.NODE(7, 1) = 0;
-    M.NODE(7, 2) = 0;
-    M.NODE(8, 0) = 15.76;
-    M.NODE(8, 1) = 0;
-    M.NODE(8, 2) = 0;
-    M.NODE(9, 0) = 17.73;
-    M.NODE(9, 1) = 0;
-    M.NODE(9, 2) = 0;
-    M.NODE(10, 0) = 19.7;
-    M.NODE(10, 1) = 0;
-    M.NODE(10, 2) = 0;
-    M.NODE(11, 0) = 21.67;
-    M.NODE(11, 1) = 0;
-    M.NODE(11, 2) = 0;
 
     M.ELEM(0, 0) = 1;
     M.ELEM(0, 1) = 1;
@@ -488,33 +461,6 @@ VAMBeamElement ReadVAMBEFile()
     M.ELEM(1, 0) = 1;
     M.ELEM(1, 1) = 2;
     M.ELEM(1, 2) = 3;
-    M.ELEM(2, 0) = 1;
-    M.ELEM(2, 1) = 3;
-    M.ELEM(2, 2) = 4;
-    M.ELEM(3, 0) = 1;
-    M.ELEM(3, 1) = 4;
-    M.ELEM(3, 2) = 5;
-    M.ELEM(4, 0) = 1;
-    M.ELEM(4, 1) = 5;
-    M.ELEM(4, 2) = 6;
-    M.ELEM(5, 0) = 1;
-    M.ELEM(5, 1) = 6;
-    M.ELEM(5, 2) = 7;
-    M.ELEM(6, 0) = 1;
-    M.ELEM(6, 1) = 7;
-    M.ELEM(6, 2) = 8;
-    M.ELEM(7, 0) = 1;
-    M.ELEM(7, 1) = 8;
-    M.ELEM(7, 2) = 9;
-    M.ELEM(8, 0) = 1;
-    M.ELEM(8, 1) = 9;
-    M.ELEM(8, 2) = 10;
-    M.ELEM(9, 0) = 1;
-    M.ELEM(9, 1) = 10;
-    M.ELEM(9, 2) = 11;
-    M.ELEM(10, 0) = 1;
-    M.ELEM(10, 1) = 11;
-    M.ELEM(10, 2) = 12;
 
     /*M.NODE(0, 0) = 0;
     M.NODE(0, 1) = 0;
@@ -588,7 +534,7 @@ VAMBeamElement ReadVAMBEFile()
     M.B.xN = 3;
     M.B.yN = 4;
 
-    M.B.aN(1) = 0;
+    M.B.aN(0) = 600;
 
     return M;
 }
@@ -597,13 +543,14 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
 {
     struct NonLinearEulerBernouliBeamElement3D M;
     M.NNODE = 17;
-    M.NELEM = 16;
+    M.NELEM = 8;
     M.NDOF = 6;
     M.NLS = 12;
+    M.NEN = 3;
     //M.CMP.np = 16;
 
     M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
-    M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 3);
+    M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
     //M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
     //M.LOAD = Eigen::MatrixXd::Zero(1,3);
 
@@ -664,51 +611,43 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
     M.ELEM(0, 0) = 1;
     M.ELEM(0, 1) = 1;
     M.ELEM(0, 2) = 2;
+    M.ELEM(0, 3) = 3;
+
     M.ELEM(1, 0) = 1;
-    M.ELEM(1, 1) = 2;
-    M.ELEM(1, 2) = 3;
+    M.ELEM(1, 1) = 3;
+    M.ELEM(1, 2) = 4;
+    M.ELEM(1, 3) = 5;
+
+
     M.ELEM(2, 0) = 1;
-    M.ELEM(2, 1) = 3;
-    M.ELEM(2, 2) = 4;
+    M.ELEM(2, 1) = 5;
+    M.ELEM(2, 2) = 6;
+    M.ELEM(2, 3) = 7;
+
     M.ELEM(3, 0) = 1;
-    M.ELEM(3, 1) = 4;
-    M.ELEM(3, 2) = 5;
+    M.ELEM(3, 1) = 7;
+    M.ELEM(3, 2) = 8;
+    M.ELEM(3, 3) = 9;
+
     M.ELEM(4, 0) = 1;
-    M.ELEM(4, 1) = 5;
-    M.ELEM(4, 2) = 6;
+    M.ELEM(4, 1) = 9;
+    M.ELEM(4, 2) = 10;
+    M.ELEM(4, 3) = 11;
+
     M.ELEM(5, 0) = 1;
-    M.ELEM(5, 1) = 6;
-    M.ELEM(5, 2) = 7;
+    M.ELEM(5, 1) = 11;
+    M.ELEM(5, 2) = 12;
+    M.ELEM(5, 3) = 13;
+
     M.ELEM(6, 0) = 1;
-    M.ELEM(6, 1) = 7;
-    M.ELEM(6, 2) = 8;
+    M.ELEM(6, 1) = 13;
+    M.ELEM(6, 2) = 14;
+    M.ELEM(6, 3) = 15;
+
     M.ELEM(7, 0) = 1;
-    M.ELEM(7, 1) = 8;
-    M.ELEM(7, 2) = 9;
-    M.ELEM(8, 0) = 1;
-    M.ELEM(8, 1) = 9;
-    M.ELEM(8, 2) = 10;
-    M.ELEM(9, 0) = 1;
-    M.ELEM(9, 1) = 10;
-    M.ELEM(9, 2) = 11;
-    M.ELEM(10, 0) = 1;
-    M.ELEM(10, 1) = 11;
-    M.ELEM(10, 2) = 12;
-    M.ELEM(11, 0) = 1;
-    M.ELEM(11, 1) = 12;
-    M.ELEM(11, 2) = 13;
-    M.ELEM(12, 0) = 1;
-    M.ELEM(12, 1) = 13;
-    M.ELEM(12, 2) = 14;
-    M.ELEM(13, 0) = 1;
-    M.ELEM(13, 1) = 14;
-    M.ELEM(13, 2) = 15;
-    M.ELEM(14, 0) = 1;
-    M.ELEM(14, 1) = 15;
-    M.ELEM(14, 2) = 16;
-    M.ELEM(15, 0) = 1;
-    M.ELEM(15, 1) = 16;
-    M.ELEM(15, 2) = 17;
+    M.ELEM(7, 1) = 15;
+    M.ELEM(7, 2) = 16;
+    M.ELEM(7, 3) = 17;
 
     M.E = 1e7;
     M.nu = 0.0001;
@@ -717,6 +656,113 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
     M.Zx = 0;
     M.Zy = 0;
     M.Zz = 1;
+
+    return M;
+}
+
+NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
+{
+    struct NonLinearEulerBernouliBeamElement3D M;
+    if (ms == 1)
+    {
+        M.NNODE = 5;
+        M.NELEM = 2;
+        M.NDOF = 6;
+        M.NLS = 12;
+        M.NEN = 3;
+        //M.CMP.np = 16;
+
+        M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
+        M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
+        //M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
+        //M.LOAD = Eigen::MatrixXd::Zero(1,3);
+
+        //Nodal Information
+        M.NODE(0, 0) = 0;
+        M.NODE(0, 1) = 0;
+        M.NODE(0, 2) = 0;
+        M.NODE(1, 0) = 0.1204;
+        M.NODE(1, 1) = 4.9067;
+        M.NODE(1, 2) = 0;
+        M.NODE(2, 0) = 0.4815;
+        M.NODE(2, 1) = 9.8017;
+        M.NODE(2, 2) = 0;
+        M.NODE(3, 0) = 1.082;
+        M.NODE(3, 1) = 14.673;
+        M.NODE(3, 2) = 0;
+        M.NODE(4, 0) = 1.9214;
+        M.NODE(4, 1) = 19.509;
+        M.NODE(4, 2) = 0;
+
+        //Element connectivity
+        M.ELEM(0, 0) = 1;
+        M.ELEM(0, 1) = 1;
+        M.ELEM(0, 2) = 2;
+        M.ELEM(0, 3) = 3;
+
+        M.ELEM(1, 0) = 1;
+        M.ELEM(1, 1) = 3;
+        M.ELEM(1, 2) = 4;
+        M.ELEM(1, 3) = 5;
+
+        M.E = 1e7;
+        M.nu = 0.0001;
+        M.Bp = 1;
+        M.Hp = 1;
+        M.Zx = 0;
+        M.Zy = 0;
+        M.Zz = 1;
+    }
+    else if (ms == 0)
+    {
+        M.NNODE = 5;
+        M.NELEM = 2;
+        M.NDOF = 6;
+        M.NLS = 12;
+        M.NEN = 3;
+        //M.CMP.np = 16;
+
+        M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
+        M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
+        //M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
+        //M.LOAD = Eigen::MatrixXd::Zero(1,3);
+
+        //Nodal Information
+        M.NODE(0, 0) = 0;
+        M.NODE(0, 1) = 0;
+        M.NODE(0, 2) = 0;
+        M.NODE(1, 0) = 0.1204;
+        M.NODE(1, 1) = 4.9067;
+        M.NODE(1, 2) = 0;
+        M.NODE(2, 0) = 0.4815;
+        M.NODE(2, 1) = 9.8017;
+        M.NODE(2, 2) = 0;
+        M.NODE(3, 0) = 1.082;
+        M.NODE(3, 1) = 14.673;
+        M.NODE(3, 2) = 0;
+        M.NODE(4, 0) = 1.9214;
+        M.NODE(4, 1) = 19.509;
+        M.NODE(4, 2) = 0;
+
+        //Element connectivity
+        M.ELEM(0, 0) = 1;
+        M.ELEM(0, 1) = 1;
+        M.ELEM(0, 2) = 2;
+        M.ELEM(0, 3) = 3;
+
+        M.ELEM(1, 0) = 1;
+        M.ELEM(1, 1) = 3;
+        M.ELEM(1, 2) = 4;
+        M.ELEM(1, 3) = 5;
+
+        M.E = 1e7;
+        M.nu = 0.0001;
+        M.Bp = 1;
+        M.Hp = 1;
+        M.Zx = 0;
+        M.Zy = 0;
+        M.Zz = 1;
+    }
 
     return M;
 }
