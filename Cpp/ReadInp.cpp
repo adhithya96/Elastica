@@ -2,188 +2,6 @@
 #define VARIABLES_H
 #include "Variables.h"
 
-//Mesh ReadInpFile()
-//{
-//    struct Mesh M;
-//    M.NBODIES = 2;
-//    M.NNODE = 12;
-//    M.NELEM = 10;
-//    M.NMAT = 2;
-//    M.NDOF = 3;
-//    M.NLS = 20;
-
-//    M.NODE = Eigen::MatrixXd::Zero(M.NNODE,3);
-//    M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 3);
-//    M.MAT = Eigen::MatrixXd::Zero(M.NMAT, M.NBODIES);
-//    M.CNODE = Eigen::MatrixXd::Zero(6,2);
-//    M.LOAD = Eigen::MatrixXd::Zero(2,3);
-////    Nodal Information
-//    M.NODE(0,0) = 0;
-//    M.NODE(0,1) = 0;
-//    M.NODE(0,2) = 0;
-//    M.NODE(1,0) = 0.508/2;
-//    M.NODE(1,1) = 0;
-//    M.NODE(1,2) = 0;
-//    M.NODE(2,0) = 1.016/2;
-//    M.NODE(2,1) = 0;
-//    M.NODE(2,2) = 0;
-//    M.NODE(3,0) = 1.524/2;
-//    M.NODE(3,1) = 0;
-//    M.NODE(3,2) = 0;
-//    M.NODE(4,0) = 2.032/2;
-//    M.NODE(4,1) = 0;
-//    M.NODE(4,2) = 0;
-//    M.NODE(5,0) = 2.54/2;
-//    M.NODE(5,1) = 0;
-//    M.NODE(5,2) = 0;
-//    M.NODE(6,0) = 0;
-//    M.NODE(6,1) = 1;
-//    M.NODE(6,2) = 0;
-//    M.NODE(7,0) = 0.508/2;
-//    M.NODE(7,1) = 1;
-//    M.NODE(7,2) = 0;
-//    M.NODE(8,0) = 1.016/2;
-//    M.NODE(8,1) = 1;
-//    M.NODE(8,2) = 0;
-//    M.NODE(9,0) = 1.524/2;
-//    M.NODE(9,1) = 1;
-//    M.NODE(9,2) = 0;
-//    M.NODE(10,0) = 2.032/2;
-//    M.NODE(10,1) = 1;
-//    M.NODE(10,2) = 0;
-//    M.NODE(11,0) = 2.54/2;
-//    M.NODE(11,1) = 1;
-//    M.NODE(11,2) = 0;
-////    Connectivity information
-//    M.ELEM(0,0) = 1;
-//    M.ELEM(0,1) = 1;
-//    M.ELEM(0,2) = 2;
-//    M.ELEM(1,0) = 1;
-//    M.ELEM(1,1) = 2;
-//    M.ELEM(1,2) = 3;
-//    M.ELEM(2,0) = 1;
-//    M.ELEM(2,1) = 3;
-//    M.ELEM(2,2) = 4;
-//    M.ELEM(3,0) = 1;
-//    M.ELEM(3,1) = 4;
-//    M.ELEM(3,2) = 5;
-//    M.ELEM(4,0) = 1;
-//    M.ELEM(4,1) = 5;
-//    M.ELEM(4,2) = 6;
-//    M.ELEM(5,0) = 2;
-//    M.ELEM(5,1) = 7;
-//    M.ELEM(5,2) = 8;
-//    M.ELEM(6,0) = 2;
-//    M.ELEM(6,1) = 8;
-//    M.ELEM(6,2) = 9;
-//    M.ELEM(7,0) = 2;
-//    M.ELEM(7,1) = 9;
-//    M.ELEM(7,2) = 10;
-//    M.ELEM(8,0) = 2;
-//    M.ELEM(8,1) = 10;
-//    M.ELEM(8,2) = 11;
-//    M.ELEM(9,0) = 2;
-//    M.ELEM(9,1) = 11;
-//    M.ELEM(9,2) = 12;
-////    Beam material information
-//    M.MAT(0,0) = 2.068423e+11;
-//    M.MAT(0,1) = 0.33;
-//    M.MAT(1,0) = 2.068423e+11;
-//    M.MAT(1,1) = 0.33;
-////    Beam cross section information
-//    M.b1 = 0.0254;
-//    M.h1 = 0.0254;
-//    M.b2 = 0.0254;
-//    M.h2 = 0.0254;
-////    Boundary conditions and constrainst
-//    //There are 3 dof for each node. Numbering followed is as follows:
-//    //Dispalcement
-//        //0. Horizontal deflection
-//        //1. Vertical Deflection
-//        //2. Angle of rotation
-//    //Force/Neumann
-//        //1. Axial Force
-//        //2. Vertical Force
-//        //3. Moment
-//    //Displacement Boundary
-//    M.CNODE(0,0) = 1;
-//    M.CNODE(0,1) = 1;
-//    M.CNODE(1,0) = 6;
-//    M.CNODE(1,1) = 0;
-//    M.CNODE(2,0) = 6;
-//    M.CNODE(2,1) = 2;
-//    M.CNODE(3,0) = 7;
-//    M.CNODE(3,1) = 1;
-//    M.CNODE(4,0) = 12;
-//    M.CNODE(4,1) = 0;
-//    M.CNODE(5,0) = 12;
-//    M.CNODE(5,1) = 2;
-////Loading conditions
-//    //Element sets have to be written in inp file for distributed load
-////    Load can act in 3 ways depending on the no. of degrees of freedom
-////    0. Axial Force
-////    1. Vertical Force
-////    2. Moment
-////    Element sets are described for each load indicating the nodes on which load act
-//  /*  M.LOAD(0,0) = 0;
-//    M.LOAD(0,1) = -175.126835;
-//    M.LOAD(0,2) = 0;
-//    M.LOAD(1,0) = 0;
-//    M.LOAD(1,1) = -175.126835;
-//    M.LOAD(1,2) = 0;
-//    M.choice = 3;
-////Element Sets
-//    M.ELSET(0,0) = 1;
-//    M.ELSET(0,1) = 2;
-//    M.ELSET(0,2) = 3;
-//    M.ELSET(0,3) = 4;
-//    M.ELSET(0,4) = 5;
-//    M.ELSET(0,5) = 6;
-//    M.ELSET(1,0) = 7;
-//    M.ELSET(1,1) = 8;
-//    M.ELSET(1,2) = 9;
-//    M.ELSET(1,3) = 10;
-//    M.ELSET(1,4) = 11;
-//    M.ELSET(1,5) = 12;*/
-//    M.choice = 3;
-//    return M;
-//}
-
-/*void LoadVector(Eigen::MatrixXd force, Eigen::MatrixXd& ELSET, Eigen::MatrixXd &LOAD, int NNODE)
-{
-    //Initialie load vector to zero
-    for(int i=0;i<NNODE;i++)
-    {
-        LOAD(i,0) = 0;
-        LOAD(i,1) = 0;
-        LOAD(i,2) = 0;
-    }
-//    initialize load vector with the values of load given by the user
-    for(int j=0;j<ELSET.rows();j++)
-        for(int i=0;i<ELSET.cols();i++)
-        {
-            LOAD((int)ELSET(j,i)-1,0) = force(j,0);
-            LOAD((int)ELSET(j,i)-1,1) = force(j,1);
-            LOAD((int)ELSET(j,i)-1,2) = force(j,2);
-        }
-}
-*/
-/*
-GaussPoints GaussQuadraturePoints()
-{
-    struct GaussPoints GP;
-    //Three Point
-    GP.w1 = 5/9;
-    GP.w2 = 8/9;
-    GP.w3 = 5/9;
-    GP.x1 = -sqrt(3/5);
-    GP.x2 = 0;
-    GP.x3 = sqrt(3/5);
-
-    return GP;
-}*/
-
-
 LinearBarElement ReadLBEFile()
 {
     struct LinearBarElement LBE;
@@ -274,7 +92,6 @@ NonLinearBarElement ReadNLBEFile()
     return NLBE;
 }
 
-//Single Body
 NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
 {
     struct NonLinearEulerBernouliBeamElement NLEBBE;
@@ -345,88 +162,7 @@ NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
     return NLEBBE;
 }
 
-//Multiple Bodies
-/*NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
-{
-    struct NonLinearEulerBernouliBeamElement NLEBBE;
-
-    NLEBBE.NBODIES = 2;
-    NLEBBE.NNODE = 8;
-    NLEBBE.NELEM = 6;
-    NLEBBE.NMAT = 2;
-    NLEBBE.NDOF = 3;
-    NLEBBE.NLS = 1;
-    NLEBBE.NDM = 2;
-
-    NLEBBE.NODE = Eigen::MatrixXd::Zero(NLEBBE.NNODE, 2);
-    NLEBBE.ELEM = Eigen::MatrixXd::Zero(NLEBBE.NELEM, 3);
-    NLEBBE.MAT = Eigen::MatrixXd::Zero(NLEBBE.NMAT, 2);
-
-    NLEBBE.MAT(0, 0) = 30e6;
-    NLEBBE.MAT(0, 1) = 0.33;
-    NLEBBE.MAT(1, 0) = 30e6;
-    NLEBBE.MAT(1, 1) = 0.33;
-
-    NLEBBE.CS.choice = "CIRCLE";
-    NLEBBE.CS.Cir.radius = 1;
-
-    //Beam 1
-    NLEBBE.NODE(0, 0) = 0;
-    NLEBBE.NODE(0, 1) = 0;
-    NLEBBE.NODE(1, 0) = 0.25;
-    NLEBBE.NODE(1, 1) = 0.25;
-    NLEBBE.NODE(2, 0) = 0.75;
-    NLEBBE.NODE(2, 1) = 0.75;
-    NLEBBE.NODE(3, 0) = 1;
-    NLEBBE.NODE(3, 1) = 1;
-
-    //Beam 2
-    NLEBBE.NODE(4, 0) = 0;
-    NLEBBE.NODE(4, 1) = 1;
-    NLEBBE.NODE(5, 0) = 0.25;
-    NLEBBE.NODE(5, 1) = 0.75;
-    NLEBBE.NODE(6, 0) = 0.75;
-    NLEBBE.NODE(6, 1) = 0.25;
-    NLEBBE.NODE(7, 0) = 1;
-    NLEBBE.NODE(7, 1) = 0;
-
-    //Connectivity 1
-    NLEBBE.ELEM(0, 0) = 1;
-    NLEBBE.ELEM(0, 1) = 1;
-    NLEBBE.ELEM(0, 2) = 2;
-    NLEBBE.ELEM(1, 0) = 1;
-    NLEBBE.ELEM(1, 1) = 2;
-    NLEBBE.ELEM(1, 2) = 3;
-    NLEBBE.ELEM(2, 0) = 1;
-    NLEBBE.ELEM(2, 1) = 3;
-    NLEBBE.ELEM(2, 2) = 4;
-
-    //Connectivity 2
-    NLEBBE.ELEM(3, 0) = 2;
-    NLEBBE.ELEM(3, 1) = 5;
-    NLEBBE.ELEM(3, 2) = 6;
-    NLEBBE.ELEM(4, 0) = 2;
-    NLEBBE.ELEM(4, 1) = 6;
-    NLEBBE.ELEM(4, 2) = 7;
-    NLEBBE.ELEM(5, 0) = 2;
-    NLEBBE.ELEM(5, 1) = 7;
-    NLEBBE.ELEM(5, 2) = 8;
-
-    NLEBBE.CNODE = Eigen::MatrixXd::Zero(3, 2);
-    NLEBBE.CNODE(0, 0) = 1;
-    NLEBBE.CNODE(0, 1) = 1;
-    NLEBBE.CNODE(1, 0) = 1;
-    NLEBBE.CNODE(1, 1) = 2;
-    NLEBBE.CNODE(2, 0) = 5;
-    NLEBBE.CNODE(2, 1) = 3;
-
-    NLEBBE.vf = 1;
-    NLEBBE.af = 0;
-
-    return NLEBBE;
-}*/
-
-
+//Validation case for GEBT (12 dofs per node) axial load 0/0 ply.
 VAMBeamElement ReadVAMBEFile()
 {
     struct VAMBeamElement M;
@@ -436,15 +172,11 @@ VAMBeamElement ReadVAMBEFile()
     M.NMAT = 1;
     M.NDOF = 12;
     M.NLS = 10;
-    //M.CMP.np = 16;
-    M.NCS = 1;
 
     M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
     M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 3);
-    //M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
-    M.CMP.inittwist = Eigen::VectorXd::Zero(3);
-    //M.LOAD = Eigen::MatrixXd::Zero(1,3);
-//    Nodal Information
+
+    //    Nodal Information
     M.NODE(0, 0) = 0;
     M.NODE(0, 1) = 0;
     M.NODE(0, 2) = 0;
@@ -455,6 +187,7 @@ VAMBeamElement ReadVAMBEFile()
     M.NODE(2, 1) = 0;
     M.NODE(2, 2) = 0;
 
+    //Connectivity information
     M.ELEM(0, 0) = 1;
     M.ELEM(0, 1) = 1;
     M.ELEM(0, 2) = 2;
@@ -462,68 +195,11 @@ VAMBeamElement ReadVAMBEFile()
     M.ELEM(1, 1) = 2;
     M.ELEM(1, 2) = 3;
 
-    /*M.NODE(0, 0) = 0;
-    M.NODE(0, 1) = 0;
-    M.NODE(0, 2) = 0;
-    M.NODE(1, 0) = 84.67e-3;
-    M.NODE(1, 1) = 0;
-    M.NODE(1, 2) = 0;
-    M.NODE(2, 0) = 169.33e-3;
-    M.NODE(2, 1) = 0;
-    M.NODE(2, 2) = 0;
-    M.NODE(3, 0) = 254e-3;
-    M.NODE(3, 1) = 0;
-    M.NODE(3, 2) = 0;
+    M.inittwist = Eigen::VectorXd::Zero(3);
+    M.inittwist(0) = 0;
+    M.inittwist(1) = 0;
+    M.inittwist(2) = 0;
 
-
-    M.ELEM(0, 0) = 1;
-    M.ELEM(0, 1) = 1;
-    M.ELEM(0, 2) = 2;
-    M.ELEM(1, 0) = 1;
-    M.ELEM(1, 1) = 2;
-    M.ELEM(1, 2) = 3;
-    M.ELEM(2, 0) = 1;
-    M.ELEM(2, 1) = 3;
-    M.ELEM(2, 2) = 4;*/
-    //    Beam material information
-        //M.MAT(0,0) = 30e6;
-        //M.MAT(0,1) = 0.33;
-    /*M.CMP.E11 = 135.6e9;
-    M.CMP.E22 = 9.9e9;
-    M.CMP.E33 = 9.9e9;
-    M.CMP.G12 = 4.2e9;
-    M.CMP.G13 = 4.2e9;
-    M.CMP.G23 = 3.3e9;
-    M.CMP.nu12 = 0.3;
-    M.CMP.nu13 = 0.3;
-    M.CMP.nu23 = 0.5;
-
-    M.CMP.Orient(0) = 20;
-    M.CMP.Orient(1) = 20;
-    M.CMP.Orient(2) = -70;
-    M.CMP.Orient(3) = -70;
-    M.CMP.Orient(4) = -70;
-    M.CMP.Orient(5) = -70;
-    M.CMP.Orient(6) = 20;
-    M.CMP.Orient(7) = 20;
-    M.CMP.Orient(8) = -20;
-    M.CMP.Orient(9) = -20;
-    M.CMP.Orient(10) = 70;
-    M.CMP.Orient(11) = 70;
-    M.CMP.Orient(12) = 70;
-    M.CMP.Orient(13) = 70;
-    M.CMP.Orient(14) = -20;
-    M.CMP.Orient(15) = -20;*/
-
-    M.CMP.inittwist(0) = 0;
-    M.CMP.inittwist(1) = 0;
-    M.CMP.inittwist(2) = 0;
-
-    //    Beam cross section information
-    /*M.CS.Rect.width = 0.0254;
-    M.CS.Rect.height = 1.168e-3;*/
-
-    //Loading
     M.B.a1 = Eigen::VectorXd::Zero(3);
     M.B.b1 = Eigen::VectorXd::Zero(3);
     M.B.aN = Eigen::VectorXd::Zero(3);
@@ -539,7 +215,8 @@ VAMBeamElement ReadVAMBEFile()
     return M;
 }
 
-NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
+//Validation case for Euler Bernouli Beam element (6 dofs per node)
+/*NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
 {
     struct NonLinearEulerBernouliBeamElement3D M;
     M.NNODE = 17;
@@ -547,12 +224,9 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
     M.NDOF = 6;
     M.NLS = 12;
     M.NEN = 3;
-    //M.CMP.np = 16;
 
     M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
     M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
-    //M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
-    //M.LOAD = Eigen::MatrixXd::Zero(1,3);
 
     //Nodal Information
     M.NODE(0, 0) = 0;
@@ -658,41 +332,108 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
     M.Zz = 1;
 
     return M;
+}*/
+
+NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
+{
+    struct NonLinearEulerBernouliBeamElement3D M;
+    M.NNODE = 5;
+    M.NELEM = 2;
+    M.NDOF = 6;
+    M.NLS = 12;
+    M.NEN = 3;
+
+    M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
+    M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
+
+    //Nodal Information
+    M.NODE(0, 0) = 0;
+    M.NODE(0, 1) = 0;
+    M.NODE(0, 2) = 0;
+    M.NODE(1, 0) = 2.5;
+    M.NODE(1, 1) = 0;
+    M.NODE(1, 2) = 0;
+    M.NODE(2, 0) = 5;
+    M.NODE(2, 1) = 0;
+    M.NODE(2, 2) = 0;
+    M.NODE(3, 0) = 7.5;
+    M.NODE(3, 1) = 0;
+    M.NODE(3, 2) = 0;
+    M.NODE(4, 0) = 10;
+    M.NODE(4, 1) = 0;
+    M.NODE(4, 2) = 0;
+
+    //Element connectivity
+    M.ELEM(0, 0) = 1;
+    M.ELEM(0, 1) = 1;
+    M.ELEM(0, 2) = 2;
+    M.ELEM(0, 3) = 3;
+
+    M.ELEM(1, 0) = 1;
+    M.ELEM(1, 1) = 3;
+    M.ELEM(1, 2) = 4;
+    M.ELEM(1, 3) = 5;
+
+    M.E = 1e7;
+    M.nu = 0.0001;
+    M.Bp = 1;
+    M.Hp = 1;
+    M.Zx = 0;
+    M.Zy = 0;
+    M.Zz = 1;
+
+    return M;
 }
 
 NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
 {
     struct NonLinearEulerBernouliBeamElement3D M;
+    //Master
     if (ms == 1)
     {
-        M.NNODE = 5;
-        M.NELEM = 2;
+        M.NNODE = 11;
+        M.NELEM = 5;
         M.NDOF = 6;
         M.NLS = 12;
         M.NEN = 3;
-        //M.CMP.np = 16;
 
         M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
         M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
-        //M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
-        //M.LOAD = Eigen::MatrixXd::Zero(1,3);
 
         //Nodal Information
         M.NODE(0, 0) = 0;
         M.NODE(0, 1) = 0;
         M.NODE(0, 2) = 0;
-        M.NODE(1, 0) = 0.1204;
-        M.NODE(1, 1) = 4.9067;
+        M.NODE(1, 0) = 1;
+        M.NODE(1, 1) = 0;
         M.NODE(1, 2) = 0;
-        M.NODE(2, 0) = 0.4815;
-        M.NODE(2, 1) = 9.8017;
+        M.NODE(2, 0) = 2;
+        M.NODE(2, 1) = 0;
         M.NODE(2, 2) = 0;
-        M.NODE(3, 0) = 1.082;
-        M.NODE(3, 1) = 14.673;
+        M.NODE(3, 0) = 3;
+        M.NODE(3, 1) = 0;
         M.NODE(3, 2) = 0;
-        M.NODE(4, 0) = 1.9214;
-        M.NODE(4, 1) = 19.509;
+        M.NODE(4, 0) = 4;
+        M.NODE(4, 1) = 0;
         M.NODE(4, 2) = 0;
+        M.NODE(5, 0) = 5;
+        M.NODE(5, 1) = 0;
+        M.NODE(5, 2) = 0;
+        M.NODE(6, 0) = 6;
+        M.NODE(6, 1) = 0;
+        M.NODE(6, 2) = 0;
+        M.NODE(7, 0) = 7;
+        M.NODE(7, 1) = 0;
+        M.NODE(7, 2) = 0;
+        M.NODE(8, 0) = 8;
+        M.NODE(8, 1) = 0;
+        M.NODE(8, 2) = 0;
+        M.NODE(9, 0) = 9;
+        M.NODE(9, 1) = 0;
+        M.NODE(9, 2) = 0;
+        M.NODE(10, 0) = 10;
+        M.NODE(10, 1) = 0;
+        M.NODE(10, 2) = 0;
 
         //Element connectivity
         M.ELEM(0, 0) = 1;
@@ -705,6 +446,21 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
         M.ELEM(1, 2) = 4;
         M.ELEM(1, 3) = 5;
 
+        M.ELEM(2, 0) = 1;
+        M.ELEM(2, 1) = 5;
+        M.ELEM(2, 2) = 6;
+        M.ELEM(2, 3) = 7;
+
+        M.ELEM(3, 0) = 1;
+        M.ELEM(3, 1) = 7;
+        M.ELEM(3, 2) = 8;
+        M.ELEM(3, 3) = 9;
+
+        M.ELEM(4, 0) = 1;
+        M.ELEM(4, 1) = 9;
+        M.ELEM(4, 2) = 10;
+        M.ELEM(4, 3) = 11;
+
         M.E = 1e7;
         M.nu = 0.0001;
         M.Bp = 1;
@@ -712,37 +468,55 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
         M.Zx = 0;
         M.Zy = 0;
         M.Zz = 1;
+
+        M.load = 6;
     }
-    else if (ms == 0)
+    //Slave
+    else if (ms == 2)
     {
-        M.NNODE = 5;
-        M.NELEM = 2;
+        M.NNODE = 11;
+        M.NELEM = 5;
         M.NDOF = 6;
         M.NLS = 12;
         M.NEN = 3;
-        //M.CMP.np = 16;
 
         M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
         M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
-        //M.CMP.Orient = Eigen::VectorXd::Zero(M.CMP.np);
-        //M.LOAD = Eigen::MatrixXd::Zero(1,3);
 
         //Nodal Information
         M.NODE(0, 0) = 0;
-        M.NODE(0, 1) = 0;
+        M.NODE(0, 1) = 0.001;
         M.NODE(0, 2) = 0;
-        M.NODE(1, 0) = 0.1204;
-        M.NODE(1, 1) = 4.9067;
+        M.NODE(1, 0) = 1;
+        M.NODE(1, 1) = 0.001;
         M.NODE(1, 2) = 0;
-        M.NODE(2, 0) = 0.4815;
-        M.NODE(2, 1) = 9.8017;
+        M.NODE(2, 0) = 2;
+        M.NODE(2, 1) = 0.001;
         M.NODE(2, 2) = 0;
-        M.NODE(3, 0) = 1.082;
-        M.NODE(3, 1) = 14.673;
+        M.NODE(3, 0) = 3;
+        M.NODE(3, 1) = 0.001;
         M.NODE(3, 2) = 0;
-        M.NODE(4, 0) = 1.9214;
-        M.NODE(4, 1) = 19.509;
+        M.NODE(4, 0) = 4;
+        M.NODE(4, 1) = 0.001;
         M.NODE(4, 2) = 0;
+        M.NODE(5, 0) = 5;
+        M.NODE(5, 1) = 0.001;
+        M.NODE(5, 2) = 0;
+        M.NODE(6, 0) = 6;
+        M.NODE(6, 1) = 0.001;
+        M.NODE(6, 2) = 0;
+        M.NODE(7, 0) = 7;
+        M.NODE(7, 1) = 0.001;
+        M.NODE(7, 2) = 0;
+        M.NODE(8, 0) = 8;
+        M.NODE(8, 1) = 0.001;
+        M.NODE(8, 2) = 0;
+        M.NODE(9, 0) = 9;
+        M.NODE(9, 1) = 0.001;
+        M.NODE(9, 2) = 0;
+        M.NODE(10, 0) = 10;
+        M.NODE(10, 1) = 0.001;
+        M.NODE(10, 2) = 0;
 
         //Element connectivity
         M.ELEM(0, 0) = 1;
@@ -755,6 +529,21 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
         M.ELEM(1, 2) = 4;
         M.ELEM(1, 3) = 5;
 
+        M.ELEM(2, 0) = 1;
+        M.ELEM(2, 1) = 5;
+        M.ELEM(2, 2) = 6;
+        M.ELEM(2, 3) = 7;
+
+        M.ELEM(3, 0) = 1;
+        M.ELEM(3, 1) = 7;
+        M.ELEM(3, 2) = 8;
+        M.ELEM(3, 3) = 9;
+
+        M.ELEM(4, 0) = 1;
+        M.ELEM(4, 1) = 9;
+        M.ELEM(4, 2) = 10;
+        M.ELEM(4, 3) = 11;
+
         M.E = 1e7;
         M.nu = 0.0001;
         M.Bp = 1;
@@ -762,6 +551,8 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
         M.Zx = 0;
         M.Zy = 0;
         M.Zz = 1;
+        
+        M.load = 6;
     }
 
     return M;

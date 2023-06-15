@@ -774,7 +774,7 @@ Eigen::VectorXd Update_Strains(VAMBeamElement VAMBE, Eigen::VectorXd* U, std::fs
         //Direct Method
         do
         {
-            Seq = Equivalent_StiffnessMatrix_FirstOrder(Strain, VAMBE.CMP.inittwist, VAMBE.CS.Rect.width, file1);
+            Seq = Equivalent_StiffnessMatrix_FirstOrder(Strain, VAMBE.inittwist, VAMBE.CS.Rect.width, file1);
             Sinv = Seq.inverse();
             Strain_new = Sinv * Force;
             Eigen::VectorXd error(6);

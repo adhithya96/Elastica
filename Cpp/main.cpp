@@ -8,12 +8,13 @@
 
 int main()
 {
-    //Read variables from input file
-    //std::string filename="Beam.inp";
-//    std::cout<<"Enter the name of the input file"<<std::endl;
-//    std::cin>>filename;
-   // struct Mesh M = ReadInpFile(filename);
-    int choice = 4;
+    // 1 - Linear Bar Element
+    // 2 - Nonlinear Bar Element
+    // 3 - Nonlinear Euler Bernouli Beam Element (3 dofs per node)
+    // 4 - GEBT(Geometrically Exact Beam theory) based beam element
+    // 5 - Nonlinear Euler Bernouli Beam Element (6 dofs per node)(quadratic)
+    // 6 - Nonlinear EBBE with contact (2 bodies)
+    int choice = 6;
     //LoadVector(M.LOAD,M.ELSET,LOAD,M.NNODE);
     // -------------------------------------
     //--------------------------------------
@@ -331,184 +332,6 @@ int main()
                //Apply Constraints
                 ApplyConstraints_NLEBBE(T, U, NLEBBE.CNODE, NLEBBE.NNODE, R);
 
-                //---------------------------------------------------------------//
-                //---------------------------------------------------------------//
-                //-----------------------CONTACT--------------------------------//
-                //--------------------------------------------------------------//
-                //--------------------------------------------------------------//     
-                // CONTACT SEARCH
-                // GLOBAL SEARCH
-                // 1. Create 2 seperate element arrays for 2 beams
-                /*int k = 0, l = 0;
-                Eigen::MatrixXd Beam1 = Eigen::MatrixXd::Zero(NLEBBE.NELEM, 2);
-                Eigen::MatrixXd Beam2 = Eigen::MatrixXd::Zero(NLEBBE.NELEM, 2);
-                for (int i = 0; i < NLEBBE.NELEM; i++)
-                {
-                    if (NLEBBE.ELEM(i, 0) == 1)
-                    {
-                        Beam1(k, 0) = NLEBBE.ELEM(i, 1);
-                        Beam1(k, 1) = NLEBBE.ELEM(i, 2);
-                        k++;
-                    }
-                    else
-                    {
-                        Beam2(l, 0) = NLEBBE.ELEM(i, 1);
-                        Beam2(l, 1) = NLEBBE.ELEM(i, 2);
-                        l++;
-                    }
-                }
-                Beam1.conservativeResize(k, 2);
-                Beam2.conservativeResize(l, 2);
-                std::cout << "Beam 1 connectivity" << std::endl;
-                std::cout << Beam1 << std::endl;
-                std::cout << "Beam 2 connectivity" << std::endl;
-                std::cout << Beam2 << std::endl;
-                // 2. Calculate midpoint of each element
-                Eigen::MatrixXd Mid1 = Eigen::MatrixXd::Zero(k, 2);
-                Eigen::MatrixXd Mid2 = Eigen::MatrixXd::Zero(l, 2);
-                std::cout << Beam1.rows();
-                for (int i = 0; i < Beam1.rows(); i++)
-                {
-                    int n1 = Beam1(i, 0) - 1;
-                    int n2 = Beam1(i, 1) - 1;
-                    double x1 = X_curr(2 * n1);
-                    double y1 = X_curr(2 * n1 + 1);
-                    double x2 = X_curr(2 * n2);
-                    double y2 = X_curr(2 * n2 + 1);
-                    Mid1(i, 0) = (x1 + x2) / 2.0;
-                    Mid1(i, 1) = (y1 + y2) / 2.0;
-                }
-
-                for (int i = 0; i < Beam2.rows(); i++)
-                {
-                    int n1 = Beam2(i, 0) - 1;
-                    int n2 = Beam2(i, 1) - 1;
-                    double x1 = X_curr(2 * n1);
-                    double y1 = X_curr(2 * n1 + 1);
-                    double x2 = X_curr(2 * n2);
-                    double y2 = X_curr(2 * n2 + 1);
-                    Mid2(i, 0) = (x1 + x2) / 2.0;
-                    Mid2(i, 1) = (y1 + y2) / 2.0;
-                }
-                std::cout << "Beam 1 mid point node data" << std::endl;
-                std::cout << Mid1 << std::endl;
-                std::cout << "Beam 2 mid point node data" << std::endl;
-                std::cout << Mid2 << std::endl;
-                // 3. Calculate the minimum distance among the midpoints
-                double min = std::numeric_limits<double>::infinity();
-                int ele1 = -1, ele2 = -1;
-                for (int i = 0; i < Beam1.rows(); i++)
-                {
-                    double x1 = Mid1(i, 0);
-                    double y1 = Mid1(i, 1);
-
-                    for (int j = 0; j < Beam2.rows(); j++)
-                    {
-                        double x2 = Mid2(j, 0);
-                        double y2 = Mid2(j, 1);
-                        double dist = sqrt(pow((x1 - x2), 2) + pow((y1 - y2), 2));
-                        std::cout << dist << std::endl;
-                        if (dist < min)
-                        {
-                            min = dist;
-                            ele1 = i;
-                            ele2 = j;
-                        }
-                    }
-                }
-                std::cout << ele1 << std::endl;
-                std::cout << ele2 << std::endl;
-
-                //LOCAL SEARCH
-                Eigen::VectorXd x1(2);
-                int n1 = Beam1(ele1, 0) - 1;
-                int n2 = Beam1(ele1, 1) - 1;
-                x1(0) = NLEBBE.NODE(n1, 0);
-                x1(1) = NLEBBE.NODE(n1, 1);
-                Eigen::VectorXd x2(2);
-                x2(0) = NLEBBE.NODE(n2, 0);
-                x2(1) = NLEBBE.NODE(n2, 1);
-
-                n1 = Beam2(ele2, 0) - 1;
-                n2 = Beam2(ele2, 1) - 1;
-                Eigen::VectorXd y1(2);
-                y1(0) = NLEBBE.NODE(n1, 0);
-                y1(1) = NLEBBE.NODE(n1, 1);
-                Eigen::VectorXd y2(2);
-                y2(0) = NLEBBE.NODE(n2, 0);
-                y2(1) = NLEBBE.NODE(n2, 1);
-                std::cout << "Point 1 - Beam 1" << std::endl;
-                std::cout << x1 << std::endl;
-                std::cout << "Point 2 - Beam 1" << std::endl;
-                std::cout << x2 << std::endl;
-                std::cout << "Point 1 - Beam 2" << std::endl;
-                std::cout << y1 << std::endl;
-                std::cout << "Point 2 - Beam 2" << std::endl;
-                std::cout << y2 << std::endl;
-
-                Eigen::VectorXd exi_vec(2);
-                exi_vec = ContactPoints(x1, x2, y1, y2, NLEBBE.NBODIES);
-                double exi = exi_vec(0);
-                double exib = exi_vec(1);
-                if ((exi > -1) && (exi < 1) && (exib > -1) && (exib < -1))
-                {
-                    std::cout << exi << std::endl;
-                    std::cout << exib << std::endl;
-                }
-                //Check if contact constraint is satisfied
-                double gN, rm, rs;
-                rm = NLEBBE.CS.Cir.radius;
-                rs = NLEBBE.CS.Cir.radius;
-                //Evaluate minimum distance d
-                double d = MinimumDistance(x1, x2, y1, y2, exi_vec);
-                gN = d - rm - rs;
-
-                //Evaluate Tangent Stiffness matrix
-                //Evaluate HTilde Matrix
-                Eigen::MatrixXd HTilde(2, 12);
-                HTilde = EvaluateHTildeMatrix(x1, x2, y1, y2, exi_vec);
-                //Evaluate A matrix
-                Eigen::MatrixXd A(2, 2);
-                A = EvaluateAMatrix(x1, x2, y1, y2, exi_vec);
-                //Evaluate B matrix
-                Eigen::MatrixXd B(2, 4);
-                B = EvaluateBMatrix(x1, x2, y1, y2, exi_vec);
-                //Evaluate C matrix
-                Eigen::MatrixXd C(2, 4);
-                C = EvaluateCMatrix(x1, x2, y1, y2, exi_vec);
-                //Evaluate D matrix
-                Eigen::MatrixXd D(2, 12);
-                D = EvaluateDMatrix(A, B, C, x1, x2, y1, y2, exi_vec);
-                Eigen::VectorXd dvec(12), dbvec(12);
-                for (int i = 0; i < 12; i++)
-                {
-                    dvec(i) = D(0, i);
-                    dbvec(i) = D(1, i);
-                }
-                //Evaluate normal vector
-                Eigen::VectorXd n(2);
-                n = EvaluateNormalVector(x1, x2, y1, y2, exi_vec);
-                //Evaluate E matrix
-                Eigen::MatrixXd E(12, 12);
-                E = EvaluateEMatrix(x1, x2, y1, y2, exi_vec, n, dvec, dbvec);
-                //Evaluate F matrix
-                Eigen::MatrixXd F(12, 12);
-                F = EvaluateFMatrix(x1, x2, y1, y2, exi_vec, n, dvec, dbvec);
-                //Evaluate G matrix
-                Eigen::MatrixXd G(12, 12);
-                G = EvaluateGMatrix(x1, x2, y1, y2, exi_vec, n, dvec, dbvec, HTilde);
-
-                //Evaluate Contact Local Tangent stiffness matrix
-                Eigen::MatrixXd Kcon(12, 12);
-                Kcon = HTilde.transpose() * n * n.transpose() * HTilde + gN * (E + E.transpose() + F + G);
-
-                //Evaluate Contact Element Residual Vector 
-                Eigen::VectorXd Rcon(12);
-                Rcon = gN * HTilde.transpose() * n;*/
-
-                //Assembly
-
-
                 K.makeCompressed();
                 T.makeCompressed();
 
@@ -540,13 +363,6 @@ int main()
                 for (int i = 0; i < NLEBBE.NNODE * NLEBBE.NDOF; i++)
                     U(i) = U_new(i);
                 iter++;
-
-                //Update current configuration
-                //for (int i = 0; i < (int)NLEBBE.NNODE; i++)
-                //{
-                //   X_curr(NLEBBE.NDM * i) = X_curr(NLEBBE.NDM * i) + U(NLEBBE.NDOF * i);
-                //    X_curr(NLEBBE.NDM * i + 1) = X_ref(NLEBBE.NDM * i + 1) + U(NLEBBE.NDOF * i + 1);
-                //}
                 
             } while (max > pow(10, -3) && iter < maxiter);
             if (fiter < NLEBBE.NLS)
@@ -647,7 +463,7 @@ int main()
                                 {
                                     Strain(j) = Tau(6 * a + j);
                                 }
-                                Seq_1 = Equivalent_StiffnessMatrix_FirstOrder(Strain, VAMBE.CMP.inittwist, VAMBE.CS.Rect.width, file1);
+                                Seq_1 = Equivalent_StiffnessMatrix_FirstOrder(Strain, VAMBE.inittwist, VAMBE.CS.Rect.width, file1);
 
                                 Element_R = Element_Residual(U1, F1, h, Seq_1, Theta, 0, VAMBE.B, U0);
                                 Element_J = Element_Jacobian(U1, F1, h, Seq_1, Theta, 0, file1);
@@ -682,8 +498,8 @@ int main()
                                 Strain2(j) = Tau(6 * b + j);
                             }
 
-                            Seq_1 = Equivalent_StiffnessMatrix_FirstOrder(Strain1, VAMBE.CMP.inittwist, VAMBE.CS.Rect.width, file1);
-                            Seq_2 = Equivalent_StiffnessMatrix_FirstOrder(Strain2, VAMBE.CMP.inittwist, VAMBE.CS.Rect.width, file1);
+                            Seq_1 = Equivalent_StiffnessMatrix_FirstOrder(Strain1, VAMBE.inittwist, VAMBE.CS.Rect.width, file1);
+                            Seq_2 = Equivalent_StiffnessMatrix_FirstOrder(Strain2, VAMBE.inittwist, VAMBE.CS.Rect.width, file1);
 
                             Eigen::VectorXd Element_R = Eigen::VectorXd::Zero(12);
                             Eigen::MatrixXd Element_J = Eigen::MatrixXd::Zero(12, 24);
@@ -727,7 +543,7 @@ int main()
                                 Strain(j) = Tau(6 * a + j);
                             }
 
-                            Seq_1 = Equivalent_StiffnessMatrix_FirstOrder(Strain, VAMBE.CMP.inittwist, VAMBE.CS.Rect.width, file1);
+                            Seq_1 = Equivalent_StiffnessMatrix_FirstOrder(Strain, VAMBE.inittwist, VAMBE.CS.Rect.width, file1);
 
                             Element_R = Element_Residual(U1, F1, h, Seq_1, Theta, VAMBE.NNODE - 1, VAMBE.B, U0);
                             Element_J = Element_Jacobian(U1, F1, h, Seq_1, Theta, VAMBE.NNODE - 1, file1);
@@ -866,7 +682,7 @@ int main()
                     
                     //declare local tangent stiffness matrix and residual vector
                     double** T;
-                    T = new double* [EBBE3D.NDOF*EBBE3D.NEN];
+                    T = new double* [EBBE3D.NDOF * EBBE3D.NEN];
                     for (int i = 0; i < EBBE3D.NDOF * EBBE3D.NEN; i++)
                         T[i] = new double[EBBE3D.NDOF * EBBE3D.NEN];
 
@@ -890,7 +706,7 @@ int main()
                             X[1][j] = EBBE3D.NODE(b, j);
                             X[2][j] = EBBE3D.NODE(c, j);
                         }
-                        double h = X[1][0] - X[0][0];
+                        double h = X[2][0] - X[0][0];
 
                         //declare and initialize dofs
                         /*double* U[2];
@@ -911,6 +727,7 @@ int main()
                             for (int k = 0; k < EBBE3D.NDOF * EBBE3D.NEN; k++)
                                 T[j][k] = 0;
                         }
+
                         RKt(D, X, U, T, R);
 
                         /*for (int i = 0; i < 12; i++)
@@ -970,7 +787,7 @@ int main()
 
                     //Assignment for next iteration
                     for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
-                        GU(j) = 0.5 * GU_new(j) + 0.5 * GU(j);
+                        GU(j) = GU_new(j);
                     iter++;
 
                     //Free memory
@@ -1019,6 +836,10 @@ int main()
         ms = 2;
         NonLinearEulerBernouliBeamElement3D EBBE3D2 = ReadEBBE3DElement(ms);
 
+        int** ContactPairs = new int* [EBBE3D2.NNODE];
+        for (int j = 0; j < EBBE3D2.NNODE; j++)
+            ContactPairs[j] = new int[EBBE3D1.NNODE];
+
         Eigen::VectorXd dGU = Eigen::VectorXd::Zero(EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE));
         Eigen::VectorXd GU = Eigen::VectorXd::Zero(EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE));
         Eigen::VectorXd error = Eigen::VectorXd::Zero(EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE));
@@ -1029,7 +850,7 @@ int main()
         double max;
         int iter = 1;
         int fiter = 1;
-        int maxiter = 20;
+        int maxiter = 50;
 
         std::fstream file1, file2;
         file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Result_Log.txt", std::fstream::in | std::fstream::out);
@@ -1056,8 +877,6 @@ int main()
         D2[5] = EBBE3D2.Zy;
         D2[6] = EBBE3D2.Zz;
 
-        /*for (int i = 0; i < 7; i++)
-            std::cout << D << std::endl;*/
         double load = 0;
 
         if (file1.is_open() && file2.is_open())
@@ -1074,10 +893,18 @@ int main()
 
                     //declare local tangent stiffness matrix and residual vector
                     double** T;
-                    T = new double* [12];
-                    for (int i = 0; i < 12; i++)
-                        T[i] = new double[12];
-                    double* R = new double[12];
+                    T = new double* [EBBE3D1.NDOF * EBBE3D1.NEN];
+                    for (int i = 0; i < EBBE3D1.NDOF * EBBE3D1.NEN; i++)
+                        T[i] = new double[EBBE3D1.NDOF * EBBE3D1.NEN];
+                    double* R = new double[EBBE3D1.NDOF * EBBE3D1.NEN];
+
+                    //declare local tangent stiffness matrix and residual vector for contact
+                    double** CT;
+                    CT = new double* [EBBE3D1.NDOF * 2];
+                    for (int i = 0; i < EBBE3D1.NDOF * 2; i++)
+                        CT[i] = new double[EBBE3D1.NDOF * 2];
+                    double* CR = new double[EBBE3D1.NDOF * 2];
+
 
                     for (int i = 0; i < (EBBE3D1.NELEM + EBBE3D2.NELEM); i++)
                     {
@@ -1086,36 +913,37 @@ int main()
                         {
                             int a = (int)EBBE3D1.ELEM(i, 1) - 1;
                             int b = (int)EBBE3D1.ELEM(i, 2) - 1;
+                            int c = (int)EBBE3D1.ELEM(i, 3) - 1;
 
                             //declare and initialize position vectors
                             /*double* X[2];
                             for (int j = 0; j < 2; j++)
                                 X[j] = new double[3];*/
-                            double X[2][3];
+                            double X[3][3];
 
                             for (int j = 0; j < 3; j++)
                             {
                                 X[0][j] = EBBE3D1.NODE(a, j);
                                 X[1][j] = EBBE3D1.NODE(b, j);
+                                X[2][j] = EBBE3D1.NODE(c, j);
                             }
-                            double h = X[1][0] - X[0][0];
+                            double h = X[2][0] - X[0][0];
 
                             //declare and initialize dofs
-                            /*double* U[2];
-                            for (int j = 0; j < 2; j++)
-                                U[j] = new double[6];*/
-                            double U[2][6];
+                            double U[3][6];
 
                             for (int j = 0; j < 6; j++)
                             {
                                 U[0][j] = GU(6 * a + j);
                                 U[1][j] = GU(6 * b + j);
+                                U[2][j] = GU(6 * c + j);
                             }
 
-                            for (int j = 0; j < 12; j++)
+
+                            for (int j = 0; j < EBBE3D1.NDOF * EBBE3D1.NEN; j++)
                             {
                                 R[j] = 0;
-                                for (int k = 0; k < 12; k++)
+                                for (int k = 0; k < EBBE3D1.NDOF * EBBE3D1.NEN; k++)
                                     T[j][k] = 0;
                             }
 
@@ -1132,60 +960,58 @@ int main()
                                 std::cout << std::endl;
                             }*/
 
-                            //Apply contact constraint
-
                             //Assembly
-                            for (int j = 0; j < 12; j++)
+                            for (int j = 0; j < EBBE3D1.NDOF * EBBE3D1.NEN; j++)
                             {
                                 GR(6 * a + j) += R[j];
-                                for (int k = 0; k < 12; k++)
+                                for (int k = 0; k < EBBE3D1.NDOF * EBBE3D1.NEN; k++)
                                     GT.coeffRef(6 * a + j, 6 * a + k) += T[j][k];
                             }
                         }
                         //slave
                         else
                         {
-                            int a = (int)EBBE3D2.ELEM(i, 1) - 1;
-                            int b = (int)EBBE3D2.ELEM(i, 2) - 1;
+                            int a = (int)EBBE3D2.ELEM(i - EBBE3D1.NELEM, 1) - 1;
+                            int b = (int)EBBE3D2.ELEM(i - EBBE3D1.NELEM, 2) - 1;
+                            int c = (int)EBBE3D2.ELEM(i - EBBE3D1.NELEM, 3) - 1;
+
+                            //std::cout << a << std::endl;
+                            //std::cout << b << std::endl;
+                            //std::cout << c << std::endl;
 
                             //declare and initialize position vectors
-                            /*double* X[2];
-                            for (int j = 0; j < 2; j++)
-                                X[j] = new double[3];*/
-                            double X2[2][3], X1[2][3];
+                            double X[3][3];
 
                             for (int j = 0; j < 3; j++)
                             {
-                                X1[0][j] = EBBE3D1.NODE(a, j);
-                                X1[1][j] = EBBE3D1.NODE(b, j);
-                                X2[0][j] = EBBE3D2.NODE(a, j);
-                                X2[1][j] = EBBE3D2.NODE(b, j);
+                                X[0][j] = EBBE3D2.NODE(a, j);
+                                //std::cout << X[0][j] << std::endl;
+                                X[1][j] = EBBE3D2.NODE(b, j);
+                                //std::cout << X[1][j] << std::endl;
+                                X[2][j] = EBBE3D2.NODE(c, j);
+                                //std::cout << X[2][j] << std::endl;
                             }
-                            double h = X2[1][0] - X2[0][0];
+                            double h = X[2][0] - X[0][0];
 
                             //declare and initialize dofs
-                            /*double* U[2];
-                            for (int j = 0; j < 2; j++)
-                                U[j] = new double[6];*/
-                            double U2[2][6], U1[2][6];
+                            double U[3][6];
 
                             for (int j = 0; j < 6; j++)
                             {
-                                U2[0][j] = GU(6 * a + j);
-                                U2[1][j] = GU(6 * b + j);
-                                U1[0][j] = GU(6 * a + j);
-                                U1[1][j] = GU(6 * b + j);
+                                U[0][j] = GU(6 * (a + EBBE3D1.NNODE) + j);
+                                U[1][j] = GU(6 * (b + EBBE3D1.NNODE) + j);
+                                U[2][j] = GU(6 * (c + EBBE3D1.NNODE) + j);
                             }
 
-                            for (int j = 0; j < 12; j++)
+                            for (int j = 0; j < EBBE3D2.NDOF * EBBE3D2.NEN; j++)
                             {
                                 R[j] = 0;
-                                for (int k = 0; k < 12; k++)
+                                for (int k = 0; k < EBBE3D2.NDOF * EBBE3D2.NEN; k++)
                                     T[j][k] = 0;
                             }
 
                             //Local Residual and tangent matrix
-                            //RKt(D1, X, U, T, R);
+                            RKt(D2, X, U, T, R);
 
                             /*for (int i = 0; i < 12; i++)
                                 std::cout << R[i] << std::endl;
@@ -1197,21 +1023,96 @@ int main()
                                 std::cout << std::endl;
                             }*/
 
-                            //Apply contact constraint
-
-
                             //Assembly
-                            for (int j = 0; j < 12; j++)
+                            for (int j = 0; j < EBBE3D2.NDOF * EBBE3D2.NEN; j++)
                             {
-                                GR(6 * a + j) += R[j];
-                                for (int k = 0; k < 12; k++)
-                                    GT.coeffRef(6 * a + j, 6 * a + k) += T[j][k];
+                                GR(6 * a + j + EBBE3D1.NNODE * EBBE3D1.NDOF) += R[j];
+                                for (int k = 0; k < EBBE3D2.NDOF * EBBE3D2.NEN; k++)
+                                    GT.coeffRef(6 * a + j + EBBE3D1.NNODE * EBBE3D1.NDOF, 6 * a + k + EBBE3D1.NNODE * EBBE3D1.NDOF) += T[j][k];
                             }
 
                         }
                     }
+                    
+                    //Contact Search 
+                    ContactSearch(EBBE3D1, EBBE3D2, ContactPairs);
+                    //Apply contact constraint
+                    //EBBE3D2 - slave
+                    //EBBE3D1 - master
+                    for (int i = 0; i < EBBE3D2.NNODE; i++)
+                    {
+                        //Find the corresponding master node for the slave node.
+                        int mnode = ContactPairs[i][1] - 1;
+                        int snode = ContactPairs[i][0] - 1;
 
+                        std::cout << mnode << std::endl;
+                        std::cout << snode << std::endl;
+
+                        double X1[3], X2[3], u1[6], u2[6], D[4];
+
+                        D[0] = 1e10;
+                        D[1] = 0;
+                        D[2] = 1;
+                        D[3] = 0;
+
+                        for (int j = 0; j < 3; j++)
+                        {
+                            X1[j] = EBBE3D2.NODE(mnode, j);
+                            X2[j] = EBBE3D1.NODE(snode, j);
+                        }
+
+                        /*for (int j = 0; j < 3; j++)
+                            std::cout << X1[j] << std::endl;
+
+                        for (int j = 0; j < 3; j++)
+                            std::cout << X2[j] << std::endl;*/
+
+                        for (int j = 0; j < 6; j++)
+                        {
+                            u1[j] = GU.coeffRef(EBBE3D2.NDOF * (snode + EBBE3D1.NNODE) + j);
+                            u2[j] = GU.coeffRef(EBBE3D1.NDOF * mnode + j);
+                        }
+
+                        //Initialize contact residual and contact tangent matrix
+                        for (int j = 0; j < EBBE3D1.NDOF * 2; j++)
+                        {
+                            CR[j] = 0;
+                            for (int k = 0; k < EBBE3D1.NDOF * 2; k++)
+                                CT[j][k] = 0;
+                        }
+
+                        Beam_Contact(D, X1, X2, u1, u2, CR, CT);
+
+                        /*std::cout << "Tangent matrix" << std::endl;
+                        for (int j = 0; j < EBBE3D1.NDOF * 2; j++)
+                        {
+                            for (int k = 0; k < EBBE3D1.NDOF * 2; k++)
+                                std::cout << CT[j][k] << "  ";
+                            std::cout << std::endl;
+                        }*/
+
+                        /*std::cout << "Residual vector" << std::endl;
+                        for (int j = 0; j < EBBE3D1.NDOF * 2; j++)
+                            std::cout << CR[j] << std::endl;*/
+
+                        //Assembly
+                        for (int j = 0; j < 6; j++)
+                        {
+                            GR(6 * mnode + j) += CR[j + 6];
+                            GR(6 * (snode + EBBE3D1.NNODE) + j) += CR[j];
+                            for (int k = 0; k < 6; k++)
+                            {
+                                GT.coeffRef(6 * (snode + EBBE3D1.NNODE) + j, 6 * (snode + EBBE3D1.NNODE) + k) += CT[j][k];
+                                GT.coeffRef(6 * (snode + EBBE3D1.NNODE) + j, 6 * mnode + k) += CT[j][k + 6];
+                                GT.coeffRef(6 * mnode + j, 6 * (snode + EBBE3D1.NNODE) + k) += CT[j + 6][k];
+                                GT.coeffRef(6 * mnode + j, 6 * mnode + k) += CT[j + 6][k + 6];
+                            }
+                        }
+                    }
+                    
                     //Assign Boundary conditions
+                    //master
+                    //fix zero end
                     for (int j = 0; j < 6; j++)
                     {
                         for (int k = 0; k < EBBE3D1.NNODE * EBBE3D1.NDOF; k++)
@@ -1219,7 +1120,34 @@ int main()
                         GR(j) = 0;
                         GT.coeffRef(j, j) = 1;
                     }
-                    GR(EBBE3D1.NNODE * EBBE3D1.NDOF - 4) -= load;
+                    //fix last end
+                    for (int j = (EBBE3D1.NNODE - 1) * EBBE3D1.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
+                    {
+                        for (int k = 0; k < EBBE3D1.NNODE * EBBE3D1.NDOF; k++)
+                            GT.coeffRef(j, k) = 0;
+                        GR(j) = 0;
+                        GT.coeffRef(j, j) = 1;
+                    }
+
+                    int p = EBBE3D1.load - 1;
+                    GR(EBBE3D1.NDOF * p + 1) -= load;
+                    //slave
+                    for (int j = EBBE3D1.NNODE * EBBE3D1.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF + 6; j++)
+                    {
+                        for (int k = EBBE3D1.NNODE * EBBE3D1.NDOF; k < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; k++)
+                            GT.coeffRef(j, k) = 0;
+                        GR(j) = 0;
+                        GT.coeffRef(j, j) = 1;
+                    }
+                    for (int j = EBBE3D1.NNODE * EBBE3D1.NDOF + (EBBE3D2.NNODE - 1) * EBBE3D2.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; j++)
+                    {
+                        for (int k = EBBE3D1.NNODE * EBBE3D1.NDOF; k < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; k++)
+                            GT.coeffRef(j, k) = 0;
+                        GR(j) = 0;
+                        GT.coeffRef(j, j) = 1;
+                    }
+                    int q = EBBE3D2.load - 1;
+                    GR(EBBE3D1.NNODE* EBBE3D1.NDOF + q* EBBE3D2.NDOF + 1) -= -load;
 
                     //Solve the equation
                     GT.makeCompressed();
@@ -1228,32 +1156,30 @@ int main()
                     solver.analyzePattern(GT);
                     solver.factorize(GT); //LU decomposition
 
-                    //std::cout<<J<<std::endl;
-
                     assert(solver.info() == Eigen::Success);
 
                     dGU = solver.solve(-GR);
 
                     //Calculate errors and update for next iteration
-                    for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
+                    for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
                         GU_new(j) = GU(j) + dGU(j);
 
                     //Error calculation
-                    for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
+                    for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
                         error(j) = abs(GU_new(j) - GU(j));
 
                     max = error(0);
-                    for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
+                    for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
                         if (max < error(j))
                             max = error(j);
 
                     //Assignment for next iteration
-                    for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
-                        GU(j) = 0.5 * GU_new(j) + 0.5 * GU(j);
+                    for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
+                        GU(j) = GU_new(j);
                     iter++;
 
                     //Free memory
-                    for (int i = 0; i < 12; i++)
+                    for (int i = 0; i < EBBE3D1.NDOF * EBBE3D1.NEN; i++)
                         delete T[i];
                     delete[] R;
 
@@ -1262,15 +1188,24 @@ int main()
                 if (iter < maxiter)
                 {
                     fiter++;
-                    load += 4.167;
-                    /*for (int j = 0; j < EBBE3D.NNODE * EBBE3D.NDOF; j++)
-                    {
-                        //file2 << "Displacements of node " << j + 1 << std::endl;
-                        //for (int k = 0; k < 3; k++)
-                            //file2 << U(12 * (j - 1) + 6 + k) << std::endl;
+                    /*file2 << "Converged values at load  " << load << std::endl;
+                    file2 << "Values for beam 1 " << std::endl;
+                    for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
                         file2 << GU(j) << std::endl;
-                    }*/
-                    file2 << GU(EBBE3D1.NNODE * EBBE3D1.NDOF - 4) << std::endl;
+                    file2 << "Values for beam 2 " << std::endl;
+                    for (int j = EBBE3D1.NNODE * EBBE3D1.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; j++)
+                        file2 << GU(j) << std::endl;*/
+                    Eigen::VectorXd GU1 = Eigen::VectorXd::Zero(EBBE3D1.NNODE * EBBE3D1.NDOF);
+                    Eigen::VectorXd GU2 = Eigen::VectorXd::Zero(EBBE3D2.NNODE * EBBE3D2.NDOF);
+                    for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
+                        GU1(j) = GU(j);
+                    for (int j = EBBE3D1.NNODE * EBBE3D1.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; j++)
+                        GU2(j - EBBE3D1.NNODE * EBBE3D1.NDOF) = GU(j);
+                    PostProcessing(EBBE3D1.NODE, GU1, load, "EBBE3D1", EBBE3D1.NNODE, 3, EBBE3D1.NDOF);
+                    PostProcessing(EBBE3D2.NODE, GU2, load, "EBBE3D2", EBBE3D2.NNODE, 3, EBBE3D2.NDOF);
+                    load += 20;
+
+                    //Print the current configuration in a file
                 }
                 else
                 {

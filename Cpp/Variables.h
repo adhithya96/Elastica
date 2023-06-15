@@ -13,73 +13,12 @@
 
 #define M_PI 3.14159265358979323846
 
-struct Stiffness
+struct Boundary
 {
-    Eigen::MatrixXd Sl;
-    Eigen::MatrixXd Sln;
-    Eigen::MatrixXd Sn;
-};
-
-struct Bar
-{
-    double A11;
-
-    double B11;
-    double B12;
-    double B16;
-
-    double D11;
-    double D12;
-    double D22;
-    double D16;
-    double D26;
-    double D66;
-};
-
-struct DoubleBar
-{
-    double A11;
-
-    double B11;
-    double B16;
-
-    double D11;
-    double D16;
-    double D66;
-};
-
-struct Variables
-{
-    Bar B;
-    DoubleBar BB;
-    Eigen::MatrixXd Amat;
-    Eigen::MatrixXd Bmat;
-    Eigen::MatrixXd Dmat;
-};
-/*
-struct ELSET
-{
-    char* elset;
-    Eigen::VectorXd elements;
-};*/
-
-struct Orthotropic
-{
-    double E11;
-    double E22;
-    double E33;
-    double nu12;
-    double nu13;
-    double nu23;
-    double G12;
-    double G13;
-    double G23;
-};
-
-struct Material
-{
-    double E;
-    double nu;
+    Eigen::VectorXd a1, b1;
+    int x1, y1;
+    Eigen::VectorXd aN, bN;
+    int xN, yN;
 };
 
 struct Rectangle
@@ -100,34 +39,8 @@ struct CrossSection
     std::string choice;
 };
 
-struct CompositeMaterialProperties
-{
-    Eigen::VectorXd Orient;
-    Eigen::VectorXd inittwist;
-    double np;
-    double E11;
-    double E22;
-    double E33;
-    double G12;
-    double G13;
-    double nu12;
-    double nu13;
-    double nu23;
-    double G23;
-};
 
-struct Loading
-{
-    double* cload;
-};
 
-struct Boundary
-{
-    Eigen::VectorXd a1, b1;
-    int x1, y1;
-    Eigen::VectorXd aN, bN;
-    int xN, yN;
-};
 
 struct LinearBarElement
 {
@@ -228,25 +141,8 @@ struct NonLinearEulerBernouliBeamElement3D
     Eigen::MatrixXd ELEM;
 
     double E, nu, Bp, Hp, Zx, Zy, Zz;
-};
 
-struct BeamContact3D
-{
-    int* NDOF;
-
-    int* NNODE;
-
-    int* NELEM;
-
-    int NLS;
-
-    Eigen::MatrixXd CP;
-
-    Eigen::MatrixXd NODE;
-
-    Eigen::MatrixXd ELEM;
-
-    double E, nu, Bp, Hp, Zx, Zy, Zz;
+    int load;
 };
 
 struct VAMBeamElement
@@ -267,15 +163,13 @@ struct VAMBeamElement
     int NNODE;
     //Number of Elements
     int NELEM;
-    //Material constants
-    CompositeMaterialProperties CMP;
     //Geometry
     CrossSection CS;
     Eigen::MatrixXd ELEM;
-    //Loading
+    //Material constants
+    Eigen::VectorXd inittwist;
+    //Boundary
     Boundary B;
-    //struct LOAD load;
-    //struct ELSET elset;
 };
 
 //Functions in ReadInpFile.cpp
@@ -307,13 +201,8 @@ double Area(struct CrossSection* CS);
 double MomentOfInertia(struct CrossSection* CS);
 void PostProcessing(Eigen::VectorXd U, NonLinearEulerBernouliBeamElement NLEBBE, int fiter);
 
-//GaussPoints GaussQuadraturePoints();
-
 //Functions for VAM Beam Element
-Variables StiffnessMatrix_VAM(double E1, double E2, double nu12, double  G12, double nu21, double width, double height,
-    Eigen::VectorXd Orient, int np, std::fstream& file1);
 Eigen::MatrixXd Equivalent_StiffnessMatrix_FirstOrder(Eigen::VectorXd Strain, Eigen::VectorXd inittwist, double b, std::fstream& file1);
-Eigen::MatrixXd Equivalent_StiffnessMatrix_ZerothOrder();
 
 //Functions from GEBT.cpp
 Eigen::VectorXd Element_Residual(Eigen::VectorXd U1, Eigen::VectorXd U2, Eigen::VectorXd F1, Eigen::VectorXd F2, double h,
@@ -328,18 +217,10 @@ Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd F1, double 
 Eigen::VectorXd Update_Strains(VAMBeamElement VAMBE, Eigen::VectorXd* U, std::fstream& file1);
 // VARIABLES_H
 
-//Functions from Contact.cpp
-Eigen::VectorXd ContactPoints(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, int nbodies);
-double MinimumDistance(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
-Eigen::MatrixXd EvaluateAMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
-Eigen::MatrixXd EvaluateBMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
-Eigen::MatrixXd EvaluateCMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
-Eigen::MatrixXd EvaluateDMatrix(Eigen::MatrixXd A, Eigen::MatrixXd B, Eigen::MatrixXd C, Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
-Eigen::VectorXd EvaluateNormalVector(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
-Eigen::MatrixXd EvaluateEMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db);
-Eigen::MatrixXd EvaluateHTildeMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi);
-Eigen::MatrixXd EvaluateFMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db);
-Eigen::MatrixXd EvaluateGMatrix(Eigen::VectorXd x1, Eigen::VectorXd x2, Eigen::VectorXd y1, Eigen::VectorXd y2, Eigen::VectorXd exi, Eigen::VectorXd n, Eigen::VectorXd d, Eigen::VectorXd db, Eigen::MatrixXd HTilde);
+//Functions from 3DBeamElement_Contact_NodeToNode.cpp
+void ContactSearch(NonLinearEulerBernouliBeamElement3D EBBE3D1, NonLinearEulerBernouliBeamElement3D EBBE3D2, int** ContactPairs);
+void Beam_Contact(double D[4], double X1[3], double X2[3], double u1[6], double u2[6], double* CR, double** CT);
+void PostProcessing(Eigen::MatrixXd X, Eigen::VectorXd U, double load, std::string BeamElement, int nnode, int ndm, int ndof);
 
 //Functions from 3DBeamElement_NonLinear_EulerBernoulli_QuadraticInterpolation
 void RKt(double D[7], double X[3][3], double U[3][6], double** T, double* R);
