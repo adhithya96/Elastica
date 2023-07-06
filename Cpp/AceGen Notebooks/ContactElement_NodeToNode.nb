@@ -1,0 +1,1685 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     63410,       1677]
+NotebookOptionsPosition[     56324,       1571]
+NotebookOutlinePosition[     56727,       1587]
+CellTagsIndexPosition[     56684,       1584]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"<<", "AceGen`"}]], "Input",
+ CellChangeTimes->{{3.892682900669381*^9, 3.8926829046390743`*^9}},
+ CellLabel->
+  "In[1409]:=",ExpressionUUID->"a6bf630e-95d5-4912-9573-09c323217436"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"SMSInitialize", "[", 
+  RowBox[{"\"\<Contact_NTN\>\"", ",", 
+   RowBox[{"\"\<Environment\>\"", "->", "\"\<User\>\""}], ",", 
+   RowBox[{"\"\<Language\>\"", "->", "\"\<C++\>\""}], ",", 
+   RowBox[{"\"\<Mode\>\"", "->", "\"\<Debug\>\""}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.892687954571316*^9, 3.8926879796129246`*^9}, {
+   3.8926887081779594`*^9, 3.892688741669218*^9}, {3.8926899637001114`*^9, 
+   3.8926899762858343`*^9}, {3.892713863363427*^9, 3.8927138643222733`*^9}, 
+   3.8927745641783094`*^9, {3.893396287318878*^9, 3.893396305496626*^9}, {
+   3.8965001370152645`*^9, 3.8965001426432447`*^9}},
+ CellLabel->
+  "In[1410]:=",ExpressionUUID->"1bcf4db1-a4d6-4618-9dd8-0fca750ad8fc"],
+
+Cell[BoxData["True"], "Output",
+ CellChangeTimes->{
+  3.8927926811912956`*^9, 3.8927932678909674`*^9, 3.8927933083906837`*^9, 
+   3.892793404257035*^9, 3.892800028035437*^9, 3.892800210876384*^9, 
+   3.8928003444624987`*^9, 3.8928004294337735`*^9, {3.8928005064209146`*^9, 
+   3.8928005232861753`*^9}, 3.8928007217757077`*^9, 3.892800780165246*^9, {
+   3.8928012336181326`*^9, 3.892801254954199*^9}, {3.8928030509288073`*^9, 
+   3.892803097432664*^9}, {3.8928033876173463`*^9, 3.892803407982492*^9}, 
+   3.8928035138797026`*^9, 3.8928035894288125`*^9, 3.8928038500018067`*^9, 
+   3.8928039194557004`*^9, 3.892803970254064*^9, 3.8928041929979434`*^9, 
+   3.8928042289279184`*^9, 3.8928042606057463`*^9, {3.8928042952222815`*^9, 
+   3.892804321412244*^9}, {3.8928044338444443`*^9, 3.892804454846918*^9}, {
+   3.8928044889694796`*^9, 3.8928045002842445`*^9}, 3.892804904956355*^9, 
+   3.8928049735371947`*^9, 3.8928050066512914`*^9, {3.8928052395219126`*^9, 
+   3.8928052645766497`*^9}, 3.893401619156538*^9, {3.8934016656226673`*^9, 
+   3.893401677593122*^9}, {3.893401721088043*^9, 3.8934017426911945`*^9}, {
+   3.8934018008661013`*^9, 3.8934018279163675`*^9}, 3.893401859802374*^9, 
+   3.893404549838621*^9, {3.8934045817995844`*^9, 3.8934046098000603`*^9}, {
+   3.893404726115821*^9, 3.8934047682048874`*^9}, 3.893404801820757*^9, 
+   3.8934752513196454`*^9, 3.896500113204626*^9, 3.8965001474356165`*^9},
+ CellLabel->
+  "Out[1410]=",ExpressionUUID->"7c631a1b-9ee0-4f19-9b79-b2cf05cf0fb6"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"SMSTemplate", "[", 
+  RowBox[{
+   RowBox[{"\"\<SMSTopology\>\"", "->", "\"\<V3\>\""}], ",", 
+   RowBox[{"\"\<SMSNoDimensions\>\"", "->", "3"}], ",", 
+   RowBox[{"\"\<SMSNoNodes\>\"", "->", "2"}], ",", 
+   RowBox[{"\"\<SMSSymmetricTangent\>\"", "->", "True"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.893396757127178*^9, 3.8933968085702004`*^9}, {
+  3.8933968513842754`*^9, 3.893396864374769*^9}, {3.893397021196885*^9, 
+  3.8933970311287117`*^9}},
+ CellLabel->
+  "In[1411]:=",ExpressionUUID->"c3c20bd1-d6bc-49b0-a89b-f8afcf5321da"],
+
+Cell[BoxData["True"], "Output",
+ CellChangeTimes->{
+  3.8934016191855392`*^9, {3.8934016656971684`*^9, 3.8934016776691227`*^9}, {
+   3.8934017211640477`*^9, 3.8934017427691936`*^9}, {3.8934018009521008`*^9, 
+   3.89340182800587*^9}, 3.8934018598993735`*^9, 3.893404549888119*^9, {
+   3.893404581845584*^9, 3.893404609848559*^9}, {3.8934047261618176`*^9, 
+   3.8934047682553883`*^9}, 3.89340480187176*^9, 3.8934752514801025`*^9, 
+   3.896500113275628*^9, 3.896500147492117*^9},
+ CellLabel->
+  "Out[1411]=",ExpressionUUID->"a4e789af-00ba-40fc-a216-a53756739f20"]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8927897491564054`*^9, 3.892789788866905*^9}, {
+   3.892790111684907*^9, 3.892790361474905*^9}, 3.8927922222984037`*^9},
+ CellLabel->
+  "In[1412]:=",ExpressionUUID->"5fb32be8-d5aa-4cd2-88ae-158ab535265a"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.893396805022608*^9, 3.8933968058335557`*^9}},
+ CellLabel->
+  "In[1413]:=",ExpressionUUID->"22c39f97-c5aa-4d65-a6b6-165d4c86deb1"],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{"1", " ", "-", " ", 
+   RowBox[{"slave", " ", "body", "\[IndentingNewLine]", "2"}], " ", "-", " ", 
+   RowBox[{"master", " ", "body"}]}], "*)"}]], "Input",
+ CellChangeTimes->{{3.892695867182793*^9, 3.892695884891723*^9}, {
+  3.8952027270077477`*^9, 3.8952027337758093`*^9}},
+ CellLabel->
+  "In[1414]:=",ExpressionUUID->"7d603704-78d6-477b-a71f-061069710b36"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"SMSModule", "[", 
+  RowBox[{"\"\<Beam Contact\>\"", ",", " ", 
+   RowBox[{"Real", "[", 
+    RowBox[{
+     RowBox[{"D$$", "[", "4", "]"}], ",", 
+     RowBox[{"X1$$", "[", "3", "]"}], ",", 
+     RowBox[{"X2$$", "[", "3", "]"}], ",", 
+     RowBox[{"u1$$", "[", "6", "]"}], ",", 
+     RowBox[{"u2$$", "[", "6", "]"}], ",", 
+     RowBox[{"CR$$", "[", "12", "]"}], ",", 
+     RowBox[{"CT$$", "[", 
+      RowBox[{"12", ",", "12"}], "]"}]}], "]"}], ",", 
+   RowBox[{"\"\<Input\>\"", "->", 
+    RowBox[{"{", 
+     RowBox[{"D$$", ",", "X1$$", ",", "X2$$", ",", "u1$$", ",", "u2$$"}], 
+     "}"}]}], ",", 
+   RowBox[{"\"\<Output\>\"", "->", 
+    RowBox[{"{", 
+     RowBox[{"CR$$", ",", "CT$$"}], "}"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.892683027883831*^9, 3.892683060597604*^9}, {
+   3.8926887576800203`*^9, 3.8926888320316043`*^9}, {3.892688955761407*^9, 
+   3.892688970680035*^9}, {3.892695029899886*^9, 3.892695046643551*^9}, {
+   3.892695860101038*^9, 3.8926958637249312`*^9}, {3.892696011137879*^9, 
+   3.892696026146881*^9}, 3.8927138194767056`*^9, {3.8927139028006363`*^9, 
+   3.8927139347730002`*^9}, {3.892714882747733*^9, 3.892714888732895*^9}, {
+   3.8927149222178206`*^9, 3.892714942850856*^9}, {3.8927784258615875`*^9, 
+   3.8927784261750894`*^9}, {3.8927785868541994`*^9, 
+   3.8927786548797493`*^9}, {3.8927922270279055`*^9, 3.892792227741406*^9}, {
+   3.892799567417673*^9, 3.892799595528666*^9}, {3.892800017275179*^9, 
+   3.8928000180611*^9}, {3.892800703815299*^9, 3.892800713745908*^9}, {
+   3.8928025060581803`*^9, 3.8928025084457893`*^9}, {3.8928030758594513`*^9, 
+   3.89280309115472*^9}, {3.893396325798796*^9, 3.893396434005699*^9}, 
+   3.893396468752658*^9, {3.893396826439988*^9, 3.893396846106321*^9}, {
+   3.8934038174515443`*^9, 3.8934038343456717`*^9}, {3.8934044140902357`*^9, 
+   3.8934044155301666`*^9}, {3.8934047465835757`*^9, 
+   3.8934047656008015`*^9}, {3.893475139373835*^9, 3.8934751441231766`*^9}},
+ CellLabel->
+  "In[1415]:=",ExpressionUUID->"e60b8d6c-5f74-4228-9aaf-47b3fc1b2c1f"],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{
+  3.892713822891548*^9, 3.8927138687852063`*^9, 3.892713937939578*^9, 
+   3.8927148918991776`*^9, {3.8927149311968937`*^9, 3.8927149468603497`*^9}, 
+   3.8927745839583087`*^9, 3.8927787909658437`*^9, 3.8927788422958794`*^9, 
+   3.892778876078903*^9, 3.8927794422122307`*^9, 3.8927926813422976`*^9, 
+   3.892793267967969*^9, 3.8927933084641824`*^9, 3.8927934043385334`*^9, 
+   3.8928000281139374`*^9, 3.892800210970886*^9, 3.8928003445360007`*^9, 
+   3.892800429535308*^9, {3.8928005065099144`*^9, 3.8928005235216513`*^9}, 
+   3.892800721869706*^9, 3.892800780259247*^9, {3.8928012337151365`*^9, 
+   3.8928012550401974`*^9}, {3.8928030509683084`*^9, 3.892803097547666*^9}, {
+   3.8928033876613445`*^9, 3.892803408068991*^9}, 3.8928035139667363`*^9, 
+   3.892803589521781*^9, 3.89280385009635*^9, 3.8928039195482044`*^9, 
+   3.892803970347065*^9, 3.8928041930989428`*^9, 3.892804229033424*^9, 
+   3.8928042607037454`*^9, {3.8928042953132887`*^9, 3.892804321515292*^9}, {
+   3.8928044339599442`*^9, 3.8928044549649196`*^9}, {3.892804489079979*^9, 
+   3.892804500382745*^9}, 3.8928049050698547`*^9, 3.8928049736406965`*^9, 
+   3.8928050067572584`*^9, {3.892805239619913*^9, 3.8928052646786504`*^9}, 
+   3.8934016192670403`*^9, {3.893401665963854*^9, 3.893401677830124*^9}, {
+   3.8934017214900494`*^9, 3.8934017429426923`*^9}, {3.893401801217103*^9, 
+   3.8934018282443705`*^9}, 3.8934018601659136`*^9, 3.89340455016112*^9, {
+   3.8934045821135864`*^9, 3.8934046101170597`*^9}, {3.8934047264343615`*^9, 
+   3.8934047684788923`*^9}, 3.8934048019972577`*^9, 3.893475251608609*^9, 
+   3.8965001134371705`*^9, 3.8965001477091637`*^9},
+ CellLabel->
+  "Out[1415]=",ExpressionUUID->"036a61e9-dc81-416b-840f-372efa4d7552"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"X01", "\[RightTee]", 
+  RowBox[{"SMSReal", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"X1$$", "[", "i", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "3"}], "}"}]}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"X02", "\[RightTee]", 
+  RowBox[{"SMSReal", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"X2$$", "[", "i", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "3"}], "}"}]}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"u01", "\[RightTee]", 
+  RowBox[{"SMSReal", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"u1$$", "[", "i", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "6"}], "}"}]}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"u02", "\[RightTee]", 
+  RowBox[{"SMSReal", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"u2$$", "[", "i", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "6"}], "}"}]}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Data", "\[RightTee]", 
+  RowBox[{"SMSReal", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"D$$", "[", "i", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "4"}], "}"}]}], "]"}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.8926961031702766`*^9, 3.892696160088306*^9}, {
+   3.8926962287886724`*^9, 3.892696250381181*^9}, {3.8927073191620655`*^9, 
+   3.892707343495989*^9}, 3.8927127931427784`*^9, {3.892712859280037*^9, 
+   3.8927128758028116`*^9}, {3.8927786746197605`*^9, 3.892778724572297*^9}, {
+   3.8927787602728205`*^9, 3.8927787674518256`*^9}, {3.892799374349242*^9, 
+   3.8927994569376364`*^9}, {3.893396959071829*^9, 3.893396960202987*^9}, {
+   3.893401755279401*^9, 3.893401785975666*^9}, {3.893403839464025*^9, 
+   3.8934038668932695`*^9}, {3.893404408823163*^9, 3.893404409127292*^9}},
+ CellLabel->
+  "In[1416]:=",ExpressionUUID->"1d22622b-4d9a-43a5-b726-cace7a1c09c6"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"time=\"\>", "\[InvisibleSpace]", "0", 
+   "\[InvisibleSpace]", "\<\" \"\>", 
+   "\[InvisibleSpace]", "\<\" variable= \"\>", "\[InvisibleSpace]", "0"}],
+  SequenceForm["time=", 0, " ", " variable= ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.8934047685448904`*^9, 3.8934048020757594`*^9, 
+  3.8934752516851063`*^9, 3.89650011351163*^9, 3.896500147788117*^9},
+ CellLabel->
+  "During evaluation of \
+In[1416]:=",ExpressionUUID->"bcb22c72-6bcd-45d3-80fb-c4aeb9de9484"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"X01\"\>", 
+       TemplateBox[{"1"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1416, 1, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[1, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"X01\"\>", 
+       TemplateBox[{"2"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1416, 2, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[2, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"X01\"\>", 
+       TemplateBox[{"3"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1416, 3, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[3, 1]]}], "}"}]], "Output",
+ CellChangeTimes->{3.8934047685538907`*^9, 3.8934048020852613`*^9, 
+  3.8934752517746043`*^9, 3.8965001135241284`*^9, 3.896500147799117*^9},
+ CellLabel->
+  "Out[1416]=",ExpressionUUID->"3cdf02d7-5b8b-41be-9d8f-5f3ba2d66fb7"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"X02\"\>", 
+       TemplateBox[{"1"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1417, 4, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[4, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"X02\"\>", 
+       TemplateBox[{"2"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1417, 5, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[5, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"X02\"\>", 
+       TemplateBox[{"3"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1417, 6, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[6, 1]]}], "}"}]], "Output",
+ CellChangeTimes->{3.8934047685538907`*^9, 3.8934048020852613`*^9, 
+  3.8934752517746043`*^9, 3.8965001135241284`*^9, 3.8965001478106565`*^9},
+ CellLabel->
+  "Out[1417]=",ExpressionUUID->"38880825-634b-4fe3-adb4-c8698e2b2f57"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u01\"\>", 
+       TemplateBox[{"1"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1418, 7, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[7, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u01\"\>", 
+       TemplateBox[{"2"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1418, 8, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[8, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u01\"\>", 
+       TemplateBox[{"3"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1418, 9, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[9, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u01\"\>", 
+       TemplateBox[{"4"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1418, 10, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[10, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u01\"\>", 
+       TemplateBox[{"5"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1418, 11, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[11, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u01\"\>", 
+       TemplateBox[{"6"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1418, 12, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[12, 1]]}], "}"}]], "Output",
+ CellChangeTimes->{3.8934047685538907`*^9, 3.8934048020852613`*^9, 
+  3.8934752517746043`*^9, 3.8965001135241284`*^9, 3.8965001479286175`*^9},
+ CellLabel->
+  "Out[1418]=",ExpressionUUID->"66b366fa-c721-44f0-840a-7cfced09b474"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u02\"\>", 
+       TemplateBox[{"1"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1419, 13, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[13, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u02\"\>", 
+       TemplateBox[{"2"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1419, 14, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[14, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u02\"\>", 
+       TemplateBox[{"3"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1419, 15, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[15, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u02\"\>", 
+       TemplateBox[{"4"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1419, 16, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[16, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u02\"\>", 
+       TemplateBox[{"5"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1419, 17, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[17, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"u02\"\>", 
+       TemplateBox[{"6"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1419, 18, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[18, 1]]}], "}"}]], "Output",
+ CellChangeTimes->{3.8934047685538907`*^9, 3.8934048020852613`*^9, 
+  3.8934752517746043`*^9, 3.8965001135241284`*^9, 3.8965001479421167`*^9},
+ CellLabel->
+  "Out[1419]=",ExpressionUUID->"74c40ce8-0388-4000-8629-b5848c628087"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"Data\"\>", 
+       TemplateBox[{"1"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1420, 19, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[19, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"Data\"\>", 
+       TemplateBox[{"2"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1420, 20, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[20, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"Data\"\>", 
+       TemplateBox[{"3"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1420, 21, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[21, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"Data\"\>", 
+       TemplateBox[{"4"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1420, 22, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[22, 1]]}], "}"}]], "Output",
+ CellChangeTimes->{3.8934047685538907`*^9, 3.8934048020852613`*^9, 
+  3.8934752517746043`*^9, 3.8965001135241284`*^9, 3.8965001480191174`*^9},
+ CellLabel->
+  "Out[1420]=",ExpressionUUID->"ab92672e-f645-430c-98cb-cb909ff9f040"]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.893401659449811*^9, 3.8934016745821967`*^9}, 
+   3.8934017056778035`*^9},
+ CellLabel->
+  "In[1421]:=",ExpressionUUID->"ebd7cc92-e126-4dba-8538-b411bcb54c64"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"\[Epsilon]", "\[RightTee]", 
+  RowBox[{
+  "Data", "\[LeftDoubleBracket]", "1", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"n", "\[RightTee]", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"Data", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
+    ",", 
+    RowBox[{"Data", "\[LeftDoubleBracket]", "3", "\[RightDoubleBracket]"}], 
+    ",", 
+    RowBox[{"Data", "\[LeftDoubleBracket]", "4", "\[RightDoubleBracket]"}]}], 
+   "}"}]}]}], "Input",
+ CellChangeTimes->{{3.892778781141837*^9, 3.892778787501842*^9}, {
+   3.892779433807227*^9, 3.8927794373267307`*^9}, {3.892802515644819*^9, 
+   3.892802551384942*^9}, 3.892803064681875*^9, 3.892803095138832*^9, {
+   3.8933965104672594`*^9, 3.8933965221013193`*^9}, {3.893396625023912*^9, 
+   3.893396657053598*^9}, {3.893401709135945*^9, 3.8934017394796495`*^9}, {
+   3.893401790495959*^9, 3.8934018549370937`*^9}},
+ CellLabel->
+  "In[1422]:=",ExpressionUUID->"75fd38d0-ca24-48b2-8f73-7333a5227d9a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  ButtonBox[
+   StyleBox["\<\"\[Epsilon]\"\>",
+    StripOnInput->False,
+    FontColor->GrayLevel[0]],
+   Appearance->"Palette",
+   ButtonFunction:>AceGen`SMSButtonFunction["", {1422, 23, 1}],
+   Evaluator->Automatic,
+   FrameMargins->None,
+   ImageMargins->None,
+   ImageSize->All,
+   Method->"Preemptive"],
+  AceGen`$V[23, 1]]], "Output",
+ CellChangeTimes->{3.8934047689470267`*^9, 3.8934048023648014`*^9, 
+  3.893475252046104*^9, 3.8965001140445304`*^9, 3.896500148130619*^9},
+ CellLabel->
+  "Out[1422]=",ExpressionUUID->"2e849e19-e598-47ab-81bb-f14e50d85307"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"n\"\>", 
+       TemplateBox[{"1"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1423, 24, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[24, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"n\"\>", 
+       TemplateBox[{"2"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1423, 25, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[25, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"n\"\>", 
+       TemplateBox[{"3"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1423, 26, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[26, 1]]}], "}"}]], "Output",
+ CellChangeTimes->{3.8934047689470267`*^9, 3.8934048023648014`*^9, 
+  3.893475252046104*^9, 3.8965001140445304`*^9, 3.896500148149617*^9},
+ CellLabel->
+  "Out[1423]=",ExpressionUUID->"290fcd12-7521-4938-b4b3-a485b44397cc"]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{
+  3.892688853912874*^9, {3.892689718498426*^9, 3.892689739974064*^9}, {
+   3.8926958092751904`*^9, 3.89269581877265*^9}, {3.8926962704901915`*^9, 
+   3.892696273149393*^9}, 3.892707134594797*^9, {3.892707353602044*^9, 
+   3.892707357212202*^9}, 3.8927127911926284`*^9, {3.8927128793773794`*^9, 
+   3.89271289514266*^9}, 3.89277877365483*^9},
+ CellLabel->
+  "In[1424]:=",ExpressionUUID->"8ca6a76e-12b7-487f-8c21-9177e1af5e91"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8926958258564215`*^9, 3.89269583549999*^9}, {
+   3.892696274812071*^9, 3.892696278087759*^9}, 3.892707133415889*^9, {
+   3.8927073584690847`*^9, 3.89270736369316*^9}, 3.892712789729114*^9, {
+   3.892712903652562*^9, 3.8927129115501986`*^9}, {3.892713212816147*^9, 
+   3.892713219138678*^9}, 3.892778775908831*^9},
+ CellLabel->
+  "In[1425]:=",ExpressionUUID->"ad058331-7d86-45aa-a12b-9ffdb4d6348c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"x1", "\[DoubleRightTee]", 
+  RowBox[{"X01", "+", 
+   RowBox[{"u01", "\[LeftDoubleBracket]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2", ",", "3"}], "}"}], 
+    "\[RightDoubleBracket]"}]}]}]], "Input",
+ CellChangeTimes->{{3.8927073795100656`*^9, 3.892707385780743*^9}, 
+   3.8927127013390903`*^9, 3.892712788104772*^9, {3.892713236347025*^9, 
+   3.892713251209575*^9}, {3.892778808101855*^9, 3.892778816435361*^9}, {
+   3.8934044367014055`*^9, 3.893404458912603*^9}},
+ CellLabel->
+  "In[1426]:=",ExpressionUUID->"4e80ec93-e41b-40d4-af57-f1e8a40f934f"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"x1\"\>", 
+       TemplateBox[{"1"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1426, 27, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[27, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"x1\"\>", 
+       TemplateBox[{"2"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1426, 28, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[28, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"x1\"\>", 
+       TemplateBox[{"3"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1426, 29, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[29, 1]]}], "}"}]], "Output",
+ CellChangeTimes->{3.8934047691649837`*^9, 3.8934048024802637`*^9, 
+  3.8934752522236032`*^9, 3.896500114252532*^9, 3.8965001484676204`*^9},
+ CellLabel->
+  "Out[1426]=",ExpressionUUID->"27075ca6-b63f-4bd2-bb3e-dff4dbcf4591"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"x2", "\[DoubleRightTee]", 
+  RowBox[{"X02", "+", 
+   RowBox[{"u02", "\[LeftDoubleBracket]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2", ",", "3"}], "}"}], 
+    "\[RightDoubleBracket]"}]}]}]], "Input",
+ CellChangeTimes->{{3.8927788546578884`*^9, 3.8927788624343944`*^9}, {
+  3.893404463102309*^9, 3.893404469924819*^9}},
+ CellLabel->
+  "In[1427]:=",ExpressionUUID->"f54db185-759e-4c3a-9cfd-b0399cb73972"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"x2\"\>", 
+       TemplateBox[{"1"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1427, 30, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[30, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"x2\"\>", 
+       TemplateBox[{"2"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1427, 31, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[31, 1]], ",", 
+   InterpretationBox[
+    ButtonBox[
+     StyleBox[
+      SubscriptBox["\<\"x2\"\>", 
+       TemplateBox[{"3"},
+        "RowDefault"]],
+      StripOnInput->False,
+      FontColor->GrayLevel[0]],
+     Appearance->"Palette",
+     ButtonFunction:>AceGen`SMSButtonFunction["", {1427, 32, 1}],
+     Evaluator->Automatic,
+     FrameMargins->None,
+     ImageMargins->None,
+     ImageSize->All,
+     Method->"Preemptive"],
+    AceGen`$V[32, 1]]}], "}"}]], "Output",
+ CellChangeTimes->{3.8934047692779827`*^9, 3.8934048025942607`*^9, 
+  3.8934752523201056`*^9, 3.896500114355033*^9, 3.896500148578656*^9},
+ CellLabel->
+  "Out[1427]=",ExpressionUUID->"e783f377-5f5d-440c-9d86-14de84884095"]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8927073938605523`*^9, 3.89270740196891*^9}, 
+   3.892712699518959*^9, {3.8927132586685843`*^9, 3.8927132773622665`*^9}, 
+   3.8927788286258698`*^9},
+ CellLabel->
+  "In[1428]:=",ExpressionUUID->"8c2ce2b9-9137-44a0-ac6e-e9f488c42d03"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8927074099162636`*^9, 3.8927074175695295`*^9}, 
+   3.892712697207477*^9, {3.8927132979489727`*^9, 3.892713315414895*^9}, 
+   3.892713353904108*^9, 3.8927788330409145`*^9},
+ CellLabel->
+  "In[1429]:=",ExpressionUUID->"8745471d-f5d0-4653-a3e1-92e3bbadd21a"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.892695845200112*^9, 3.8926958536107354`*^9}, {
+   3.892696280292562*^9, 3.8926962826438427`*^9}, 3.892707131994763*^9, {
+   3.892707427706668*^9, 3.8927074326231074`*^9}, 3.8927126949704432`*^9, {
+   3.8927133024720163`*^9, 3.8927133561452694`*^9}, 3.892778832019372*^9},
+ CellLabel->
+  "In[1430]:=",ExpressionUUID->"f1d6958e-f194-4dfe-bf90-837636f8cd12"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"gN", "\[DoubleRightTee]", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"x1", "-", "x2"}], ")"}], ".", "n"}]}]], "Input",
+ CellChangeTimes->{{3.892707438878089*^9, 3.892707445341936*^9}, 
+   3.8927126930214424`*^9, {3.8927133717094016`*^9, 3.892713382351962*^9}, {
+   3.8927788700598974`*^9, 3.8927788708444*^9}, {3.8927996324969172`*^9, 
+   3.8927996415668945`*^9}, {3.8927999745125856`*^9, 
+   3.8927999800217237`*^9}, {3.8928025600403757`*^9, 
+   3.8928025874810734`*^9}, {3.8928038406576295`*^9, 3.892803846924552*^9}, {
+   3.8928039028717203`*^9, 3.892803916659734*^9}, {3.8928039499448714`*^9, 
+   3.8928039555203266`*^9}},
+ CellLabel->
+  "In[1431]:=",ExpressionUUID->"b68f2ccc-7762-4f12-b788-2901824b83c2"],
+
+Cell[BoxData[
+ InterpretationBox[
+  ButtonBox[
+   StyleBox["\<\"gN\"\>",
+    StripOnInput->False,
+    FontColor->GrayLevel[0]],
+   Appearance->"Palette",
+   ButtonFunction:>AceGen`SMSButtonFunction["", {1431, 33, 1}],
+   Evaluator->Automatic,
+   FrameMargins->None,
+   ImageMargins->None,
+   ImageSize->All,
+   Method->"Preemptive"],
+  AceGen`$V[33, 1]]], "Output",
+ CellChangeTimes->{3.893404769436983*^9, 3.89340480280577*^9, 
+  3.8934752525966043`*^9, 3.896500114674531*^9, 3.896500148781153*^9},
+ CellLabel->
+  "Out[1431]=",ExpressionUUID->"94c4940e-cba1-4840-a7d3-5477c5c77d7f"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"u", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{"{", 
+     RowBox[{"u01", ",", "u02"}], "}"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.8934003686010337`*^9, 3.8934003794146256`*^9}, {
+  3.8934045013991003`*^9, 3.893404531332546*^9}, {3.8934751280871897`*^9, 
+  3.8934751304001594`*^9}, {3.8965001089318027`*^9, 3.8965001091285295`*^9}},
+ CellLabel->
+  "In[1432]:=",ExpressionUUID->"ca8c12ea-0e59-4490-84cb-81970a7ea470"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8928030154748526`*^9, 3.8928030433949776`*^9}, {
+  3.8928034886353703`*^9, 3.892803511487649*^9}, {3.892803565812827*^9, 
+  3.892803586033828*^9}, {3.8933970522718115`*^9, 3.8933970526404133`*^9}},
+ CellLabel->
+  "In[1433]:=",ExpressionUUID->"21f100e9-6260-4d4b-bcfa-909465f91b2e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"SMSIf", "[", 
+  RowBox[{"gN", ">", "0"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SMSReturn", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SMSEndIf", "[", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.893401419914471*^9, 3.8934014435277753`*^9}},
+ CellLabel->
+  "In[1434]:=",ExpressionUUID->"018c5d49-aa71-4bb2-914b-3b5a079436ee"],
+
+Cell[BoxData[
+ TagBox[
+  DynamicModuleBox[{AceGen`Private`q1$$ = AceGen`SMSFreezeF[
+    AceGen`$V[34, 1], AceGen`Logical, True, True, False, False, False, {}, 
+    0.1508671537473627569`8.], AceGen`Private`q2$$ = AceGen`$V[34, 1]}, 
+   InterpretationBox[
+    TemplateBox[{"\"\[DoubleStruckCapitalF]reeze[\"", 
+      InterpretationBox[
+       ButtonBox[
+        StyleBox[
+         StyleBox[
+          TemplateBox[{
+            SubscriptBox["\"\[InvisiblePrefixScriptBase]\"", "34"], 
+            "\"\[Yen]\[InvisiblePrefixScriptBase]\""}, "RowDefault"], 
+          RGBColor[0.501961, 0, 0.501961], StripOnInput -> False], FontColor -> 
+         RGBColor[0.501961, 0, 0.501961], StripOnInput -> False], 
+        ButtonFunction :> AceGen`SMSButtonFunction["", {1434, 34, 1}], 
+        ImageSize -> All, ImageMargins -> None, Evaluator -> Automatic, 
+        Appearance -> "Palette", FrameMargins -> None, Method -> 
+        "Preemptive"], 
+       AceGen`$V[34, 1]], "\"]\""},
+     "RowDefault"],
+    AceGen`Private`q1$$],
+   DynamicModuleValues:>{}],
+  Setting[#, {0}]& ]], "Output",
+ CellChangeTimes->{3.893404769600485*^9, 3.8934048029178047`*^9, 
+  3.8934752527596054`*^9, 3.89650011487503*^9, 3.896500148923151*^9},
+ CellLabel->
+  "Out[1434]=",ExpressionUUID->"0ba6c5d5-6cb0-49b6-a416-06214459c2dc"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[CapitalPi]", "\[DoubleRightTee]", 
+  RowBox[{"0.5", "*", "\[Epsilon]", "*", 
+   SuperscriptBox["gN", "2"]}]}]], "Input",
+ CellChangeTimes->{{3.8934014482642508`*^9, 3.8934014715763693`*^9}},
+ CellLabel->
+  "In[1437]:=",ExpressionUUID->"69f93021-46a9-4322-adf8-fbbaab186eb7"],
+
+Cell[BoxData[
+ InterpretationBox[
+  ButtonBox[
+   StyleBox["\<\"\[CapitalPi]\"\>",
+    StripOnInput->False,
+    FontColor->GrayLevel[0]],
+   Appearance->"Palette",
+   ButtonFunction:>AceGen`SMSButtonFunction["", {1437, 37, 1}],
+   Evaluator->Automatic,
+   FrameMargins->None,
+   ImageMargins->None,
+   ImageSize->All,
+   Method->"Preemptive"],
+  AceGen`$V[37, 1]]], "Output",
+ CellChangeTimes->{3.893404769768484*^9, 3.8934048031877604`*^9, 
+  3.893475252942605*^9, 3.8965001150880737`*^9, 3.8965001490751505`*^9},
+ CellLabel->
+  "Out[1437]=",ExpressionUUID->"3cde2529-8c72-46ab-9fea-f98f6abd7865"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"SMSDo", "[", 
+  RowBox[{"i", ",", "1", ",", "12"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Rgi", "\[DoubleRightTee]", 
+  RowBox[{"SMSD", "[", 
+   RowBox[{"\[CapitalPi]", ",", "u", ",", "i"}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"SMSExport", "[", 
+  RowBox[{"Rgi", ",", 
+   RowBox[{"CR$$", "[", "i", "]"}], ",", 
+   RowBox[{"\"\<AddIn\>\"", "->", "True"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SMSDo", "[", 
+  RowBox[{"j", ",", "i", ",", "12"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Kgij", "\[DoubleRightTee]", 
+  RowBox[{"SMSD", "[", 
+   RowBox[{"Rgi", ",", "u", ",", "j"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"SMSExport", "[", 
+  RowBox[{"Kgij", ",", 
+   RowBox[{"CT$$", "[", 
+    RowBox[{"i", ",", "j"}], "]"}], ",", 
+   RowBox[{"\"\<AddIn\>\"", "->", "True"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SMSEndDo", "[", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SMSEndDo", "[", "]"}]}], "Input",
+ CellChangeTimes->{{3.893401482788082*^9, 3.893401598516221*^9}, {
+  3.893404537707935*^9, 3.893404541099688*^9}, {3.893404644970274*^9, 
+  3.8934047221696496`*^9}, {3.8934047971022763`*^9, 3.8934047979905505`*^9}, {
+  3.893475158732321*^9, 3.89347516037084*^9}},
+ CellLabel->
+  "In[1438]:=",ExpressionUUID->"1afa348d-0e07-4fb1-af1b-297433fae70e"],
+
+Cell[BoxData[
+ InterpretationBox[
+  ButtonBox[
+   StyleBox["\<\"i\"\>",
+    StripOnInput->False,
+    FontColor->RGBColor[0, 0.501961, 0]],
+   Appearance->"Palette",
+   ButtonFunction:>AceGen`SMSButtonFunction["", {1438, 38, 1}],
+   Evaluator->Automatic,
+   FrameMargins->None,
+   ImageMargins->None,
+   ImageSize->All,
+   Method->"Preemptive"],
+  AceGen`$V[38, 1]]], "Output",
+ CellChangeTimes->{3.8934047698669877`*^9, 3.893404803264261*^9, 
+  3.8934752529626074`*^9, 3.8965001153020315`*^9, 3.8965001491726513`*^9},
+ CellLabel->
+  "Out[1438]=",ExpressionUUID->"ebe3ee67-f63c-40ff-8ad6-40b4c9edd4c9"],
+
+Cell[BoxData[
+ InterpretationBox[
+  ButtonBox[
+   StyleBox["\<\"Rgi\"\>",
+    StripOnInput->False,
+    FontColor->GrayLevel[0]],
+   Appearance->"Palette",
+   ButtonFunction:>AceGen`SMSButtonFunction["", {1439, 44, 1}],
+   Evaluator->Automatic,
+   FrameMargins->None,
+   ImageMargins->None,
+   ImageSize->All,
+   Method->"Preemptive"],
+  AceGen`$V[44, 1]]], "Output",
+ CellChangeTimes->{3.8934047698669877`*^9, 3.893404803264261*^9, 
+  3.8934752529626074`*^9, 3.8965001153020315`*^9, 3.8965001492941523`*^9},
+ CellLabel->
+  "Out[1439]=",ExpressionUUID->"28264eee-5d62-4f88-a6ac-5172d6575b07"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox["\<\"Export\"\>",
+   StripOnInput->False,
+   LineColor->RGBColor[0, 
+     Rational[2, 3], 0],
+   FrontFaceColor->RGBColor[0, 
+     Rational[2, 3], 0],
+   BackFaceColor->RGBColor[0, 
+     Rational[2, 3], 0],
+   GraphicsColor->RGBColor[0, 
+     Rational[2, 3], 0],
+   FontWeight->Bold,
+   FontSlant->Italic,
+   FontColor->RGBColor[0, 
+     Rational[2, 3], 0]], "[", 
+  TemplateBox[{",", "\",\"", 
+    InterpretationBox[
+     ButtonBox[
+      StyleBox["\"Rgi\"", FontColor -> GrayLevel[0], StripOnInput -> False], 
+      ButtonFunction :> AceGen`SMSButtonFunction["", {1440, 44, 1}], 
+      ImageSize -> All, ImageMargins -> None, Evaluator -> Automatic, 
+      Appearance -> "Palette", FrameMargins -> None, Method -> "Preemptive"], 
+     AceGen`$V[44, 1]], 
+    TagBox[
+     DynamicModuleBox[{AceGen`Private`q1$$ = AceGen`SMSExternalF[
+         HoldForm[$CellContext`CR$$][
+          AceGen`SMSRegularF[1]], 
+         AceGen`$V[38, 1]], AceGen`Private`q2$$ = HoldForm[$CellContext`CR$$][
+         AceGen`$V[38, 1]]}, 
+      InterpretationBox[
+       StyleBox[
+        SubscriptBox[
+         TagBox["CR$$", HoldForm], 
+         InterpretationBox[
+          ButtonBox[
+           StyleBox[
+           "\"i\"", FontColor -> RGBColor[0, 0.501961, 0], StripOnInput -> 
+            False], ButtonFunction :> 
+           AceGen`SMSButtonFunction["", {1440, 38, 1}], ImageSize -> All, 
+           ImageMargins -> None, Evaluator -> Automatic, Appearance -> 
+           "Palette", FrameMargins -> None, Method -> "Preemptive"], 
+          AceGen`SMSGetNames[38, 1, 
+           Part[AceGen`$RE, 38, 1]]]], 
+        RGBColor[1, 0, 0], StripOnInput -> False], AceGen`Private`q1$$], 
+      DynamicModuleValues :> {}], Setting[#, {0}]& ]},
+   "RowWithSeparators"], "]"}]], "Output",
+ CellChangeTimes->{3.8934047698669877`*^9, 3.893404803264261*^9, 
+  3.8934752529626074`*^9, 3.8965001153020315`*^9, 3.8965001493096533`*^9},
+ CellLabel->
+  "Out[1440]=",ExpressionUUID->"a5ff53d7-8f90-4b7f-8f79-72d5f9350979"],
+
+Cell[BoxData[
+ InterpretationBox[
+  ButtonBox[
+   StyleBox["\<\"j\"\>",
+    StripOnInput->False,
+    FontColor->RGBColor[0, 0.501961, 0]],
+   Appearance->"Palette",
+   ButtonFunction:>AceGen`SMSButtonFunction["", {1441, 46, 1}],
+   Evaluator->Automatic,
+   FrameMargins->None,
+   ImageMargins->None,
+   ImageSize->All,
+   Method->"Preemptive"],
+  AceGen`$V[46, 1]]], "Output",
+ CellChangeTimes->{3.8934047698669877`*^9, 3.893404803264261*^9, 
+  3.8934752529626074`*^9, 3.8965001153020315`*^9, 3.8965001493226533`*^9},
+ CellLabel->
+  "Out[1441]=",ExpressionUUID->"78a8f381-b313-4330-87f9-cf84d1caf05f"],
+
+Cell[BoxData[
+ InterpretationBox[
+  ButtonBox[
+   StyleBox["\<\"Kgij\"\>",
+    StripOnInput->False,
+    FontColor->GrayLevel[0]],
+   Appearance->"Palette",
+   ButtonFunction:>AceGen`SMSButtonFunction["", {1442, 54, 1}],
+   Evaluator->Automatic,
+   FrameMargins->None,
+   ImageMargins->None,
+   ImageSize->All,
+   Method->"Preemptive"],
+  AceGen`$V[54, 1]]], "Output",
+ CellChangeTimes->{3.8934047698669877`*^9, 3.893404803264261*^9, 
+  3.8934752529626074`*^9, 3.8965001153020315`*^9, 3.896500149440652*^9},
+ CellLabel->
+  "Out[1442]=",ExpressionUUID->"33cdc7e0-54e1-44e2-8efc-9648ac9167fa"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox["\<\"Export\"\>",
+   StripOnInput->False,
+   LineColor->RGBColor[0, 
+     Rational[2, 3], 0],
+   FrontFaceColor->RGBColor[0, 
+     Rational[2, 3], 0],
+   BackFaceColor->RGBColor[0, 
+     Rational[2, 3], 0],
+   GraphicsColor->RGBColor[0, 
+     Rational[2, 3], 0],
+   FontWeight->Bold,
+   FontSlant->Italic,
+   FontColor->RGBColor[0, 
+     Rational[2, 3], 0]], "[", 
+  TemplateBox[{",", "\",\"", 
+    InterpretationBox[
+     ButtonBox[
+      StyleBox["\"Kgij\"", FontColor -> GrayLevel[0], StripOnInput -> False], 
+      ButtonFunction :> AceGen`SMSButtonFunction["", {1443, 54, 1}], 
+      ImageSize -> All, ImageMargins -> None, Evaluator -> Automatic, 
+      Appearance -> "Palette", FrameMargins -> None, Method -> "Preemptive"], 
+     AceGen`$V[54, 1]], 
+    TagBox[
+     DynamicModuleBox[{AceGen`Private`q1$$ = AceGen`SMSExternalF[
+         HoldForm[$CellContext`CT$$][
+          AceGen`SMSRegularF[1], 
+          AceGen`SMSRegularF[2]], 
+         AceGen`$V[38, 1], 
+         AceGen`$V[46, 1]], AceGen`Private`q2$$ = HoldForm[$CellContext`CT$$][
+         AceGen`$V[38, 1], 
+         AceGen`$V[46, 1]]}, 
+      InterpretationBox[
+       StyleBox[
+        SubscriptBox[
+         TagBox["CT$$", HoldForm], 
+         TemplateBox[{
+           InterpretationBox[
+            ButtonBox[
+             StyleBox[
+             "\"i\"", FontColor -> RGBColor[0, 0.501961, 0], StripOnInput -> 
+              False], ButtonFunction :> 
+             AceGen`SMSButtonFunction["", {1443, 38, 1}], ImageSize -> All, 
+             ImageMargins -> None, Evaluator -> Automatic, Appearance -> 
+             "Palette", FrameMargins -> None, Method -> "Preemptive"], 
+            AceGen`SMSGetNames[38, 1, 
+             Part[AceGen`$RE, 38, 1]]], "\"\[VerticalLine]\"", 
+           InterpretationBox[
+            ButtonBox[
+             StyleBox[
+             "\"j\"", FontColor -> RGBColor[0, 0.501961, 0], StripOnInput -> 
+              False], ButtonFunction :> 
+             AceGen`SMSButtonFunction["", {1443, 46, 1}], ImageSize -> All, 
+             ImageMargins -> None, Evaluator -> Automatic, Appearance -> 
+             "Palette", FrameMargins -> None, Method -> "Preemptive"], 
+            AceGen`SMSGetNames[46, 1, 
+             Part[AceGen`$RE, 46, 1]]]}, "RowDefault"]], 
+        RGBColor[1, 0, 0], StripOnInput -> False], AceGen`Private`q1$$], 
+      DynamicModuleValues :> {}], Setting[#, {0}]& ]},
+   "RowWithSeparators"], "]"}]], "Output",
+ CellChangeTimes->{3.8934047698669877`*^9, 3.893404803264261*^9, 
+  3.8934752529626074`*^9, 3.8965001153020315`*^9, 3.8965001494556513`*^9},
+ CellLabel->
+  "Out[1443]=",ExpressionUUID->"fc3d8bfb-f71f-4277-8bfc-179f0548e4fa"]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8928042508469963`*^9, 3.8928042538355055`*^9}, 
+   3.892804988316024*^9},
+ CellLabel->
+  "In[1446]:=",ExpressionUUID->"199c1745-5c8d-4e00-8618-7c5422e5a80b"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{3.8928042927986946`*^9, 3.8928049869217105`*^9},
+ CellLabel->
+  "In[1447]:=",ExpressionUUID->"1c4c827a-e0b3-4d18-a163-4df101ed7cd3"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8928043004485407`*^9, 3.89280430240893*^9}, 
+   3.892804985987833*^9},
+ CellLabel->
+  "In[1448]:=",ExpressionUUID->"0f3b55cb-653a-4144-b920-a8cb619f2c46"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.892804312105452*^9, 3.8928043175282307`*^9}, {
+   3.8928044189807024`*^9, 3.892804484472686*^9}, 3.892804902003113*^9, 
+   3.8928049847971706`*^9},
+ CellLabel->
+  "In[1449]:=",ExpressionUUID->"afb186d5-ddb3-413d-b2a3-8ed46463fc8d"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.892803316518931*^9, 3.892803405060094*^9}, {
+   3.892803960737953*^9, 3.892803967323798*^9}, {3.892804182271805*^9, 
+   3.892804187382101*^9}, 3.89280422532592*^9, {3.892804971464823*^9, 
+   3.892805031225628*^9}, {3.892805206393097*^9, 3.892805261964853*^9}, 
+   3.8934003548228817`*^9},
+ CellLabel->
+  "In[1450]:=",ExpressionUUID->"2c7109b8-15aa-46b1-a3db-63d6099949ed"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8928033944369144`*^9, 3.892803397169953*^9}},
+ CellLabel->
+  "In[1451]:=",ExpressionUUID->"cab4b0a8-98e5-4e80-8116-661323276f43"],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"SMSIf", "[", 
+     RowBox[{"gN", "\[LessEqual]", "0"}], "]"}], "\[IndentingNewLine]", 
+    "\[CapitalPi]"}], "\[DoubleRightTee]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"1", "/", "2"}], ")"}], "\[Epsilon]", " ", 
+     SuperscriptBox["gN", "2"], "\[IndentingNewLine]", 
+     RowBox[{"SMSElse", "[", "]"}], "\[IndentingNewLine]", "\[CapitalPi]"}], 
+    "\[DoubleRightTee]", 
+    RowBox[{"0", "\[IndentingNewLine]", 
+     RowBox[{"SMSEndIf", "[", "]"}]}]}]}], "*)"}]], "Input",
+ CellChangeTimes->{{3.8927074507082987`*^9, 3.892707459396247*^9}, 
+   3.8927126881139035`*^9, 3.8927133901254992`*^9, {3.8927933863175955`*^9, 
+   3.8927933912590823`*^9}, {3.892800175493368*^9, 3.8928001981045456`*^9}, {
+   3.8928004889928484`*^9, 3.8928004902884064`*^9}, {3.892801131548273*^9, 
+   3.8928011676534777`*^9}, {3.892801246965506*^9, 3.892801248050844*^9}},
+ CellLabel->
+  "In[1452]:=",ExpressionUUID->"55b48789-edd6-40a9-91dd-6aa7393e9ccb"],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{"\[CapitalPi]", "\[RightTee]", 
+   RowBox[{"SMSFreeze", "[", "W", "]"}]}], "*)"}]], "Input",
+ CellChangeTimes->{{3.8928001819645414`*^9, 3.8928002067875013`*^9}, 
+   3.8928004270190687`*^9, {3.892800480019991*^9, 3.892800483095521*^9}},
+ CellLabel->
+  "In[1453]:=",ExpressionUUID->"ace5e796-d978-482b-8af8-b02f13b9de94"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{
+  3.8927930935425444`*^9, {3.892793244368808*^9, 3.8927932548834286`*^9}, {
+   3.892800498501194*^9, 3.8928005176715612`*^9}, {3.8934016100273952`*^9, 
+   3.893401610241221*^9}},
+ CellLabel->
+  "In[1454]:=",ExpressionUUID->"fbe80faa-d8dc-4aa5-89ca-cedea63d94b3"],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{"\[CapitalPi]", "\[DoubleRightTee]", 
+   RowBox[{"\[Epsilon]", "*", "gN", "*", 
+    RowBox[{"SMSD", "[", 
+     RowBox[{"gN", ",", "u"}], "]"}]}]}], "*)"}]], "Input",
+ CellChangeTimes->{{3.892803283696892*^9, 3.8928032933722377`*^9}, {
+  3.8934045954174547`*^9, 3.893404595930295*^9}},
+ CellLabel->
+  "In[1455]:=",ExpressionUUID->"b1384104-0409-4cb3-a62c-57d57ed09f3b"],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{"R", "\[DoubleRightTee]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"SMSD", "[", 
+      RowBox[{"\[CapitalPi]", ",", "u"}], "]"}], "\[IndentingNewLine]", 
+     RowBox[{"SMSExport", "[", 
+      RowBox[{"R", ",", "R$$"}], "]"}], "\[IndentingNewLine]", "K"}], 
+    "\[DoubleRightTee]", 
+    RowBox[{
+     RowBox[{"SMSD", "[", 
+      RowBox[{"R", ",", "u"}], "]"}], "\[IndentingNewLine]", 
+     RowBox[{"SMSExport", "[", 
+      RowBox[{"K", ",", "K$$"}], "]"}]}]}]}], "*)"}]], "Input",
+ CellChangeTimes->{{3.892708104393513*^9, 3.892708112159756*^9}, {
+   3.892708162832217*^9, 3.892708175713057*^9}, 3.8927132347287474`*^9, {
+   3.892713421062753*^9, 3.892713456711791*^9}, {3.8927136305598345`*^9, 
+   3.892713660040001*^9}, {3.8927932894833364`*^9, 3.8927933010203056`*^9}, {
+   3.892799493166617*^9, 3.8927995608595304`*^9}, {3.892800655652151*^9, 
+   3.8928006963192053`*^9}, 3.892800776960994*^9, {3.8928032951171865`*^9, 
+   3.892803295421651*^9}, {3.893404605897235*^9, 3.8934046061761856`*^9}},
+ CellLabel->
+  "In[1456]:=",ExpressionUUID->"2b941e51-857a-4932-b2d5-94a1083523fe"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"SMSWrite", "[", "]"}]], "Input",
+ CellChangeTimes->{{3.892800329938969*^9, 3.892800333976906*^9}},
+ CellLabel->
+  "In[1457]:=",ExpressionUUID->"849f50a1-3e12-4a66-b6bb-f634db9f070f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"[\"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\"] \"\>", 
+   "\[InvisibleSpace]", "\<\" Consistency check - global\"\>"}],
+  SequenceForm["[", 1, "] ", " Consistency check - global"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.893404804200762*^9, 3.8934752536561065`*^9, 
+  3.896500115953556*^9, 3.8965001498561506`*^9},
+ CellLabel->
+  "During evaluation of \
+In[1457]:=",ExpressionUUID->"e9f51a74-58bc-4bd6-8d88-cadecaf263b7"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"[\"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\"] \"\>", 
+   "\[InvisibleSpace]", "\<\" Consistency check - expressions\"\>"}],
+  SequenceForm["[", 1, "] ", " Consistency check - expressions"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.893404804200762*^9, 3.8934752536561065`*^9, 
+  3.896500115953556*^9, 3.89650014994965*^9},
+ CellLabel->
+  "During evaluation of \
+In[1457]:=",ExpressionUUID->"b5102e07-1cb0-41f5-b678-f717e4f3d547"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Events: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"28", " ", "\<\"SMSDB-0\"\>"}]}],
+  SequenceForm["Events: ", 28 "SMSDB-0"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.893404804200762*^9, 3.8934752536561065`*^9, 
+  3.896500115953556*^9, 3.896500149967152*^9},
+ CellLabel->
+  "During evaluation of \
+In[1457]:=",ExpressionUUID->"d5674b6c-96db-411c-88d6-dca7f1e7a3dc"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"[\"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\"] \"\>", 
+   "\[InvisibleSpace]", "\<\" Generate source code :\"\>"}],
+  SequenceForm["[", 1, "] ", " Generate source code :"],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.893404804200762*^9, 3.8934752536561065`*^9, 
+  3.896500115953556*^9, 3.896500149974652*^9},
+ CellLabel->
+  "During evaluation of \
+In[1457]:=",ExpressionUUID->"6adccba4-357d-4118-8475-f30eb63eaa6a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"[\"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\"] \"\>", 
+   "\[InvisibleSpace]", "\<\"Final formating \"\>"}],
+  SequenceForm["[", 1, "] ", "Final formating "],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.893404804200762*^9, 3.8934752536561065`*^9, 
+  3.896500115953556*^9, 3.8965001501076527`*^9},
+ CellLabel->
+  "During evaluation of \
+In[1457]:=",ExpressionUUID->"bb0a16e0-36c9-4118-8c71-707ac4e3dc1e"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {
+     TemplateBox[{
+       StyleBox["\"File: \"", Bold, 
+        RGBColor[0, 0, 1], StripOnInput -> False], "\"Contact_NTN.cpp\"", 
+       StyleBox["\"  Size: \"", Bold, 
+        RGBColor[0, 0, 1], StripOnInput -> False], "3908", 
+       StyleBox["\"  Time: \"", Bold, 
+        RGBColor[0, 0, 1], StripOnInput -> False], "1"},
+      "RowDefault"]},
+    {
+     TagBox[GridBox[{
+        {
+         StyleBox["\<\"Method\"\>",
+          StripOnInput->False,
+          LineColor->RGBColor[0, 0, 1],
+          FrontFaceColor->RGBColor[0, 0, 1],
+          BackFaceColor->RGBColor[0, 0, 1],
+          GraphicsColor->RGBColor[0, 0, 1],
+          FontWeight->Bold,
+          FontColor->RGBColor[0, 0, 1]], 
+         StyleBox["\<\"Beam Contact\"\>",
+          StripOnInput->False,
+          LineColor->RGBColor[0, 0, 1],
+          FrontFaceColor->RGBColor[0, 0, 1],
+          BackFaceColor->RGBColor[0, 0, 1],
+          GraphicsColor->RGBColor[0, 0, 1],
+          FontColor->RGBColor[0, 0, 1]]},
+        {
+         StyleBox["\<\"No.Formulae\"\>",
+          StripOnInput->False,
+          LineColor->RGBColor[0, 0, 1],
+          FrontFaceColor->RGBColor[0, 0, 1],
+          BackFaceColor->RGBColor[0, 0, 1],
+          GraphicsColor->RGBColor[0, 0, 1],
+          FontWeight->Bold,
+          FontColor->RGBColor[0, 0, 1]], "52"},
+        {
+         StyleBox["\<\"No.Leafs\"\>",
+          StripOnInput->False,
+          LineColor->RGBColor[0, 0, 1],
+          FrontFaceColor->RGBColor[0, 0, 1],
+          BackFaceColor->RGBColor[0, 0, 1],
+          GraphicsColor->RGBColor[0, 0, 1],
+          FontWeight->Bold,
+          FontColor->RGBColor[0, 0, 1]], "554"}
+       },
+       AutoDelete->False,
+       GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Center}}},
+       GridBoxDividers->{"Columns" -> {True, True}},
+       GridBoxFrame->{"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+       GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+      "Grid"]}
+   },
+   DefaultBaseStyle->"Column",
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxDividers->{"Rows" -> {True, True}},
+   GridBoxFrame->{"Columns" -> False, "Rows" -> False},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Column"]], "Print",
+ CellChangeTimes->{3.893404804200762*^9, 3.8934752536561065`*^9, 
+  3.896500115953556*^9, 3.896500150233694*^9},
+ CellLabel->
+  "During evaluation of \
+In[1457]:=",ExpressionUUID->"511c7222-7f4d-40b6-88ee-3098c02f62ea"]
+}, Open  ]],
+
+Cell[BoxData["0.6580000000000013`"], "Output",
+ CellChangeTimes->{3.8934048045713024`*^9, 3.89347525421511*^9, 
+  3.896500116320508*^9, 3.8965001503106904`*^9},
+ CellLabel->
+  "Out[1457]=",ExpressionUUID->"7034c2b4-8103-4a7f-b516-59c0aeeacdeb"]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.892708183569359*^9, 3.892708189901948*^9}, 
+   3.8927132560308313`*^9},
+ CellLabel->
+  "In[1458]:=",ExpressionUUID->"d7735ffe-7946-4aa6-a41f-030e78c5eaee"],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{{3.8927082476586857`*^9, 3.892708329367123*^9}, {
+  3.892713295842043*^9, 3.8927133003042426`*^9}},
+ CellLabel->
+  "In[1459]:=",ExpressionUUID->"2f349db5-6226-4e3b-9e6a-d730c286e6a8"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8927079597473536`*^9, 3.892708012979974*^9}, {
+   3.8927080471651635`*^9, 3.892708066800382*^9}, 3.892713388331852*^9},
+ CellLabel->
+  "In[1460]:=",ExpressionUUID->"f0c8109a-679e-4ea8-b5b1-efaad31dd6d3"]
+},
+WindowSize->{574.8, 579.6},
+WindowMargins->{{-4.8, Automatic}, {Automatic, 0}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (June 19, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"c6403d4f-3e02-4acb-8f13-70199e7759ab"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 203, 4, 28, "Input",ExpressionUUID->"a6bf630e-95d5-4912-9573-09c323217436"],
+Cell[CellGroupData[{
+Cell[786, 28, 713, 12, 48, "Input",ExpressionUUID->"1bcf4db1-a4d6-4618-9dd8-0fca750ad8fc"],
+Cell[1502, 42, 1490, 21, 32, "Output",ExpressionUUID->"7c631a1b-9ee0-4f19-9b79-b2cf05cf0fb6"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3029, 68, 556, 11, 48, "Input",ExpressionUUID->"c3c20bd1-d6bc-49b0-a89b-f8afcf5321da"],
+Cell[3588, 81, 560, 9, 32, "Output",ExpressionUUID->"a4e789af-00ba-40fc-a216-a53756739f20"]
+}, Open  ]],
+Cell[4163, 93, 252, 4, 28, "Input",ExpressionUUID->"5fb32be8-d5aa-4cd2-88ae-158ab535265a"],
+Cell[4418, 99, 178, 3, 28, "Input",ExpressionUUID->"22c39f97-c5aa-4d65-a6b6-165d4c86deb1"],
+Cell[4599, 104, 398, 8, 48, "Input",ExpressionUUID->"7d603704-78d6-477b-a71f-061069710b36"],
+Cell[CellGroupData[{
+Cell[5022, 116, 2047, 38, 86, "Input",ExpressionUUID->"e60b8d6c-5f74-4228-9aaf-47b3fc1b2c1f"],
+Cell[7072, 156, 1759, 25, 32, "Output",ExpressionUUID->"036a61e9-dc81-416b-840f-372efa4d7552"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8868, 186, 1886, 45, 105, "Input",ExpressionUUID->"1d22622b-4d9a-43a5-b726-cace7a1c09c6"],
+Cell[10757, 233, 526, 11, 22, "Print",ExpressionUUID->"bcb22c72-6bcd-45d3-80fb-c4aeb9de9484"],
+Cell[11286, 246, 1607, 54, 35, "Output",ExpressionUUID->"3cdf02d7-5b8b-41be-9d8f-5f3ba2d66fb7"],
+Cell[12896, 302, 1609, 54, 35, "Output",ExpressionUUID->"38880825-634b-4fe3-adb4-c8698e2b2f57"],
+Cell[14508, 358, 2944, 102, 35, "Output",ExpressionUUID->"66b366fa-c721-44f0-840a-7cfced09b474"],
+Cell[17455, 462, 2950, 102, 35, "Output",ExpressionUUID->"74c40ce8-0388-4000-8629-b5848c628087"],
+Cell[20408, 566, 2064, 70, 35, "Output",ExpressionUUID->"ab92672e-f645-430c-98cb-cb909ff9f040"]
+}, Open  ]],
+Cell[22487, 639, 206, 4, 28, "Input",ExpressionUUID->"ebd7cc92-e126-4dba-8538-b411bcb54c64"],
+Cell[CellGroupData[{
+Cell[22718, 647, 994, 21, 48, "Input",ExpressionUUID->"75fd38d0-ca24-48b2-8f73-7333a5227d9a"],
+Cell[23715, 670, 596, 17, 33, "Output",ExpressionUUID->"2e849e19-e598-47ab-81bb-f14e50d85307"],
+Cell[24314, 689, 1605, 54, 35, "Output",ExpressionUUID->"290fcd12-7521-4938-b4b3-a485b44397cc"]
+}, Open  ]],
+Cell[25934, 746, 472, 8, 28, "Input",ExpressionUUID->"8ca6a76e-12b7-487f-8c21-9177e1af5e91"],
+Cell[26409, 756, 446, 7, 28, "Input",ExpressionUUID->"ad058331-7d86-45aa-a12b-9ffdb4d6348c"],
+Cell[CellGroupData[{
+Cell[26880, 767, 577, 12, 28, "Input",ExpressionUUID->"4e80ec93-e41b-40d4-af57-f1e8a40f934f"],
+Cell[27460, 781, 1610, 54, 35, "Output",ExpressionUUID->"27075ca6-b63f-4bd2-bb3e-dff4dbcf4591"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[29107, 840, 430, 10, 28, "Input",ExpressionUUID->"f54db185-759e-4c3a-9cfd-b0399cb73972"],
+Cell[29540, 852, 1608, 54, 35, "Output",ExpressionUUID->"e783f377-5f5d-440c-9d86-14de84884095"]
+}, Open  ]],
+Cell[31163, 909, 281, 5, 28, "Input",ExpressionUUID->"8c2ce2b9-9137-44a0-ac6e-e9f488c42d03"],
+Cell[31447, 916, 304, 5, 28, "Input",ExpressionUUID->"8745471d-f5d0-4653-a3e1-92e3bbadd21a"],
+Cell[31754, 923, 404, 6, 28, "Input",ExpressionUUID->"f1d6958e-f194-4dfe-bf90-837636f8cd12"],
+Cell[CellGroupData[{
+Cell[32183, 933, 732, 14, 28, "Input",ExpressionUUID->"b68f2ccc-7762-4f12-b788-2901824b83c2"],
+Cell[32918, 949, 583, 17, 33, "Output",ExpressionUUID->"94c4940e-cba1-4840-a7d3-5477c5c77d7f"]
+}, Open  ]],
+Cell[33516, 969, 465, 10, 28, "Input",ExpressionUUID->"ca8c12ea-0e59-4490-84cb-81970a7ea470"],
+Cell[33984, 981, 330, 5, 28, "Input",ExpressionUUID->"21f100e9-6260-4d4b-bcfa-909465f91b2e"],
+Cell[CellGroupData[{
+Cell[34339, 990, 387, 9, 67, "Input",ExpressionUUID->"018c5d49-aa71-4bb2-914b-3b5a079436ee"],
+Cell[34729, 1001, 1300, 28, 34, "Output",ExpressionUUID->"0ba6c5d5-6cb0-49b6-a416-06214459c2dc"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[36066, 1034, 300, 6, 28, "Input",ExpressionUUID->"69f93021-46a9-4322-adf8-fbbaab186eb7"],
+Cell[36369, 1042, 598, 17, 33, "Output",ExpressionUUID->"3cde2529-8c72-46ab-9fea-f98f6abd7865"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37004, 1064, 1299, 28, 162, "Input",ExpressionUUID->"1afa348d-0e07-4fb1-af1b-297433fae70e"],
+Cell[38306, 1094, 601, 17, 33, "Output",ExpressionUUID->"ebe3ee67-f63c-40ff-8ad6-40b4c9edd4c9"],
+Cell[38910, 1113, 591, 17, 33, "Output",ExpressionUUID->"28264eee-5d62-4f88-a6ac-5172d6575b07"],
+Cell[39504, 1132, 2027, 50, 42, "Output",ExpressionUUID->"a5ff53d7-8f90-4b7f-8f79-72d5f9350979"],
+Cell[41534, 1184, 601, 17, 33, "Output",ExpressionUUID->"78a8f381-b313-4330-87f9-cf84d1caf05f"],
+Cell[42138, 1203, 590, 17, 33, "Output",ExpressionUUID->"33cdc7e0-54e1-44e2-8efc-9648ac9167fa"],
+Cell[42731, 1222, 2698, 64, 42, "Output",ExpressionUUID->"fc3d8bfb-f71f-4277-8bfc-179f0548e4fa"]
+}, Open  ]],
+Cell[45444, 1289, 206, 4, 28, "Input",ExpressionUUID->"199c1745-5c8d-4e00-8618-7c5422e5a80b"],
+Cell[45653, 1295, 178, 3, 28, "Input",ExpressionUUID->"1c4c827a-e0b3-4d18-a163-4df101ed7cd3"],
+Cell[45834, 1300, 203, 4, 28, "Input",ExpressionUUID->"0f3b55cb-653a-4144-b920-a8cb619f2c46"],
+Cell[46040, 1306, 280, 5, 28, "Input",ExpressionUUID->"afb186d5-ddb3-413d-b2a3-8ed46463fc8d"],
+Cell[46323, 1313, 421, 7, 28, "Input",ExpressionUUID->"2c7109b8-15aa-46b1-a3db-63d6099949ed"],
+Cell[46747, 1322, 178, 3, 28, "Input",ExpressionUUID->"cab4b0a8-98e5-4e80-8116-661323276f43"],
+Cell[46928, 1327, 1018, 22, 105, "Input",ExpressionUUID->"55b48789-edd6-40a9-91dd-6aa7393e9ccb"],
+Cell[47949, 1351, 360, 7, 28, "Input",ExpressionUUID->"ace5e796-d978-482b-8af8-b02f13b9de94"],
+Cell[48312, 1360, 309, 6, 28, "Input",ExpressionUUID->"fbe80faa-d8dc-4aa5-89ca-cedea63d94b3"],
+Cell[48624, 1368, 408, 9, 28, "Input",ExpressionUUID->"b1384104-0409-4cb3-a62c-57d57ed09f3b"],
+Cell[49035, 1379, 1120, 23, 86, "Input",ExpressionUUID->"2b941e51-857a-4932-b2d5-94a1083523fe"],
+Cell[CellGroupData[{
+Cell[50180, 1406, 206, 4, 28, "Input",ExpressionUUID->"849f50a1-3e12-4a66-b6bb-f634db9f070f"],
+Cell[CellGroupData[{
+Cell[50411, 1414, 500, 11, 22, "Print",ExpressionUUID->"e9f51a74-58bc-4bd6-8d88-cadecaf263b7"],
+Cell[50914, 1427, 507, 11, 22, "Print",ExpressionUUID->"b5102e07-1cb0-41f5-b678-f717e4f3d547"],
+Cell[51424, 1440, 422, 10, 22, "Print",ExpressionUUID->"d5674b6c-96db-411c-88d6-dca7f1e7a3dc"],
+Cell[51849, 1452, 490, 11, 22, "Print",ExpressionUUID->"6adccba4-357d-4118-8475-f30eb63eaa6a"],
+Cell[52342, 1465, 478, 11, 22, "Print",ExpressionUUID->"bb0a16e0-36c9-4118-8c71-707ac4e3dc1e"],
+Cell[52823, 1478, 2513, 65, 82, "Print",ExpressionUUID->"511c7222-7f4d-40b6-88ee-3098c02f62ea"]
+}, Open  ]],
+Cell[55351, 1546, 244, 4, 32, "Output",ExpressionUUID->"7034c2b4-8103-4a7f-b516-59c0aeeacdeb"]
+}, Open  ]],
+Cell[55610, 1553, 204, 4, 28, "Input",ExpressionUUID->"d7735ffe-7946-4aa6-a41f-030e78c5eaee"],
+Cell[55817, 1559, 248, 4, 48, "Input",ExpressionUUID->"2f349db5-6226-4e3b-9e6a-d730c286e6a8"],
+Cell[56068, 1565, 252, 4, 84, "Input",ExpressionUUID->"f0c8109a-679e-4ea8-b5b1-efaad31dd6d3"]
+}
+]
+*)
+
