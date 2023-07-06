@@ -13,14 +13,15 @@ int main()
     // 3 - Nonlinear Euler Bernouli Beam Element (3 dofs per node)
     // 4 - GEBT(Geometrically Exact Beam theory) based beam element
     // 5 - Nonlinear Euler Bernouli Beam Element (6 dofs per node)(quadratic)
-    // 6 - Nonlinear EBBE with contact (2 bodies)
-    int choice = 6;
+    // 6 - Nonlinear Euler Bernouli Beam Element with contact using Node to Node (2 bodies)
+    // 7 - Nonlinear Euler Bernouli beam element with Segment to Segment contact (2 bodies)
+    int choice = 7;
     //LoadVector(M.LOAD,M.ELSET,LOAD,M.NNODE);
-    // -------------------------------------
-    //--------------------------------------
-    //----------BAR ELEMENT LINEAR----------
-    //--------------------------------------
-    //--------------------------------------
+    // -------------------------------------//
+    //--------------------------------------//
+    //----------BAR ELEMENT LINEAR----------//
+    //--------------------------------------//
+    //--------------------------------------//
     //This code works only for linear bar element with a concentrated loads.
     if (choice == 1)
     {
@@ -185,7 +186,7 @@ int main()
 
             //            std::cout<<"Increment in displacement"<<std::endl<<dU<<std::endl;
 
-                        //Next iteration
+            //Next iteration
             for (int i = 0; i < NLBE.NNODE * NLBE.NDOF; i++)
                 U_new(i) = U(i) + dU(i);
 
@@ -628,7 +629,6 @@ int main()
         file1.close();
         file2.close();
     }
-
     //--------------------------------------------------------//
     //--------------------------------------------------------//
     //----------3D EulerBernouli Beam Element-----------------//
@@ -1033,9 +1033,9 @@ int main()
 
                         }
                     }
-                    
+
                     //Contact Search 
-                    ContactSearch(EBBE3D1, EBBE3D2, ContactPairs);
+                    ContactSearch(EBBE3D1, EBBE3D2, ContactPairs,"NTN");
                     //Apply contact constraint
                     //EBBE3D2 - slave
                     //EBBE3D1 - master
@@ -1045,8 +1045,8 @@ int main()
                         int mnode = ContactPairs[i][1] - 1;
                         int snode = ContactPairs[i][0] - 1;
 
-                        std::cout << mnode << std::endl;
-                        std::cout << snode << std::endl;
+                        //std::cout << mnode << std::endl;
+                        //std::cout << snode << std::endl;
 
                         double X1[3], X2[3], u1[6], u2[6], D[4];
 
@@ -1080,8 +1080,9 @@ int main()
                             for (int k = 0; k < EBBE3D1.NDOF * 2; k++)
                                 CT[j][k] = 0;
                         }
-
-                        Beam_Contact(D, X1, X2, u1, u2, CR, CT);
+                        
+                        double g;
+                        Contact_NTN(D, X1, X2, u1, u2, CR, CT, &g);
 
                         /*std::cout << "Tangent matrix" << std::endl;
                         for (int j = 0; j < EBBE3D1.NDOF * 2; j++)
@@ -1096,20 +1097,24 @@ int main()
                             std::cout << CR[j] << std::endl;*/
 
                         //Assembly
-                        for (int j = 0; j < 6; j++)
+                        std::cout << g << std::endl;
+                        if (g < 0)
                         {
-                            GR(6 * mnode + j) += CR[j + 6];
-                            GR(6 * (snode + EBBE3D1.NNODE) + j) += CR[j];
-                            for (int k = 0; k < 6; k++)
+                            for (int j = 0; j < 6; j++)
                             {
-                                GT.coeffRef(6 * (snode + EBBE3D1.NNODE) + j, 6 * (snode + EBBE3D1.NNODE) + k) += CT[j][k];
-                                GT.coeffRef(6 * (snode + EBBE3D1.NNODE) + j, 6 * mnode + k) += CT[j][k + 6];
-                                GT.coeffRef(6 * mnode + j, 6 * (snode + EBBE3D1.NNODE) + k) += CT[j + 6][k];
-                                GT.coeffRef(6 * mnode + j, 6 * mnode + k) += CT[j + 6][k + 6];
+                                GR(6 * mnode + j) += CR[j + 6];
+                                GR(6 * (snode + EBBE3D1.NNODE) + j) += CR[j];
+                                for (int k = 0; k < 6; k++)
+                                {
+                                    GT.coeffRef(6 * (snode + EBBE3D1.NNODE) + j, 6 * (snode + EBBE3D1.NNODE) + k) += CT[j][k];
+                                    GT.coeffRef(6 * (snode + EBBE3D1.NNODE) + j, 6 * mnode + k) += CT[j][k + 6];
+                                    GT.coeffRef(6 * mnode + j, 6 * (snode + EBBE3D1.NNODE) + k) += CT[j + 6][k];
+                                    GT.coeffRef(6 * mnode + j, 6 * mnode + k) += CT[j + 6][k + 6];
+                                }
                             }
                         }
                     }
-                    
+
                     //Assign Boundary conditions
                     //master
                     //fix zero end
@@ -1147,7 +1152,7 @@ int main()
                         GT.coeffRef(j, j) = 1;
                     }
                     int q = EBBE3D2.load - 1;
-                    GR(EBBE3D1.NNODE* EBBE3D1.NDOF + q* EBBE3D2.NDOF + 1) -= -load;
+                    GR(EBBE3D1.NNODE * EBBE3D1.NDOF + q * EBBE3D2.NDOF + 1) -= -load;
 
                     //Solve the equation
                     GT.makeCompressed();
@@ -1183,7 +1188,7 @@ int main()
                         delete T[i];
                     delete[] R;
 
-                    std::cout << max << std::endl;
+                    //std::cout << max << std::endl;
                 } while (max > pow(10, -6) && iter < maxiter);
                 if (iter < maxiter)
                 {
@@ -1204,7 +1209,7 @@ int main()
                     PostProcessing(EBBE3D1.NODE, GU1, load, "EBBE3D1", EBBE3D1.NNODE, 3, EBBE3D1.NDOF);
                     PostProcessing(EBBE3D2.NODE, GU2, load, "EBBE3D2", EBBE3D2.NNODE, 3, EBBE3D2.NDOF);
                     load += 20;
-
+                    std::cout << load << std::endl;
                     //Print the current configuration in a file
                 }
                 else
@@ -1214,7 +1219,724 @@ int main()
                 }
             } while (fiter < EBBE3D1.NLS);
         }
+    }
+    //--------------------------------------------------------//
+    //----------3D EulerBernouli Beam Element-----------------//
+    //-----------------Large displacement---------------------//
+    //-----------------Updated Lagrangian---------------------//
+    //--------------------Quadratic---------------------------//
+    //------------Segment to Segment Contact------------------//
+    else if (choice == 7)
+    {
+        //Master 1
+        //Slave 2
+        double ms;
+        //Read master data
+        ms = 1;
+        NonLinearEulerBernouliBeamElement3D EBBE3D1 = ReadEBBE3DElement(ms);
+        //Read slave data
+        ms = 2;
+        NonLinearEulerBernouliBeamElement3D EBBE3D2 = ReadEBBE3DElement(ms);
+
+        Eigen::VectorXd dGU = Eigen::VectorXd::Zero(EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE));
+        Eigen::VectorXd GU = Eigen::VectorXd::Zero(EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE));
+        Eigen::VectorXd error = Eigen::VectorXd::Zero(EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE));
+        Eigen::VectorXd GU_new = Eigen::VectorXd::Zero(EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE));
+        Eigen::VectorXd GR = Eigen::VectorXd::Zero(EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE));
+        Eigen::SparseMatrix<double, Eigen::ColMajor> GT(EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE), EBBE3D1.NDOF * (EBBE3D1.NNODE + EBBE3D2.NNODE));
+
+        double max = 0;
+        int iter = 1;
+        int fiter = 1;
+        int maxiter = 50;
+
+        std::fstream file1, file2;
+        file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Result_Log.txt", std::fstream::in | std::fstream::out);
+        file2.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Results.txt", std::fstream::in | std::fstream::out);
+
+        //declare and initialize material parameters and other input variables
+        //master
+        //std::unique_ptr<double[]> D1 = std::make_unique<double[]>(7);
+        double* D1 = new double[7];
+        D1[0] = EBBE3D1.E;
+        D1[1] = EBBE3D1.nu;
+        D1[2] = EBBE3D1.Bp;
+        D1[3] = EBBE3D1.Hp;
+        D1[4] = EBBE3D1.Zx;
+        D1[5] = EBBE3D1.Zy;
+        D1[6] = EBBE3D1.Zz;
+
+        //slave
+        //std::unique_ptr<double[]> D2 = std::make_unique<double[]>(7);
+        double* D2 = new double[7];
+        D2[0] = EBBE3D2.E;
+        D2[1] = EBBE3D2.nu;
+        D2[2] = EBBE3D2.Bp;
+        D2[3] = EBBE3D2.Hp;
+        D2[4] = EBBE3D2.Zx;
+        D2[5] = EBBE3D2.Zy;
+        D2[6] = EBBE3D2.Zz;
+
+        double load = 0;
+
+        if (file1.is_open() && file2.is_open())
+        {
+            do
+            {
+                iter = 0;
+                do
+                {
+                    //Initialize all matrices to zero
+                    GU_new.setZero();
+                    GR.setZero();
+                    GT.setZero();
+
+                    //declare element tangent stiffness matrix and residual vector
+                    double** T;
+                    T = new double* [EBBE3D1.NDOF * EBBE3D1.NEN];
+                    for (int i = 0; i < EBBE3D1.NDOF * EBBE3D1.NEN; i++)
+                        T[i] = new double[EBBE3D1.NDOF * EBBE3D1.NEN];
+                    double* R = new double[EBBE3D1.NDOF * EBBE3D1.NEN];
+
+                    //initialize element tangent stiffness and element residual to zero. 
+                    for (int i = 0; i < EBBE3D1.NDOF * EBBE3D1.NEN; i++)
+                        R[i] = 0;
+                    for (int i = 0; i < EBBE3D1.NDOF * EBBE3D1.NEN; i++)
+                        for (int j = 0; j < EBBE3D1.NDOF * EBBE3D1.NEN; j++)
+                            T[i][j] = 0;
+                    
+                    //declare contact element tangent stiffness matrix and residual vector for contact
+                    double** CT;
+                    CT = new double* [EBBE3D1.NDOF * 4];
+                    for (int i = 0; i < EBBE3D1.NDOF * 4; i++)
+                        CT[i] = new double[EBBE3D1.NDOF * 4];
+                    double* CR = new double[EBBE3D1.NDOF * 4];
+
+                    for (int i = 0; i < (EBBE3D1.NELEM + EBBE3D2.NELEM); i++)
+                    {
+                        //master
+                        if (i < EBBE3D1.NELEM)
+                        {
+                            int a = (int)EBBE3D1.ELEM(i, 1) - 1;
+                            int b = (int)EBBE3D1.ELEM(i, 2) - 1;
+                            int c = (int)EBBE3D1.ELEM(i, 3) - 1;
+
+                            double X[3][3];
+
+                            for (int j = 0; j < 3; j++)
+                            {
+                                X[0][j] = EBBE3D1.NODE(a, j);
+                                X[1][j] = EBBE3D1.NODE(b, j);
+                                X[2][j] = EBBE3D1.NODE(c, j);
+                            }
+                            double h = X[2][0] - X[0][0];
+
+                            //declare and initialize dofs
+                            double U[3][6];
+
+                            for (int j = 0; j < 6; j++)
+                            {
+                                U[0][j] = GU(6 * a + j);
+                                U[1][j] = GU(6 * b + j);
+                                U[2][j] = GU(6 * c + j);
+                            }
+
+
+                            for (int j = 0; j < EBBE3D1.NDOF * EBBE3D1.NEN; j++)
+                            {
+                                R[j] = 0;
+                                for (int k = 0; k < EBBE3D1.NDOF * EBBE3D1.NEN; k++)
+                                    T[j][k] = 0;
+                            }
+
+                            //Local Residual and tangent matrix
+                            RKt(D1, X, U, T, R);
+
+                            //Assembly
+                            for (int j = 0; j < EBBE3D1.NDOF * EBBE3D1.NEN; j++)
+                            {
+                                GR(6 * a + j) += R[j];
+                                for (int k = 0; k < EBBE3D1.NDOF * EBBE3D1.NEN; k++)
+                                    GT.coeffRef(6 * a + j, 6 * a + k) += T[j][k];
+                            }
+                        }
+                        //slave
+                        else
+                        {
+                            int a = (int)EBBE3D2.ELEM(i - EBBE3D1.NELEM, 1) - 1;
+                            int b = (int)EBBE3D2.ELEM(i - EBBE3D1.NELEM, 2) - 1;
+                            int c = (int)EBBE3D2.ELEM(i - EBBE3D1.NELEM, 3) - 1;
+
+                            //declare and initialize position vectors
+                            double X[3][3];
+
+                            for (int j = 0; j < 3; j++)
+                            {
+                                X[0][j] = EBBE3D2.NODE(a, j);
+                                //std::cout << X[0][j] << std::endl;
+                                X[1][j] = EBBE3D2.NODE(b, j);
+                                //std::cout << X[1][j] << std::endl;
+                                X[2][j] = EBBE3D2.NODE(c, j);
+                                //std::cout << X[2][j] << std::endl;
+                            }
+                            double h = X[2][0] - X[0][0];
+
+                            //declare and initialize dofs
+                            double U[3][6];
+
+                            for (int j = 0; j < 6; j++)
+                            {
+                                U[0][j] = GU(6 * (a + EBBE3D1.NNODE) + j);
+                                U[1][j] = GU(6 * (b + EBBE3D1.NNODE) + j);
+                                U[2][j] = GU(6 * (c + EBBE3D1.NNODE) + j);
+                            }
+
+                            for (int j = 0; j < EBBE3D2.NDOF * EBBE3D2.NEN; j++)
+                            {
+                                R[j] = 0;
+                                for (int k = 0; k < EBBE3D2.NDOF * EBBE3D2.NEN; k++)
+                                    T[j][k] = 0;
+                            }
+
+                            //Local Residual and tangent matrix
+                            RKt(D2, X, U, T, R);
+
+                            //Assembly
+                            for (int j = 0; j < EBBE3D2.NDOF * EBBE3D2.NEN; j++)
+                            {
+                                GR(6 * a + j + EBBE3D1.NNODE * EBBE3D1.NDOF) += R[j];
+                                for (int k = 0; k < EBBE3D2.NDOF * EBBE3D2.NEN; k++)
+                                    GT.coeffRef(6 * a + j + EBBE3D1.NNODE * EBBE3D1.NDOF, 6 * a + k + EBBE3D1.NNODE * EBBE3D1.NDOF) += T[j][k];
+                            }
+
+                        }
+                    }
+
+                    int** ContactPairs = new int* [EBBE3D2.NELEM];
+                    for (int j = 0; j < EBBE3D2.NELEM; j++)
+                        ContactPairs[j] = new int[2];
+
+                    double** TP;
+                    TP = new double* [2];
+                    for (int i = 0; i < 2; i++)
+                        TP[i] = new double[2];
+                    double* RP = new double[2];
+
+                    //Contact Search 
+                    ContactSearch(EBBE3D1, EBBE3D2, ContactPairs,"STS");
+
+                    //-------------------------------------------------//
+                    //------------Apply contact constraint-------------//
+                    //-------------------------------------------------// 
+                    //EBBE3D2 - slave
+                    //EBBE3D1 - master
+                    for (int i = 0; i < EBBE3D2.NELEM; i++)
+                    {
+                        //Find the corresponding master element for the slave element.
+                        int melem = ContactPairs[i][1] - 1;
+                        int selem = ContactPairs[i][0] - 1;
+
+                        //std::cout << melem << std::endl;
+                        //std::cout << selem << std::endl;
+
+                        //Find the nodes for slave and master elements
+                        int n1, n2, n3, m1, m2, m3;
+                        n1 = EBBE3D1.ELEM(melem, 1) - 1;
+                        n2 = EBBE3D1.ELEM(melem, 2) - 1;
+                        n3 = EBBE3D1.ELEM(melem, 3) - 1;
+                        m1 = EBBE3D2.ELEM(selem, 1) - 1;
+                        m2 = EBBE3D2.ELEM(selem, 2) - 1;
+                        m3 = EBBE3D2.ELEM(selem, 3) - 1;
+
+                        /*std::cout << n1 << std::endl;
+                        std::cout << n2 << std::endl;
+                        std::cout << n3 << std::endl;
+                        std::cout << m1 << std::endl;
+                        std::cout << m2 << std::endl;
+                        std::cout << m3 << std::endl;*/
+
+                        double X1[3], X2[3], X3[3], u1[6], u2[6], u3[6];
+
+                        double Y1[3], Y2[3], Y3[3], v1[6], v2[6], v3[6];
+
+                        for (int j = 0; j < 3; j++)
+                        {
+                            X1[j] = EBBE3D1.NODE(n1, j);
+                            X2[j] = EBBE3D1.NODE(n2, j);
+                            X3[j] = EBBE3D1.NODE(n3, j);
+                            Y1[j] = EBBE3D2.NODE(m1, j);
+                            Y2[j] = EBBE3D2.NODE(m2, j);
+                            Y3[j] = EBBE3D2.NODE(m3, j);
+                        }
+
+                        /*for (int j = 0; j < 3; j++)
+                            std::cout << X1[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 3; j++)
+                            std::cout << X2[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 3; j++)
+                            std::cout << X3[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 3; j++)
+                            std::cout << Y1[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 3; j++)
+                            std::cout << Y2[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 3; j++)
+                            std::cout << Y3[j] << " ";
+                        std::cout << std::endl;*/
+
+
+                        /*for (int j = 0; j < 3; j++)
+                            std::cout << X1[j] << std::endl;
+
+                        for (int j = 0; j < 3; j++)
+                            std::cout << X2[j] << std::endl;*/
+
+                        for (int j = 0; j < 6; j++)
+                        {
+                            u1[j] = GU.coeffRef(EBBE3D1.NDOF * n1 + j);
+                            u2[j] = GU.coeffRef(EBBE3D1.NDOF * n2 + j);
+                            u3[j] = GU.coeffRef(EBBE3D1.NDOF * n3 + j);
+
+                            v1[j] = GU.coeffRef(EBBE3D2.NDOF * (m1 + EBBE3D1.NNODE) + j);
+                            v2[j] = GU.coeffRef(EBBE3D2.NDOF * (m2 + EBBE3D1.NNODE) + j);
+                            v3[j] = GU.coeffRef(EBBE3D2.NDOF * (m3 + EBBE3D1.NNODE) + j);
+                        }
+
+                        /*for (int j = 0; j < 6; j++)
+                            std::cout << u1[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 6; j++)
+                            std::cout << u2[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 6; j++)
+                            std::cout << u3[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 6; j++)
+                            std::cout << v1[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 6; j++)
+                            std::cout << v2[j] << " ";
+                        std::cout << std::endl;
+                        for (int j = 0; j < 6; j++)
+                            std::cout << v3[j] << " ";
+                        std::cout << std::endl;*/
+
+                        //CPP procedure
+                        double CPP_iter = 0;
+                        double Data1[3];
+                        //Data1[1] = 1;
+                        //Data1[2] = 1;
+                        //master nodes n1, n2
+                        //slave nodes m1, m2
+                        CPP_STS(Data1, X1, X2, Y1, Y2, u1, u2, v1, v2, RP, TP);
+                        Data1[1] = RP[0];
+                        Data1[2] = RP[1];
+                        //double CPP_max = 10;
+                        /*do
+                        {
+                            for (int j = 0; j < 2; j++)
+                            {
+                                RP[j] = 0;
+                                for (int k = 0; k < 2; k++)
+                                    TP[j][k] = 0;
+                            }
+                            double epsilon;
+                            Eigen::MatrixXd Tan(2, 2);
+                            Eigen::VectorXd Res(2), del(2), del_new(2);
+                            del = Eigen::VectorXd::Zero(2);
+                            Data1[0] = EBBE3D1.epsilon;
+                            CPP_STS(Data1, X1, X2, Y1, Y2, u1, u2, v1, v2, RP, TP);
+                            for (int j = 0; j < 2; j++)
+                            {
+                                Res(j) = RP[j];
+                                for (int k = 0; k < 2; k++)
+                                    Tan(j, k) = TP[j][k];
+                            }
+                            del_new = Tan.ldlt().solve(-Res);;
+                            //std::cout << del_new << std::endl;
+                            //Evaluate error
+                            Eigen::VectorXd error(2);
+                            for (int j = 0; j < 2; j++)
+                                error(j) = abs(del_new(j) - del(j));
+                            //Find maximum
+                            CPP_max = error(0);
+                            if (CPP_max < error(1))
+                                CPP_max = error(1);
+                            for (int j = 0; j < 2; j++)
+                                Data1[j + 1] += del_new(j);
+                            //for (int j = 0; j < 2; j++)
+                            //    std::cout << Data1[j + 1] << std::endl;
+                            //Next iteration
+                            for (int j = 0; j < 2; j++)
+                                del(j) = del_new(j);
+                            CPP_iter++;
+                        } while (CPP_max > 1e-8 && CPP_iter < 5);*/
+
+                        /*if (load >= 80)
+                        {
+                            std::cout << "CPP Procedure" << std::endl;
+                            std::cout << "Master points" << std::endl;
+                            for (int j = 0; j < 3; j++)
+                                std::cout << X1[j] + u1[j] << "  ";
+                            std::cout << std::endl;
+                            for (int j = 0; j < 3; j++)
+                                std::cout << X2[j] + u2[j] << "  ";
+                            std::cout << std::endl;
+
+                            std::cout << "Slave points" << std::endl;
+                            for (int j = 0; j < 3; j++)
+                                std::cout << Y1[j] + v1[j] << "  ";
+                            std::cout << std::endl;
+                            for (int j = 0; j < 3; j++)
+                                std::cout << Y2[j] + v2[j] << "  ";
+                            std::cout << std::endl;
+
+                            for (int j = 0; j < 2; j++)
+                                std::cout << Data1[j + 1] << std::endl;
+                        }*/
+                        
+
+                        //Element residual and element tangent for elements
+                        if ((Data1[1] < 1 && Data1[1]>-1) && (Data1[2] < 1 && Data1[2]>-1))
+                        {
+                            double Data2[5];
+                            Data2[0] = EBBE3D1.epsilon;
+                            Data2[1] = Data1[1];
+                            Data2[2] = Data1[2];
+                            Data2[3] = EBBE3D1.D;
+                            Data2[4] = EBBE3D2.D;
+                            double g;
+                            Contact_STS(Data2, X1, X2, Y1, Y2, u1, u2, v1, v2, CR, CT, &g);
+                            /*std::cout << "Gap function" << std::endl;
+                            std::cout << g << std::endl;*/
+                            //Assembly
+                            //master nodes n1, n2
+                            //slave nodes m1, m2
+                            if (g < 0)
+                            {
+                                for (int j = 0; j < 12; j++)
+                                {
+                                    GR(6 * n1 + j) += CR[j];
+                                    GR(6 * (m1 + EBBE3D1.NNODE) + j) += CR[j + 12];
+                                    for (int k = 0; k < 12; k++)
+                                    {
+                                        GT.coeffRef(6 * n1 + j, 6 * n1 + k) += CT[j][k];
+                                        GT.coeffRef(6 * n1 + j, 6 * (m1 + EBBE3D1.NNODE) + k) += CT[j][k + 12];
+                                        GT.coeffRef(6 * (m1 + EBBE3D1.NNODE) + j, 6 * n1 + k) += CT[j + 12][k];
+                                        GT.coeffRef(6 * (m1 + EBBE3D1.NNODE) + j, 6 * (m1 + EBBE3D1.NNODE) + k) += CT[j + 12][k + 12];
+                                    }
+                                }
+                            }
+                            
+
+                            /*for (int j = 0; j < 6; j++)
+                            {
+                                GR(6 * n1 + j) += CR[j];
+                                GR(6 * n2 + j) += CR[j + 6];
+                                GR(6 * (m1 + EBBE3D1.NNODE) + j) += CR[j + 12];
+                                GR(6 * (m2 + EBBE3D1.NNODE) + j) += CR[j + 18];
+                                for (int k = 0; k < 6; k++)
+                                {
+                                    GT.coeffRef(6 * n1 + j, 6 * n1 + k) += CT[j][k];
+                                    GT.coeffRef(6 * n1 + j, 6 * n2 + k) += CT[j][k + 6];
+
+                                    
+                                    GT.coeffRef(6 * n2 + j, 6 * n1 + k) += CT[j + 6][k];
+
+                                    GT.coeffRef(6 * n1 + j, 6 * (m1 + EBBE3D1.NNODE) + k) += CT[j][k + 12];
+                                    GT.coeffRef(6 * (m1 + EBBE3D1.NNODE) + j, 6 * n1 + k) += CT[j + 12][k];
+                                    GT.coeffRef(6 * (m1 + EBBE3D1.NNODE) + j, 6 * (m1 + EBBE3D1.NNODE) + k) += CT[j + 12][k + 12];
+                                }
+                            }*/
+                        }
+
+                        /*std::cout << "Tangent matrix" << std::endl;
+                        for (int j = 0; j < EBBE3D1.NDOF * 2; j++)
+                        {
+                            for (int k = 0; k < EBBE3D1.NDOF * 2; k++)
+                                std::cout << CT[j][k] << "  ";
+                            std::cout << std::endl;
+                        }*/
+
+                        /*std::cout << "Residual vector" << std::endl;
+                        for (int j = 0; j < EBBE3D1.NDOF * 2; j++)
+                            std::cout << CR[j] << std::endl;*/
+
+                        //CPP procedure, element residual and element tangent for elements with
+                        //master nodes n2, n3
+                        //slave nodes m2, m3
+                        //Data1[1] = 1;
+                        //Data1[2] = 1;
+                        CPP_STS(Data1, X2, X3, Y2, Y3, u2, u3, v2, v3, RP, TP);
+                        Data1[1] = RP[0];
+                        Data1[2] = RP[1];
+                        //CPP_max = 10;
+                        //CPP_iter = 1;
+                        /*do
+                        {
+                            for (int j = 0; j < 2; j++)
+                            {
+                                RP[j] = 0;
+                                for (int k = 0; k < 2; k++)
+                                    TP[j][k] = 0;
+                            }
+                            double epsilon;
+                            Eigen::MatrixXd Tan(2, 2);
+                            Eigen::VectorXd Res(2), del(2), del_new(2), el(2);
+                            el = Eigen::VectorXd::Zero(2);
+                            del = Eigen::VectorXd::Zero(2);
+                            Data1[0] = EBBE3D1.epsilon;
+                            CPP_STS(Data1, X2, X3, Y2, Y3, u2, u3, v2, v3, RP, TP);
+                            for (int j = 0; j < 2; j++)
+                            {
+                                Res(j) = RP[j];
+                                for (int k = 0; k < 2; k++)
+                                    Tan(j, k) = TP[j][k];
+                            }
+                            del_new = Tan.colPivHouseholderQr().solve(-Res);
+                            //Evaluate error
+                            Eigen::VectorXd error(2);
+                            for (int j = 0; j < 2; j++)
+                                error(j) = abs(del_new(j) - del(j));
+                            //Find maximum
+                            CPP_max = error(0);
+                            if (CPP_max < error(1))
+                                CPP_max = error(1);
+                            for (int j = 0; j < 2; j++)
+                                Data1[j + 1] += del_new(j);
+                            //Next iteration
+                            for (int j = 0; j < 2; j++)
+                                del(j) = del_new(j);
+                            CPP_iter++;
+                        } while (CPP_max > 1e-8 && CPP_iter < 5);*/
+
+                        /*if (load >= 80)
+                        {
+                            std::cout << "CPP Procedure" << std::endl;
+                            std::cout << "Master points" << std::endl;
+                            for (int j = 0; j < 3; j++)
+                                std::cout << X2[j] + u2[j] << "  ";
+                            std::cout << std::endl;
+                            for (int j = 0; j < 3; j++)
+                                std::cout << X3[j] + u3[j] << "  ";
+                            std::cout << std::endl;
+
+                            std::cout << "Slave points" << std::endl;
+                            for (int j = 0; j < 3; j++)
+                                std::cout << Y2[j] + v2[j] << "  ";
+                            std::cout << std::endl;
+                            for (int j = 0; j < 3; j++)
+                                std::cout << Y3[j] + v3[j] << "  ";
+                            std::cout << std::endl;
+
+                            for (int j = 0; j < 2; j++)
+                                std::cout << Data1[j + 1] << std::endl;
+                        }*/
+                        
+                        //Element residual and element tangent for elements
+                        if ((Data1[1]<1 && Data1[1]>-1) && (Data1[2]<1 && Data1[2]>-1))
+                        {
+                            double Data2[5];
+                            Data2[0] = EBBE3D2.epsilon;
+                            Data2[1] = Data1[1];
+                            Data2[2] = Data1[2];
+                            Data2[3] = EBBE3D1.D;
+                            Data2[4] = EBBE3D2.D;
+                            double g;
+                            Contact_STS(Data2, X2, X3, Y2, Y3, u2, u3, v2, v3, CR, CT, &g);
+
+                            /*std::cout << "Gap function" << std::endl;
+                            std::cout << g << std::endl;*/
+
+                            //Assembly
+                            if (g < 0)
+                            {
+                                for (int j = 0; j < 12; j++)
+                                {
+                                    GR(6 * n2 + j) += CR[j];
+                                    GR(6 * (m2 + EBBE3D1.NNODE) + j) += CR[j + 12];
+                                    for (int k = 0; k < 12; k++)
+                                    {
+                                        GT.coeffRef(6 * n2 + j, 6 * n2 + k) += CT[j][k];
+                                        GT.coeffRef(6 * n2 + j, 6 * (m2 + EBBE3D1.NNODE) + k) += CT[j][k + 12];
+                                        GT.coeffRef(6 * (m2 + EBBE3D1.NNODE) + j, 6 * n2 + k) += CT[j + 12][k];
+                                        GT.coeffRef(6 * (m2 + EBBE3D1.NNODE) + j, 6 * (m2 + EBBE3D1.NNODE) + k) += CT[j + 12][k + 12];
+                                    }
+                                }
+                            } 
+                        }
+                    }
+                    //Assign Boundary conditions
+                    //master
+                    //fix zero end
+                    for (int j = 0; j < 6; j++)
+                    {
+                        for (int k = 0; k < EBBE3D1.NNODE * EBBE3D1.NDOF; k++)
+                            GT.coeffRef(j, k) = 0;
+                        GR(j) = 0;
+                        GT.coeffRef(j, j) = 1;
+                    }
+                    //fix last end
+                    for (int j = (EBBE3D1.NNODE - 1) * EBBE3D1.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
+                    {
+                        for (int k = 0; k < EBBE3D1.NNODE * EBBE3D1.NDOF; k++)
+                            GT.coeffRef(j, k) = 0;
+                        GR(j) = 0;
+                        GT.coeffRef(j, j) = 1;
+                    }
+
+                    int p = EBBE3D1.load - 1;
+                    GR(EBBE3D1.NDOF * p + 1) -= load;
+                    //slave
+                    for (int j = EBBE3D1.NNODE * EBBE3D1.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF + 6; j++)
+                    {
+                        for (int k = EBBE3D1.NNODE * EBBE3D1.NDOF; k < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; k++)
+                            GT.coeffRef(j, k) = 0;
+                        GR(j) = 0;
+                        GT.coeffRef(j, j) = 1;
+                    }
+                    for (int j = EBBE3D1.NNODE * EBBE3D1.NDOF + (EBBE3D2.NNODE - 1) * EBBE3D2.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; j++)
+                    {
+                        for (int k = EBBE3D1.NNODE * EBBE3D1.NDOF; k < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; k++)
+                            GT.coeffRef(j, k) = 0;
+                        GR(j) = 0;
+                        GT.coeffRef(j, j) = 1;
+                    }
+                    int q = EBBE3D2.load - 1;
+                    GR(EBBE3D1.NNODE * EBBE3D1.NDOF + q * EBBE3D2.NDOF + 1) -= -load;
+
+                    //Solve the equation
+                    GT.makeCompressed();
+
+                    Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor>> solver;
+                    solver.analyzePattern(GT);
+                    solver.factorize(GT); //LU decomposition
+
+                    assert(solver.info() == Eigen::Success);
+
+                    dGU = solver.solve(-GR);
+
+                    //control step size
+                    max = dGU(0);
+                    for (int j = 1; j < (EBBE3D1.NNODE + EBBE3D2.NNODE); j++)
+                    {
+                        if (max < dGU(j))
+                            max = dGU(j);
+                        else if (max < dGU(j + 1))
+                            max = dGU(j);
+                        else if (max < dGU(j + 2))
+                            max = dGU(j);
+                        else
+                            continue;
+                    }
+                    //std::cout << max << std::endl;
+                    while (max > EBBE3D1.D || max > EBBE3D2.D)
+                    {  
+                        for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE); j++)
+                        {
+                            dGU(j) = 0.5 * dGU(j);
+                            dGU(j + 1) = 0.5 * dGU(j + 1);
+                            dGU(j + 2) = 0.5 * dGU(j + 2);
+                        }
+
+                        max = dGU(0);
+                        for (int j = 1; j < (EBBE3D1.NNODE + EBBE3D2.NNODE); j++)
+                        {
+                            if (max < dGU(j))
+                                max = dGU(j);
+                            else if (max < dGU(j + 1))
+                                max = dGU(j);
+                            else if (max < dGU(j + 2))
+                                max = dGU(j);
+                            else
+                                continue;
+                        }
+                    }
+                    /*if (load >= 80)
+                    {
+                        std::cout << "Change in displacements" << std::endl;
+                        for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
+                            std::cout << dGU(j) << std::endl;
+                        std::cout << "Tangent stiffness matrix" << std::endl;
+                        for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; j++)
+                        {
+                            for (int k = 0; k < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; k++)
+                                std::cout << GT.coeffRef(j, k) << " ";
+                            std::cout << std::endl;
+                        }
+                        std::cout << "Residual vector" << std::endl;
+                        for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; j++)
+                            std::cout << GR.coeffRef(j) << std::endl;
+                    }*/
+
+                    //Calculate errors and update for next iteration
+                    for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
+                        GU_new(j) = GU(j) + dGU(j);
+
+                    //Error calculation
+                    for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
+                        error(j) = abs(GU_new(j) - GU(j));
+
+                    max = error(0);
+                    for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
+                        if (max < error(j))
+                            max = error(j);
+
+                    //Assignment for next iteration
+                    for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
+                        GU(j) = GU_new(j);
+                    iter++;
+
+                    //Free memory
+                    delete[] TP, RP, CT, T, R, CR, ContactPairs;
+                    
+                    std::cout << max << std::endl;
+                } while (max > pow(10, -6) && iter < maxiter);
+                if (iter < maxiter)
+                {
+                    fiter++;
+                    /*file2 << "Converged values at load  " << load << std::endl;
+                    file2 << "Values for beam 1 " << std::endl;
+                    for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
+                        file2 << GU(j) << std::endl;
+                    file2 << "Values for beam 2 " << std::endl;
+                    for (int j = EBBE3D1.NNODE * EBBE3D1.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; j++)
+                        file2 << GU(j) << std::endl;*/
+                    //for (int j = 0; j < (EBBE3D1.NNODE + EBBE3D2.NNODE) * EBBE3D1.NDOF; j++)
+                    //    std::cout << GU(j) << std::endl;
+                    Eigen::VectorXd GU1 = Eigen::VectorXd::Zero(EBBE3D1.NNODE * EBBE3D1.NDOF);
+                    Eigen::VectorXd GU2 = Eigen::VectorXd::Zero(EBBE3D2.NNODE * EBBE3D2.NDOF);
+                    for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
+                        GU1(j) = GU(j);
+                    for (int j = EBBE3D1.NNODE * EBBE3D1.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; j++)
+                        GU2(j - EBBE3D1.NNODE * EBBE3D1.NDOF) = GU(j);
+                    PostProcessing(EBBE3D1.NODE, GU1, load, "EBBE3D1", EBBE3D1.NNODE, 3, EBBE3D1.NDOF);
+                    PostProcessing(EBBE3D2.NODE, GU2, load, "EBBE3D2", EBBE3D2.NNODE, 3, EBBE3D2.NDOF);
+                    load += 10;
+                    std::cout << load << std::endl;
+                    //Print the current configuration in a file
+                }
+                else
+                {
+                    Eigen::VectorXd GU1 = Eigen::VectorXd::Zero(EBBE3D1.NNODE * EBBE3D1.NDOF);
+                    Eigen::VectorXd GU2 = Eigen::VectorXd::Zero(EBBE3D2.NNODE * EBBE3D2.NDOF);
+                    for (int j = 0; j < EBBE3D1.NNODE * EBBE3D1.NDOF; j++)
+                        GU1(j) = GU(j);
+                    for (int j = EBBE3D1.NNODE * EBBE3D1.NDOF; j < EBBE3D1.NNODE * EBBE3D1.NDOF + EBBE3D2.NNODE * EBBE3D2.NDOF; j++)
+                        GU2(j - EBBE3D1.NNODE * EBBE3D1.NDOF) = GU(j);
+                    PostProcessing(EBBE3D1.NODE, GU1, load, "EBBE3D1", EBBE3D1.NNODE, 3, EBBE3D1.NDOF);
+                    PostProcessing(EBBE3D2.NODE, GU2, load, "EBBE3D2", EBBE3D2.NNODE, 3, EBBE3D2.NDOF);
+                    std::cout << "Code didn't converge" << std::endl;
+                    break;
+                }
+            } while (fiter < EBBE3D1.NLS);
         }
+        delete[] D1, D2;
+    }
     else
         std::cout << "Wrong option" << std::endl;
 }

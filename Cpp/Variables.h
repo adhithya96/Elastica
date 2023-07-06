@@ -10,6 +10,7 @@
 #include<sstream>
 #include<math.h>
 #include<cassert>
+#include<memory>
 
 #define M_PI 3.14159265358979323846
 
@@ -143,6 +144,10 @@ struct NonLinearEulerBernouliBeamElement3D
     double E, nu, Bp, Hp, Zx, Zy, Zz;
 
     int load;
+
+    double D;
+
+    double epsilon;
 };
 
 struct VAMBeamElement
@@ -218,9 +223,16 @@ Eigen::VectorXd Update_Strains(VAMBeamElement VAMBE, Eigen::VectorXd* U, std::fs
 // VARIABLES_H
 
 //Functions from 3DBeamElement_Contact_NodeToNode.cpp
-void ContactSearch(NonLinearEulerBernouliBeamElement3D EBBE3D1, NonLinearEulerBernouliBeamElement3D EBBE3D2, int** ContactPairs);
-void Beam_Contact(double D[4], double X1[3], double X2[3], double u1[6], double u2[6], double* CR, double** CT);
+void ContactSearch(NonLinearEulerBernouliBeamElement3D EBBE3D1, NonLinearEulerBernouliBeamElement3D EBBE3D2, int** ContactPairs, std::string choice);
+void Contact_NTN(double D[4], double X1[3], double X2[3], double u1[6], double u2[6], double* CR, double** CT, double* g);
 void PostProcessing(Eigen::MatrixXd X, Eigen::VectorXd U, double load, std::string BeamElement, int nnode, int ndm, int ndof);
+void Contact_STS(double D[5], double X1[3], double X2[3]
+    , double X3[3], double X4[3], double u1[6], double u2[6], double u3[6], double u4[6]
+    , double* CR, double** CT, double* g);
+void CPP_STS(double D[3], double X1[3], double X2[3]
+    , double X3[3], double X4[3], double u1[6], double u2[6], double u3[6]
+    , double u4[6], double* RP, double** TP);
+
 
 //Functions from 3DBeamElement_NonLinear_EulerBernoulli_QuadraticInterpolation
 void RKt(double D[7], double X[3][3], double U[3][6], double** T, double* R);

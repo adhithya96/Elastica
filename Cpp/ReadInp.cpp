@@ -216,7 +216,7 @@ VAMBeamElement ReadVAMBEFile()
 }
 
 //Validation case for Euler Bernouli Beam element (6 dofs per node)
-/*NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
+NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
 {
     struct NonLinearEulerBernouliBeamElement3D M;
     M.NNODE = 17;
@@ -332,15 +332,15 @@ VAMBeamElement ReadVAMBEFile()
     M.Zz = 1;
 
     return M;
-}*/
+}
 
-NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
+/*NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
 {
     struct NonLinearEulerBernouliBeamElement3D M;
     M.NNODE = 5;
     M.NELEM = 2;
     M.NDOF = 6;
-    M.NLS = 12;
+    M.NLS = 24;
     M.NEN = 3;
 
     M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
@@ -383,9 +383,10 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
     M.Zz = 1;
 
     return M;
-}
+}*/
 
-NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
+//Validation case for node-to-node contact with 3-D EB beams
+NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms)
 {
     struct NonLinearEulerBernouliBeamElement3D M;
     //Master
@@ -394,7 +395,7 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
         M.NNODE = 11;
         M.NELEM = 5;
         M.NDOF = 6;
-        M.NLS = 12;
+        M.NLS = 24;
         M.NEN = 3;
 
         M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
@@ -470,6 +471,10 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
         M.Zz = 1;
 
         M.load = 6;
+
+        M.D = 0.0001;
+
+        M.epsilon = 1e10;
     }
     //Slave
     else if (ms == 2)
@@ -477,7 +482,7 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
         M.NNODE = 11;
         M.NELEM = 5;
         M.NDOF = 6;
-        M.NLS = 12;
+        M.NLS = 24;
         M.NEN = 3;
 
         M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
@@ -553,10 +558,112 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms )
         M.Zz = 1;
         
         M.load = 6;
-    }
 
+        M.D = 0.0001;
+
+        M.epsilon = 1e10;
+    }
     return M;
 }
+
+//Validation case for segment-to-segment contact with 3-D EB beams
+/*NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms)
+{
+    struct NonLinearEulerBernouliBeamElement3D M;
+    //Master
+    if (ms == 1)
+    {
+        M.NNODE = 3;
+        M.NELEM = 1;
+        M.NDOF = 6;
+        M.NLS = 40;
+        M.NEN = 3;
+
+        M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
+        M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
+
+        //Nodal Information
+        M.NODE(0, 0) = 0;
+        M.NODE(0, 1) = 0;
+        M.NODE(0, 2) = 0;
+        M.NODE(1, 0) = 5;
+        M.NODE(1, 1) = 0;
+        M.NODE(1, 2) = 0;
+        M.NODE(2, 0) = 10;
+        M.NODE(2, 1) = 0;
+        M.NODE(2, 2) = 0;
+
+        //Element connectivity
+        M.ELEM(0, 0) = 1;
+        M.ELEM(0, 1) = 1;
+        M.ELEM(0, 2) = 2;
+        M.ELEM(0, 3) = 3;
+
+        M.E = 1e7;
+        M.nu = 0.0001;
+        M.Bp = 1;
+        M.Hp = 1;
+        M.Zx = 0;
+        M.Zy = 0;
+        M.Zz = 1;
+
+        //node where point load is acting
+        M.load = 2;
+
+        M.D = 0.0001;
+
+        M.epsilon = 1e10;
+    }
+    //Slave
+    else if (ms == 2)
+    {
+        M.NNODE = 3;
+        M.NELEM = 1;
+        M.NDOF = 6;
+        M.NLS = 40;
+        M.NEN = 3;
+
+        M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
+        M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
+
+        //Nodal Information
+        M.NODE(0, 0) = 0;
+        M.NODE(0, 1) = 0.001;
+        M.NODE(0, 2) = 0;
+        M.NODE(1, 0) = 5;
+        M.NODE(1, 1) = 0.001;
+        M.NODE(1, 2) = 0;
+        M.NODE(2, 0) = 10;
+        M.NODE(2, 1) = 0.001;
+        M.NODE(2, 2) = 0;
+
+        //Element connectivity
+        M.ELEM(0, 0) = 1;
+        M.ELEM(0, 1) = 1;
+        M.ELEM(0, 2) = 2;
+        M.ELEM(0, 3) = 3;
+
+        M.E = 1e7;
+        M.nu = 0.0001;
+        M.Bp = 1;
+        M.Hp = 1;
+        M.Zx = 0;
+        M.Zy = 0;
+        M.Zz = 1;
+
+        M.load = 2;
+
+        M.D = 0.0001;
+
+        M.epsilon = 1e10;
+    }
+    return M;
+}*/
+
+
+
+
+
 
 /*
 Mesh ReadInpFile(std::string filename)

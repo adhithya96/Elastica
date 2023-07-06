@@ -14,7 +14,7 @@ z2 = []
 FFMpegWriter = manimation.writers['ffmpeg']
 metadata = dict(title='Movie Test', artist='Matplotlib',
                 comment='a red circle following a blue sine wave')
-writer = FFMpegWriter(fps=1, metadata=metadata)
+writer = FFMpegWriter(fps=2, metadata=metadata)
 
 fig = plt.figure()
 ax2 = fig.subplots()
@@ -34,9 +34,9 @@ data1_name = "EBBE3D1_"
 data2_name = "EBBE3D2_"
 
 with writer.saving(fig, "writer_test.mp4", 100):
-    for i in range(1, 11):
-        data1_path = os.path.join(CSD, data1_name + str((i - 1) * 20) + ".txt")
-        data2_path = os.path.join(CSD, data2_name + str((i - 1) * 20) + ".txt")
+    for i in range(1, 10):
+        data1_path = os.path.join(CSD, data1_name + str((i - 1) * 10) + ".txt")
+        data2_path = os.path.join(CSD, data2_name + str((i - 1) * 10) + ".txt")
         f = open(data1_path)
         x1 = []
         y1 = []
