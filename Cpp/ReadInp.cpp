@@ -92,74 +92,88 @@ NonLinearBarElement ReadNLBEFile()
     return NLBE;
 }
 
-NonLinearEulerBernouliBeamElement ReadNLEBBEFile()
+NLEBBE2D::NLEBBE2D()
 {
-    struct NonLinearEulerBernouliBeamElement NLEBBE;
+    NLEBBE2D::NNODE = 9;
+    NLEBBE2D::NELEM = 8;
+    NLEBBE2D::NMAT = 2;
+    NLEBBE2D::NDOF = 3;
+    NLEBBE2D::NLS = 12;
 
-    NLEBBE.NBODIES = 1;
-    NLEBBE.NNODE = 5;
-    NLEBBE.NELEM = 4;
-    NLEBBE.NMAT = 2;
-    NLEBBE.NDOF = 3;
-    NLEBBE.NLS = 10;
+    NLEBBE2D::NODE = Eigen::MatrixXd::Zero(NLEBBE2D::NNODE, 3);
+    NLEBBE2D::ELEM = Eigen::MatrixXd::Zero(NLEBBE2D::NELEM, 3);
 
-    NLEBBE.NODE = Eigen::MatrixXd::Zero(NLEBBE.NNODE,3);
-    NLEBBE.ELEM = Eigen::MatrixXd::Zero(NLEBBE.NELEM, 3);
-    NLEBBE.MAT = Eigen::MatrixXd::Zero(NLEBBE.NMAT, 2);
+    NLEBBE2D::E = 30e6;
+    NLEBBE2D::nu = 0.33;
 
-    NLEBBE.MAT(0,0) = 30e6;
-    NLEBBE.MAT(0,1) = 0.33;
-    NLEBBE.MAT(1,0) = 30e6;
-    NLEBBE.MAT(1,1) = 0.33;
+    NLEBBE2D::h = 1;
+    NLEBBE2D::b = 1;
 
-    NLEBBE.CS.choice = "RECT";
-    NLEBBE.CS.Rect.height = 1;
-    NLEBBE.CS.Rect.width = 1;
-    NLEBBE.CS.choice = "CIRCLE";
-    NLEBBE.CS.Cir.radius = 1;
+    NLEBBE2D::NODE(0, 0) = 0;
+    NLEBBE2D::NODE(0, 1) = 0;
+    NLEBBE2D::NODE(0, 2) = 0;
+    NLEBBE2D::NODE(1, 0) = 12.5;
+    NLEBBE2D::NODE(1, 1) = 0;
+    NLEBBE2D::NODE(1, 2) = 0;
+    NLEBBE2D::NODE(2, 0) = 25;
+    NLEBBE2D::NODE(2, 1) = 0;
+    NLEBBE2D::NODE(2, 2) = 0;
+    NLEBBE2D::NODE(3, 0) = 37.5;
+    NLEBBE2D::NODE(3, 1) = 0;
+    NLEBBE2D::NODE(3, 2) = 0;
+    NLEBBE2D::NODE(4, 0) = 50;
+    NLEBBE2D::NODE(4, 1) = 0;
+    NLEBBE2D::NODE(4, 2) = 0;
+    NLEBBE2D::NODE(5, 0) = 62.5;
+    NLEBBE2D::NODE(5, 1) = 0;
+    NLEBBE2D::NODE(5, 2) = 0;
+    NLEBBE2D::NODE(6, 0) = 75;
+    NLEBBE2D::NODE(6, 1) = 0;
+    NLEBBE2D::NODE(6, 2) = 0;
+    NLEBBE2D::NODE(7, 0) = 87.5;
+    NLEBBE2D::NODE(7, 1) = 0;
+    NLEBBE2D::NODE(7, 2) = 0;
+    NLEBBE2D::NODE(8, 0) = 100;
+    NLEBBE2D::NODE(8, 1) = 0;
+    NLEBBE2D::NODE(8, 2) = 0;
 
+    NLEBBE2D::ELEM(0, 0) = 1;
+    NLEBBE2D::ELEM(0, 1) = 1;
+    NLEBBE2D::ELEM(0, 2) = 2;
+    NLEBBE2D::ELEM(1, 0) = 1;
+    NLEBBE2D::ELEM(1, 1) = 2;
+    NLEBBE2D::ELEM(1, 2) = 3;
+    NLEBBE2D::ELEM(2, 0) = 1;
+    NLEBBE2D::ELEM(2, 1) = 3;
+    NLEBBE2D::ELEM(2, 2) = 4;
+    NLEBBE2D::ELEM(3, 0) = 1;
+    NLEBBE2D::ELEM(3, 1) = 4;
+    NLEBBE2D::ELEM(3, 2) = 5;
+    NLEBBE2D::ELEM(4, 0) = 1;
+    NLEBBE2D::ELEM(4, 1) = 5;
+    NLEBBE2D::ELEM(4, 2) = 6;
+    NLEBBE2D::ELEM(5, 0) = 1;
+    NLEBBE2D::ELEM(5, 1) = 6;
+    NLEBBE2D::ELEM(5, 2) = 7;
+    NLEBBE2D::ELEM(6, 0) = 1;
+    NLEBBE2D::ELEM(6, 1) = 7;
+    NLEBBE2D::ELEM(6, 2) = 8;
+    NLEBBE2D::ELEM(7, 0) = 1;
+    NLEBBE2D::ELEM(7, 1) = 8;
+    NLEBBE2D::ELEM(7, 2) = 9;
 
-    NLEBBE.NODE(0,0) = 0;
-    NLEBBE.NODE(0,1) = 0;
-    NLEBBE.NODE(0,2) = 0;
-    NLEBBE.NODE(1,0) = 12.5;
-    NLEBBE.NODE(1,1) = 0;
-    NLEBBE.NODE(1,2) = 0;
-    NLEBBE.NODE(2,0) = 25;
-    NLEBBE.NODE(2,1) = 0;
-    NLEBBE.NODE(2,2) = 0;
-    NLEBBE.NODE(3,0) = 37.5;
-    NLEBBE.NODE(3,1) = 0;
-    NLEBBE.NODE(3,2) = 0;
-    NLEBBE.NODE(4,0) = 50;
-    NLEBBE.NODE(4,1) = 0;
-    NLEBBE.NODE(4,2) = 0;
+    NLEBBE2D::CNODE = Eigen::MatrixXd::Zero(4, 2);
+    NLEBBE2D::CNODE(0, 0) = 1;
+    NLEBBE2D::CNODE(0, 1) = 2;
+    NLEBBE2D::CNODE(1, 0) = 5;
+    NLEBBE2D::CNODE(1, 1) = 1;
+    NLEBBE2D::CNODE(2, 0) = 5;
+    NLEBBE2D::CNODE(2, 1) = 3;
+    NLEBBE2D::CNODE(3, 0) = 9;
+    NLEBBE2D::CNODE(3, 1) = 2;
 
-    NLEBBE.ELEM(0,0) = 1;
-    NLEBBE.ELEM(0,1) = 1;
-    NLEBBE.ELEM(0,2) = 2;
-    NLEBBE.ELEM(1,0) = 1;
-    NLEBBE.ELEM(1,1) = 2;
-    NLEBBE.ELEM(1,2) = 3;
-    NLEBBE.ELEM(2,0) = 1;
-    NLEBBE.ELEM(2,1) = 3;
-    NLEBBE.ELEM(2,2) = 4;
-    NLEBBE.ELEM(3,0) = 1;
-    NLEBBE.ELEM(3,1) = 4;
-    NLEBBE.ELEM(3,2) = 5;
-
-    NLEBBE.CNODE = Eigen::MatrixXd::Zero(3, 2);
-    NLEBBE.CNODE(0, 0) = 1;
-    NLEBBE.CNODE(0, 1) = 2;
-    NLEBBE.CNODE(1, 0) = 5;
-    NLEBBE.CNODE(1, 1) = 1;
-    NLEBBE.CNODE(2, 0) = 5;
-    NLEBBE.CNODE(2, 1) = 3;
-
-    NLEBBE.vf = 1;
-    NLEBBE.af = 0;
-
-    return NLEBBE;
+    NLEBBE2D::vf = 0;
+    NLEBBE2D::af = 0;
 }
 
 //Validation case for GEBT (12 dofs per node) axial load 0/0 ply.
@@ -216,122 +230,124 @@ VAMBeamElement ReadVAMBEFile()
 }
 
 //Validation case for Euler Bernouli Beam element (6 dofs per node)
-NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
+NLEBBE3D::NLEBBE3D(int choice)
 {
-    struct NonLinearEulerBernouliBeamElement3D M;
-    M.NNODE = 17;
-    M.NELEM = 8;
-    M.NDOF = 6;
-    M.NLS = 12;
-    M.NEN = 3;
+    if (choice == 1)
+    {
+        NLEBBE3D::NNODE = 17;
+        NLEBBE3D::NELEM = 8;
+        NLEBBE3D::NDOF = 6;
+        NLEBBE3D::NLS = 12;
+        NLEBBE3D::NEN = 3;
 
-    M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
-    M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
+        NLEBBE3D::NODE = Eigen::MatrixXd::Zero(NLEBBE3D::NNODE, 3);
+        NLEBBE3D::ELEM = Eigen::MatrixXd::Zero(NLEBBE3D::NELEM, 4);
 
-    //Nodal Information
-    M.NODE(0, 0) = 0;
-    M.NODE(0, 1) = 0;
-    M.NODE(0, 2) = 0;
-    M.NODE(1, 0) = 0.1204;
-    M.NODE(1, 1) = 4.9067;
-    M.NODE(1, 2) = 0;
-    M.NODE(2, 0) = 0.4815;
-    M.NODE(2, 1) = 9.8017;
-    M.NODE(2, 2) = 0;
-    M.NODE(3, 0) = 1.082;
-    M.NODE(3, 1) = 14.673;
-    M.NODE(3, 2) = 0;
-    M.NODE(4, 0) = 1.9214;
-    M.NODE(4, 1) = 19.509;
-    M.NODE(4, 2) = 0;
-    M.NODE(5, 0) = 2.9968;
-    M.NODE(5, 1) = 24.298;
-    M.NODE(5, 2) = 0;
-    M.NODE(6, 0) = 4.306;
-    M.NODE(6, 1) = 29.03;
-    M.NODE(6, 2) = 0;
-    M.NODE(7, 0) = 5.845;
-    M.NODE(7, 1) = 33.69;
-    M.NODE(7, 2) = 0;
-    M.NODE(8, 0) = 7.612;
-    M.NODE(8, 1) = 38.27;
-    M.NODE(8, 2) = 0;
-    M.NODE(9, 0) = 9.601;
-    M.NODE(9, 1) = 42.75;
-    M.NODE(9, 2) = 0;
-    M.NODE(10, 0) = 11.807;
-    M.NODE(10, 1) = 47.14;
-    M.NODE(10, 2) = 0;
-    M.NODE(11, 0) = 14.23;
-    M.NODE(11, 1) = 51.41;
-    M.NODE(11, 2) = 0;
-    M.NODE(12, 0) = 16.853;
-    M.NODE(12, 1) = 55.56;
-    M.NODE(12, 2) = 0;
-    M.NODE(13, 0) = 19.68;
-    M.NODE(13, 1) = 59.57;
-    M.NODE(13, 2) = 0;
-    M.NODE(14, 0) = 22.698;
-    M.NODE(14, 1) = 63.44;
-    M.NODE(14, 2) = 0;
-    M.NODE(15, 0) = 25.9;
-    M.NODE(15, 1) = 67.15;
-    M.NODE(15, 2) = 0;
-    M.NODE(16, 0) = 29.3;
-    M.NODE(16, 1) = 70.71;
-    M.NODE(16, 2) = 0;
+        //Nodal Information
+        NLEBBE3D::NODE(0, 0) = 0;
+        NLEBBE3D::NODE(0, 1) = 0;
+        NLEBBE3D::NODE(0, 2) = 0;
+        NLEBBE3D::NODE(1, 0) = 0.1204;
+        NLEBBE3D::NODE(1, 1) = 4.9067;
+        NLEBBE3D::NODE(1, 2) = 0;
+        NLEBBE3D::NODE(2, 0) = 0.4815;
+        NLEBBE3D::NODE(2, 1) = 9.8017;
+        NLEBBE3D::NODE(2, 2) = 0;
+        NLEBBE3D::NODE(3, 0) = 1.082;
+        NLEBBE3D::NODE(3, 1) = 14.673;
+        NLEBBE3D::NODE(3, 2) = 0;
+        NLEBBE3D::NODE(4, 0) = 1.9214;
+        NLEBBE3D::NODE(4, 1) = 19.509;
+        NLEBBE3D::NODE(4, 2) = 0;
+        NLEBBE3D::NODE(5, 0) = 2.9968;
+        NLEBBE3D::NODE(5, 1) = 24.298;
+        NLEBBE3D::NODE(5, 2) = 0;
+        NLEBBE3D::NODE(6, 0) = 4.306;
+        NLEBBE3D::NODE(6, 1) = 29.03;
+        NLEBBE3D::NODE(6, 2) = 0;
+        NLEBBE3D::NODE(7, 0) = 5.845;
+        NLEBBE3D::NODE(7, 1) = 33.69;
+        NLEBBE3D::NODE(7, 2) = 0;
+        NLEBBE3D::NODE(8, 0) = 7.612;
+        NLEBBE3D::NODE(8, 1) = 38.27;
+        NLEBBE3D::NODE(8, 2) = 0;
+        NLEBBE3D::NODE(9, 0) = 9.601;
+        NLEBBE3D::NODE(9, 1) = 42.75;
+        NLEBBE3D::NODE(9, 2) = 0;
+        NLEBBE3D::NODE(10, 0) = 11.807;
+        NLEBBE3D::NODE(10, 1) = 47.14;
+        NLEBBE3D::NODE(10, 2) = 0;
+        NLEBBE3D::NODE(11, 0) = 14.23;
+        NLEBBE3D::NODE(11, 1) = 51.41;
+        NLEBBE3D::NODE(11, 2) = 0;
+        NLEBBE3D::NODE(12, 0) = 16.853;
+        NLEBBE3D::NODE(12, 1) = 55.56;
+        NLEBBE3D::NODE(12, 2) = 0;
+        NLEBBE3D::NODE(13, 0) = 19.68;
+        NLEBBE3D::NODE(13, 1) = 59.57;
+        NLEBBE3D::NODE(13, 2) = 0;
+        NLEBBE3D::NODE(14, 0) = 22.698;
+        NLEBBE3D::NODE(14, 1) = 63.44;
+        NLEBBE3D::NODE(14, 2) = 0;
+        NLEBBE3D::NODE(15, 0) = 25.9;
+        NLEBBE3D::NODE(15, 1) = 67.15;
+        NLEBBE3D::NODE(15, 2) = 0;
+        NLEBBE3D::NODE(16, 0) = 29.3;
+        NLEBBE3D::NODE(16, 1) = 70.71;
+        NLEBBE3D::NODE(16, 2) = 0;
 
-    //Element connectivity
-    M.ELEM(0, 0) = 1;
-    M.ELEM(0, 1) = 1;
-    M.ELEM(0, 2) = 2;
-    M.ELEM(0, 3) = 3;
+        //Element connectivity
+        NLEBBE3D::ELEM(0, 0) = 1;
+        NLEBBE3D::ELEM(0, 1) = 1;
+        NLEBBE3D::ELEM(0, 2) = 2;
+        NLEBBE3D::ELEM(0, 3) = 3;
 
-    M.ELEM(1, 0) = 1;
-    M.ELEM(1, 1) = 3;
-    M.ELEM(1, 2) = 4;
-    M.ELEM(1, 3) = 5;
+        NLEBBE3D::ELEM(1, 0) = 1;
+        NLEBBE3D::ELEM(1, 1) = 3;
+        NLEBBE3D::ELEM(1, 2) = 4;
+        NLEBBE3D::ELEM(1, 3) = 5;
 
 
-    M.ELEM(2, 0) = 1;
-    M.ELEM(2, 1) = 5;
-    M.ELEM(2, 2) = 6;
-    M.ELEM(2, 3) = 7;
+        NLEBBE3D::ELEM(2, 0) = 1;
+        NLEBBE3D::ELEM(2, 1) = 5;
+        NLEBBE3D::ELEM(2, 2) = 6;
+        NLEBBE3D::ELEM(2, 3) = 7;
 
-    M.ELEM(3, 0) = 1;
-    M.ELEM(3, 1) = 7;
-    M.ELEM(3, 2) = 8;
-    M.ELEM(3, 3) = 9;
+        NLEBBE3D::ELEM(3, 0) = 1;
+        NLEBBE3D::ELEM(3, 1) = 7;
+        NLEBBE3D::ELEM(3, 2) = 8;
+        NLEBBE3D::ELEM(3, 3) = 9;
 
-    M.ELEM(4, 0) = 1;
-    M.ELEM(4, 1) = 9;
-    M.ELEM(4, 2) = 10;
-    M.ELEM(4, 3) = 11;
+        NLEBBE3D::ELEM(4, 0) = 1;
+        NLEBBE3D::ELEM(4, 1) = 9;
+        NLEBBE3D::ELEM(4, 2) = 10;
+        NLEBBE3D::ELEM(4, 3) = 11;
 
-    M.ELEM(5, 0) = 1;
-    M.ELEM(5, 1) = 11;
-    M.ELEM(5, 2) = 12;
-    M.ELEM(5, 3) = 13;
+        NLEBBE3D::ELEM(5, 0) = 1;
+        NLEBBE3D::ELEM(5, 1) = 11;
+        NLEBBE3D::ELEM(5, 2) = 12;
+        NLEBBE3D::ELEM(5, 3) = 13;
 
-    M.ELEM(6, 0) = 1;
-    M.ELEM(6, 1) = 13;
-    M.ELEM(6, 2) = 14;
-    M.ELEM(6, 3) = 15;
+        NLEBBE3D::ELEM(6, 0) = 1;
+        NLEBBE3D::ELEM(6, 1) = 13;
+        NLEBBE3D::ELEM(6, 2) = 14;
+        NLEBBE3D::ELEM(6, 3) = 15;
 
-    M.ELEM(7, 0) = 1;
-    M.ELEM(7, 1) = 15;
-    M.ELEM(7, 2) = 16;
-    M.ELEM(7, 3) = 17;
+        NLEBBE3D::ELEM(7, 0) = 1;
+        NLEBBE3D::ELEM(7, 1) = 15;
+        NLEBBE3D::ELEM(7, 2) = 16;
+        NLEBBE3D::ELEM(7, 3) = 17;
 
-    M.E = 1e7;
-    M.nu = 0.0001;
-    M.Bp = 1;
-    M.Hp = 1;
-    M.Zx = 0;
-    M.Zy = 0;
-    M.Zz = 1;
-
-    return M;
+        NLEBBE3D::E = 1e7;
+        NLEBBE3D::nu = 0.0001;
+        NLEBBE3D::Bp = 1;
+        NLEBBE3D::Hp = 1;
+        NLEBBE3D::Zx = 0;
+        NLEBBE3D::Zy = 0;
+        NLEBBE3D::Zz = 1;
+    }
+    else
+        std::cout << "Wrong input" << std::endl;
 }
 
 /*NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
@@ -386,184 +402,196 @@ NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement()
 }*/
 
 //Validation case for node-to-node contact with 3-D EB beams
-NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms)
+/*NLEBBE3D::NLEBBE3D(int choice)
 {
-    struct NonLinearEulerBernouliBeamElement3D M;
     //Master
-    if (ms == 1)
+    if (choice == 1)
     {
-        M.NNODE = 11;
-        M.NELEM = 5;
-        M.NDOF = 6;
-        M.NLS = 24;
-        M.NEN = 3;
+        NLEBBE3D::NNODE = 11;
+        NLEBBE3D::NELEM = 5;
+        NLEBBE3D::NDOF = 6;
+        NLEBBE3D::NLS = 24;
+        NLEBBE3D::NEN = 3;
 
-        M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
-        M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
+        NLEBBE3D::NODE = Eigen::MatrixXd::Zero(NLEBBE3D::NNODE, 3);
+        NLEBBE3D::ELEM = Eigen::MatrixXd::Zero(NLEBBE3D::NELEM, 4);
 
         //Nodal Information
-        M.NODE(0, 0) = 0;
-        M.NODE(0, 1) = 0;
-        M.NODE(0, 2) = 0;
-        M.NODE(1, 0) = 1;
-        M.NODE(1, 1) = 0;
-        M.NODE(1, 2) = 0;
-        M.NODE(2, 0) = 2;
-        M.NODE(2, 1) = 0;
-        M.NODE(2, 2) = 0;
-        M.NODE(3, 0) = 3;
-        M.NODE(3, 1) = 0;
-        M.NODE(3, 2) = 0;
-        M.NODE(4, 0) = 4;
-        M.NODE(4, 1) = 0;
-        M.NODE(4, 2) = 0;
-        M.NODE(5, 0) = 5;
-        M.NODE(5, 1) = 0;
-        M.NODE(5, 2) = 0;
-        M.NODE(6, 0) = 6;
-        M.NODE(6, 1) = 0;
-        M.NODE(6, 2) = 0;
-        M.NODE(7, 0) = 7;
-        M.NODE(7, 1) = 0;
-        M.NODE(7, 2) = 0;
-        M.NODE(8, 0) = 8;
-        M.NODE(8, 1) = 0;
-        M.NODE(8, 2) = 0;
-        M.NODE(9, 0) = 9;
-        M.NODE(9, 1) = 0;
-        M.NODE(9, 2) = 0;
-        M.NODE(10, 0) = 10;
-        M.NODE(10, 1) = 0;
-        M.NODE(10, 2) = 0;
+        NLEBBE3D::NODE(0, 0) = 0;
+        NLEBBE3D::NODE(0, 1) = 0;
+        NLEBBE3D::NODE(0, 2) = 0;
+        NLEBBE3D::NODE(1, 0) = 1;
+        NLEBBE3D::NODE(1, 1) = 0;
+        NLEBBE3D::NODE(1, 2) = 0;
+        NLEBBE3D::NODE(2, 0) = 2;
+        NLEBBE3D::NODE(2, 1) = 0;
+        NLEBBE3D::NODE(2, 2) = 0;
+        NLEBBE3D::NODE(3, 0) = 3;
+        NLEBBE3D::NODE(3, 1) = 0;
+        NLEBBE3D::NODE(3, 2) = 0;
+        NLEBBE3D::NODE(4, 0) = 4;
+        NLEBBE3D::NODE(4, 1) = 0;
+        NLEBBE3D::NODE(4, 2) = 0;
+        NLEBBE3D::NODE(5, 0) = 5;
+        NLEBBE3D::NODE(5, 1) = 0;
+        NLEBBE3D::NODE(5, 2) = 0;
+        NLEBBE3D::NODE(6, 0) = 6;
+        NLEBBE3D::NODE(6, 1) = 0;
+        NLEBBE3D::NODE(6, 2) = 0;
+        NLEBBE3D::NODE(7, 0) = 7;
+        NLEBBE3D::NODE(7, 1) = 0;
+        NLEBBE3D::NODE(7, 2) = 0;
+        NLEBBE3D::NODE(8, 0) = 8;
+        NLEBBE3D::NODE(8, 1) = 0;
+        NLEBBE3D::NODE(8, 2) = 0;
+        NLEBBE3D::NODE(9, 0) = 9;
+        NLEBBE3D::NODE(9, 1) = 0;
+        NLEBBE3D::NODE(9, 2) = 0;
+        NLEBBE3D::NODE(10, 0) = 10;
+        NLEBBE3D::NODE(10, 1) = 0;
+        NLEBBE3D::NODE(10, 2) = 0;
 
         //Element connectivity
-        M.ELEM(0, 0) = 1;
-        M.ELEM(0, 1) = 1;
-        M.ELEM(0, 2) = 2;
-        M.ELEM(0, 3) = 3;
+        NLEBBE3D::ELEM(0, 0) = 1;
+        NLEBBE3D::ELEM(0, 1) = 1;
+        NLEBBE3D::ELEM(0, 2) = 2;
+        NLEBBE3D::ELEM(0, 3) = 3;
 
-        M.ELEM(1, 0) = 1;
-        M.ELEM(1, 1) = 3;
-        M.ELEM(1, 2) = 4;
-        M.ELEM(1, 3) = 5;
+        NLEBBE3D::ELEM(1, 0) = 1;
+        NLEBBE3D::ELEM(1, 1) = 3;
+        NLEBBE3D::ELEM(1, 2) = 4;
+        NLEBBE3D::ELEM(1, 3) = 5;
 
-        M.ELEM(2, 0) = 1;
-        M.ELEM(2, 1) = 5;
-        M.ELEM(2, 2) = 6;
-        M.ELEM(2, 3) = 7;
+        NLEBBE3D::ELEM(2, 0) = 1;
+        NLEBBE3D::ELEM(2, 1) = 5;
+        NLEBBE3D::ELEM(2, 2) = 6;
+        NLEBBE3D::ELEM(2, 3) = 7;
 
-        M.ELEM(3, 0) = 1;
-        M.ELEM(3, 1) = 7;
-        M.ELEM(3, 2) = 8;
-        M.ELEM(3, 3) = 9;
+        NLEBBE3D::ELEM(3, 0) = 1;
+        NLEBBE3D::ELEM(3, 1) = 7;
+        NLEBBE3D::ELEM(3, 2) = 8;
+        NLEBBE3D::ELEM(3, 3) = 9;
 
-        M.ELEM(4, 0) = 1;
-        M.ELEM(4, 1) = 9;
-        M.ELEM(4, 2) = 10;
-        M.ELEM(4, 3) = 11;
+        NLEBBE3D::ELEM(4, 0) = 1;
+        NLEBBE3D::ELEM(4, 1) = 9;
+        NLEBBE3D::ELEM(4, 2) = 10;
+        NLEBBE3D::ELEM(4, 3) = 11;
 
-        M.E = 1e7;
-        M.nu = 0.0001;
-        M.Bp = 1;
-        M.Hp = 1;
-        M.Zx = 0;
-        M.Zy = 0;
-        M.Zz = 1;
+        NLEBBE3D::E = 1e7;
+        NLEBBE3D::nu = 0.0001;
+        NLEBBE3D::Bp = 1;
+        NLEBBE3D::Hp = 1;
+        NLEBBE3D::Zx = 0;
+        NLEBBE3D::Zy = 0;
+        NLEBBE3D::Zz = 1;
 
-        M.load = 6;
+        NLEBBE3D::loadnode = 6;
 
-        M.D = 0.0001;
-
-        M.epsilon = 1e10;
+        NLEBBE3D::DIA = 0.0002;
     }
     //Slave
-    else if (ms == 2)
+    else if (choice == 2)
     {
-        M.NNODE = 11;
-        M.NELEM = 5;
-        M.NDOF = 6;
-        M.NLS = 24;
-        M.NEN = 3;
+        NLEBBE3D::NNODE = 11;
+        NLEBBE3D::NELEM = 5;
+        NLEBBE3D::NDOF = 6;
+        NLEBBE3D::NLS = 24;
+        NLEBBE3D::NEN = 3;
 
-        M.NODE = Eigen::MatrixXd::Zero(M.NNODE, 3);
-        M.ELEM = Eigen::MatrixXd::Zero(M.NELEM, 4);
+        NLEBBE3D::NODE = Eigen::MatrixXd::Zero(NLEBBE3D::NNODE, 3);
+        NLEBBE3D::ELEM = Eigen::MatrixXd::Zero(NLEBBE3D::NELEM, 4);
 
         //Nodal Information
-        M.NODE(0, 0) = 0;
-        M.NODE(0, 1) = 0.001;
-        M.NODE(0, 2) = 0;
-        M.NODE(1, 0) = 1;
-        M.NODE(1, 1) = 0.001;
-        M.NODE(1, 2) = 0;
-        M.NODE(2, 0) = 2;
-        M.NODE(2, 1) = 0.001;
-        M.NODE(2, 2) = 0;
-        M.NODE(3, 0) = 3;
-        M.NODE(3, 1) = 0.001;
-        M.NODE(3, 2) = 0;
-        M.NODE(4, 0) = 4;
-        M.NODE(4, 1) = 0.001;
-        M.NODE(4, 2) = 0;
-        M.NODE(5, 0) = 5;
-        M.NODE(5, 1) = 0.001;
-        M.NODE(5, 2) = 0;
-        M.NODE(6, 0) = 6;
-        M.NODE(6, 1) = 0.001;
-        M.NODE(6, 2) = 0;
-        M.NODE(7, 0) = 7;
-        M.NODE(7, 1) = 0.001;
-        M.NODE(7, 2) = 0;
-        M.NODE(8, 0) = 8;
-        M.NODE(8, 1) = 0.001;
-        M.NODE(8, 2) = 0;
-        M.NODE(9, 0) = 9;
-        M.NODE(9, 1) = 0.001;
-        M.NODE(9, 2) = 0;
-        M.NODE(10, 0) = 10;
-        M.NODE(10, 1) = 0.001;
-        M.NODE(10, 2) = 0;
+        NLEBBE3D::NODE(0, 0) = 0;
+        NLEBBE3D::NODE(0, 1) = 0.001;
+        NLEBBE3D::NODE(0, 2) = 0;
+        NLEBBE3D::NODE(1, 0) = 1;
+        NLEBBE3D::NODE(1, 1) = 0.001;
+        NLEBBE3D::NODE(1, 2) = 0;
+        NLEBBE3D::NODE(2, 0) = 2;
+        NLEBBE3D::NODE(2, 1) = 0.001;
+        NLEBBE3D::NODE(2, 2) = 0;
+        NLEBBE3D::NODE(3, 0) = 3;
+        NLEBBE3D::NODE(3, 1) = 0.001;
+        NLEBBE3D::NODE(3, 2) = 0;
+        NLEBBE3D::NODE(4, 0) = 4;
+        NLEBBE3D::NODE(4, 1) = 0.001;
+        NLEBBE3D::NODE(4, 2) = 0;
+        NLEBBE3D::NODE(5, 0) = 5;
+        NLEBBE3D::NODE(5, 1) = 0.001;
+        NLEBBE3D::NODE(5, 2) = 0;
+        NLEBBE3D::NODE(6, 0) = 6;
+        NLEBBE3D::NODE(6, 1) = 0.001;
+        NLEBBE3D::NODE(6, 2) = 0;
+        NLEBBE3D::NODE(7, 0) = 7;
+        NLEBBE3D::NODE(7, 1) = 0.001;
+        NLEBBE3D::NODE(7, 2) = 0;
+        NLEBBE3D::NODE(8, 0) = 8;
+        NLEBBE3D::NODE(8, 1) = 0.001;
+        NLEBBE3D::NODE(8, 2) = 0;
+        NLEBBE3D::NODE(9, 0) = 9;
+        NLEBBE3D::NODE(9, 1) = 0.001;
+        NLEBBE3D::NODE(9, 2) = 0;
+        NLEBBE3D::NODE(10, 0) = 10;
+        NLEBBE3D::NODE(10, 1) = 0.001;
+        NLEBBE3D::NODE(10, 2) = 0;
 
         //Element connectivity
-        M.ELEM(0, 0) = 1;
-        M.ELEM(0, 1) = 1;
-        M.ELEM(0, 2) = 2;
-        M.ELEM(0, 3) = 3;
+        NLEBBE3D::ELEM(0, 0) = 1;
+        NLEBBE3D::ELEM(0, 1) = 1;
+        NLEBBE3D::ELEM(0, 2) = 2;
+        NLEBBE3D::ELEM(0, 3) = 3;
 
-        M.ELEM(1, 0) = 1;
-        M.ELEM(1, 1) = 3;
-        M.ELEM(1, 2) = 4;
-        M.ELEM(1, 3) = 5;
+        NLEBBE3D::ELEM(1, 0) = 1;
+        NLEBBE3D::ELEM(1, 1) = 3;
+        NLEBBE3D::ELEM(1, 2) = 4;
+        NLEBBE3D::ELEM(1, 3) = 5;
 
-        M.ELEM(2, 0) = 1;
-        M.ELEM(2, 1) = 5;
-        M.ELEM(2, 2) = 6;
-        M.ELEM(2, 3) = 7;
+        NLEBBE3D::ELEM(2, 0) = 1;
+        NLEBBE3D::ELEM(2, 1) = 5;
+        NLEBBE3D::ELEM(2, 2) = 6;
+        NLEBBE3D::ELEM(2, 3) = 7;
 
-        M.ELEM(3, 0) = 1;
-        M.ELEM(3, 1) = 7;
-        M.ELEM(3, 2) = 8;
-        M.ELEM(3, 3) = 9;
+        NLEBBE3D::ELEM(3, 0) = 1;
+        NLEBBE3D::ELEM(3, 1) = 7;
+        NLEBBE3D::ELEM(3, 2) = 8;
+        NLEBBE3D::ELEM(3, 3) = 9;
 
-        M.ELEM(4, 0) = 1;
-        M.ELEM(4, 1) = 9;
-        M.ELEM(4, 2) = 10;
-        M.ELEM(4, 3) = 11;
+        NLEBBE3D::ELEM(4, 0) = 1;
+        NLEBBE3D::ELEM(4, 1) = 9;
+        NLEBBE3D::ELEM(4, 2) = 10;
+        NLEBBE3D::ELEM(4, 3) = 11;
 
-        M.E = 1e7;
-        M.nu = 0.0001;
-        M.Bp = 1;
-        M.Hp = 1;
-        M.Zx = 0;
-        M.Zy = 0;
-        M.Zz = 1;
-        
-        M.load = 6;
+        NLEBBE3D::E = 1e7;
+        NLEBBE3D::nu = 0.0001;
+        NLEBBE3D::Bp = 1;
+        NLEBBE3D::Hp = 1;
+        NLEBBE3D::Zx = 0;
+        NLEBBE3D::Zy = 0;
+        NLEBBE3D::Zz = 1;
 
-        M.D = 0.0001;
+        NLEBBE3D::loadnode = 6;
 
-        M.epsilon = 1e10;
+        NLEBBE3D::DIA = 0.0002;
+
     }
-    return M;
+}
+
+BeamContact::BeamContact(const int nbeams, std::string str)
+{
+    BeamContact::NBEAMS = nbeams;
+
+    BeamContact::epsilon = 1e10;
+
+    if (str == "STS")
+        BeamContact::NEN = 4;
+    else if (str == "NTN")
+        BeamContact::NEN = 2;
+
+    BeamContact::GlobalELEM = { 0, 1 };
+    
+    
+
 }
 
 //Validation case for segment-to-segment contact with 3-D EB beams

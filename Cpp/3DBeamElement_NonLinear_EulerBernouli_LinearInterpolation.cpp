@@ -10,8 +10,6 @@ Subroutine                      : RKt size: 19948
 Total size of Mathematica  code : 19948 subexpressions
 Total size of C code            : 96227 bytes */
 
-
-#include "sms.h"
 #include<iostream>
 #include "Variables.h"
 
@@ -42,7 +40,7 @@ Total size of C code            : 96227 bytes */
 }*/
 
 
-void RKtLin(double D[7], double X[2][3], double U[2][6], double **T, double *R)
+void NLEBBE3D::RKtLin(double D[7], double X[2][3], double U[2][6], double **T, double *R)
 {
     /*for (int i = 0; i < 7; i++)
         std::cout << D[i] << std::endl;

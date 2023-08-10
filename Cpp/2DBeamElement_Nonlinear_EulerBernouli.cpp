@@ -3,15 +3,75 @@
 
 #include "Variables.h"
 
-struct ForceVector_IntConstants
+
+int NLEBBE2D::get_nen()
 {
-    double Q1;
-    double Q2;
-    double Q3;
-    double Q4;
-    double Q5;
-    double Q6;
-};
+    return NLEBBE2D::NEN;
+}
+
+int NLEBBE2D::get_ndof()
+{
+    return NLEBBE2D::NDOF;
+}
+
+int NLEBBE2D::get_nnode()
+{
+    return NLEBBE2D::NNODE;
+}
+
+int NLEBBE2D::get_nelem()
+{
+    return NLEBBE2D::NELEM;
+}
+
+int NLEBBE2D::get_nls()
+{
+    return NLEBBE2D::NLS;
+}
+
+double NLEBBE2D::get_coordinates(int i, int j)
+{
+    return NLEBBE2D::NODE(i, j);
+}
+
+int NLEBBE2D::get_connectivity(int i, int j)
+{
+    return NLEBBE2D::ELEM(i, j);
+}
+
+int NLEBBE2D::get_cnode(int i, int j)
+{
+    return NLEBBE2D::CNODE(i, j);
+}
+
+double NLEBBE2D::get_modelprop(std::string str)
+{
+    if (str == "E")
+        return NLEBBE2D::E;
+    else if (str == "nu")
+        return NLEBBE2D::nu;
+    else if (str == "b")
+        return NLEBBE2D::b;
+    else if (str == "h")
+        return NLEBBE2D::h;
+}
+
+double NLEBBE2D::get_loadprop(std::string str)
+{
+    if (str == "vf")
+        return NLEBBE2D::vf;
+    else if (str == "af")
+        return NLEBBE2D::af;
+}
+
+void NLEBBE2D::set_loadprop(std::string str, double value)
+{
+    if (str == "vf")
+        NLEBBE2D::vf = value;
+    else if (str == "af")
+        NLEBBE2D::af = value;
+}
+
 
 //Jacobian
 double Jacobian(double xa, double xb)
@@ -19,40 +79,6 @@ double Jacobian(double xa, double xb)
     double J = (xb - xa) / 2;
     assert(J > 0);
     return J;
-}
-
-double Area(struct CrossSection* CS)
-{
-    if ((*CS).choice == "RECT")
-    {
-        double h = (*CS).Rect.height;
-        double b = (*CS).Rect.width;
-        return (b * h);
-    }
-    else if ((*CS).choice == "CIRCLE")
-    {
-        double r = (*CS).Cir.radius;
-        return (M_PI * pow(r, 2));
-    }
-    else
-        return -99;
-}
-
-double MomentOfInertia(struct CrossSection* CS)
-{
-    if ((*CS).choice == "RECT")
-    {
-        double h = (*CS).Rect.height;
-        double b = (*CS).Rect.width;
-        return (b * pow(h, 3) / 12);
-    }
-    else if ((*CS).choice == "CIRCLE")
-    {
-        double r = (*CS).Cir.radius;
-        return (M_PI * pow(r, 4) / 4);
-    }
-    else
-        return -99;
 }
 
 //Hermite Cubics
@@ -128,7 +154,7 @@ double SDHF(double num, double xa, double xb)
 }
 
 //To rearrange the elements of stiffness matrix and force vector
-void RearrangeElementStiffness_NLEBBE(Eigen::MatrixXd& k, Eigen::MatrixXd& t, Eigen::VectorXd& f)
+void NLEBBE2D::RearrangeElementStiffness_NLEBBE(Eigen::MatrixXd& k, Eigen::MatrixXd& t, Eigen::VectorXd& f)
 {
     Eigen::MatrixXd temp(6, 6), temp2(6, 6);
     Eigen::VectorXd temp3(6);
@@ -215,7 +241,7 @@ double ddw0dx(Eigen::VectorXd& U, double x, int a, int b, double xa, double xb)
     return ddwdx;
 }
 
-Eigen::MatrixXd TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& k, double xa, double xb, double E, double nu, double A, double I, Eigen::VectorXd& U, int a, int b)
+Eigen::MatrixXd NLEBBE2D::TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& k, double xa, double xb, double E, double nu, double A, double I, Eigen::VectorXd& U, int a, int b)
 {
     //One point Gauss Quadrature rule
     double ow1 = 2;
@@ -255,7 +281,7 @@ Eigen::MatrixXd TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& k, double xa, dou
 }
 
 
-Eigen::MatrixXd StiffnessMatrix_NLEBBE(double xa, double xb, double E, double nu, double A, double I, Eigen::VectorXd& U, int a, int b)
+Eigen::MatrixXd NLEBBE2D::StiffnessMatrix_NLEBBE(double xa, double xb, double E, double nu, double A, double I, Eigen::VectorXd& U, int a, int b)
 {
     //Two Point Gauss Quadrature
     double tx1 = -0.577350269;
@@ -313,7 +339,7 @@ Eigen::MatrixXd StiffnessMatrix_NLEBBE(double xa, double xb, double E, double nu
 }
 
 //Local Force Vector
-Eigen::VectorXd LocalFoceVec_NLEBBE(double xa, double xb, int a, int b, double vf, double af, Eigen::VectorXd& U, double E, double nu)
+Eigen::VectorXd NLEBBE2D::LocalFoceVec_NLEBBE(double xa, double xb, int a, int b, double vf, double af, Eigen::VectorXd& U, double E, double nu)
 {
     //Two Point Gauss Quadrature
     double tx1 = -0.577350269;
@@ -354,12 +380,12 @@ Eigen::VectorXd LocalFoceVec_NLEBBE(double xa, double xb, int a, int b, double v
     return f;
 }
 
-void ApplyConstraints_NLEBBE(Eigen::SparseMatrix<double, Eigen::ColMajor>& T, Eigen::VectorXd& U, Eigen::MatrixXd& CNODE, int NNODE, Eigen::VectorXd& R)
+void NLEBBE2D::ApplyConstraints_NLEBBE(Eigen::SparseMatrix<double, Eigen::ColMajor>& T, Eigen::VectorXd& U, int NNODE, Eigen::VectorXd& R)
 {
-    for (int j = 0; j < CNODE.rows(); j++)
+    for (int j = 0; j < NLEBBE2D::CNODE.rows(); j++)
     {
-        int nodenum = CNODE(j, 0);
-        int dir = CNODE(j, 1) - 1;
+        int nodenum = NLEBBE2D::CNODE(j, 0);
+        int dir = NLEBBE2D::CNODE(j, 1) - 1;
         for (int i = 0; i < 3 * NNODE; i++)
             T.coeffRef(3 * (nodenum - 1) + dir, i) = 0;
         R(3 * (nodenum - 1) + dir) = 0;
@@ -367,7 +393,7 @@ void ApplyConstraints_NLEBBE(Eigen::SparseMatrix<double, Eigen::ColMajor>& T, Ei
     }
 }
 
-void PostProcessing(Eigen::VectorXd U, NonLinearEulerBernouliBeamElement NLEBBE, int fiter)
+/*void PostProcessing(Eigen::VectorXd U, NonLinearEulerBernouliBeamElement NLEBBE, int fiter)
 {
     std::fstream file1;
     std::string filename, temp; 
@@ -414,7 +440,7 @@ void PostProcessing(Eigen::VectorXd U, NonLinearEulerBernouliBeamElement NLEBBE,
     else
         std::cout << " File is not open " << std::endl;
 
-}
+}*/
 
 #endif
 

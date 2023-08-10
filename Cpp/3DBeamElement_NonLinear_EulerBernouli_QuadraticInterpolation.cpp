@@ -1,3 +1,10 @@
+#ifndef VARIABLES_H
+#define VARIABLES_H
+#include "Variables.h"
+#include<iomanip>
+
+
+
 /*************************************************************
 * AceGen    7.505 Windows (16 Aug 22)                        *
 *           Co. J. Korelc  2020           18 May 23 15:11:18 *
@@ -9,8 +16,79 @@ Number of formulae              : 1015    Method: Automatic
 Subroutine                      : RKt size: 21520
 Total size of Mathematica  code : 21520 subexpressions
 Total size of C code            : 103503 bytes */
-#include "sms.h"
 #include<iostream>
+
+int NLEBBE3D::get_nen()
+{
+    return NLEBBE3D::NEN;
+}
+
+int NLEBBE3D::get_ndof()
+{
+    return NLEBBE3D::NDOF;
+}
+
+int NLEBBE3D::get_nnode()
+{
+    return NLEBBE3D::NNODE;
+}
+
+int NLEBBE3D::get_nelem()
+{
+    return NLEBBE3D::NELEM;
+}
+
+int NLEBBE3D::get_nls()
+{
+    return NLEBBE3D::NLS;
+}
+
+int NLEBBE3D::get_coordinates(int i, int j)
+{
+    return NLEBBE3D::NODE(i, j);
+}
+
+double NLEBBE3D::get_matprop(std::string str)
+{
+    if (str == "E")
+        return NLEBBE3D::E;
+    else if (str == "nu")
+        return NLEBBE3D::nu;
+    else if (str == "Bp")
+        return NLEBBE3D::Bp;
+    else if (str == "Hp")
+        return NLEBBE3D::Hp;
+    else if (str == "Zx")
+        return NLEBBE3D::Zx;
+    else if (str == "Zy")
+        return NLEBBE3D::Zy;
+    else if (str == "Zz")
+        return NLEBBE3D::Zz;
+    else
+        return -99;
+}
+
+int NLEBBE3D::get_connectivity(int i, int j)
+{
+    return NLEBBE3D::ELEM(i, j);
+}
+
+int NLEBBE3D::get_loadnode()
+{
+    return NLEBBE3D::loadnode;
+}
+
+int NLEBBE3D::get_nbeams()
+{
+    return NLEBBE3D::NBEAMS;
+}
+
+double NLEBBE3D::get_diameter()
+{
+    return NLEBBE3D::DIA;
+}
+
+
 
 double GaussIntegrationPoints(int i, int j)
 {
@@ -105,7 +183,7 @@ double GaussIntegrationPoints(int i, int j)
 }
 
 /******************* S U B R O U T I N E *********************/
-void RKt(double D[7], double X[3][3], double U[3][6]
+void NLEBBE3D::RKt(double D[7], double X[3][3], double U[3][6]
     , double **T, double* R)
 {
     double v[1518];
@@ -2220,3 +2298,5 @@ void RKt(double D[7], double X[3][3], double U[3][6]
                 T[j][i] = T[i][j];
     }
 };
+
+#endif

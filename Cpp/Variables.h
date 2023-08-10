@@ -11,6 +11,7 @@
 #include<math.h>
 #include<cassert>
 #include<memory>
+#include "sms.h"
 
 #define M_PI 3.14159265358979323846
 
@@ -95,59 +96,89 @@ struct NonLinearBarElement
     CrossSection CS;
 };
 
-struct NonLinearEulerBernouliBeamElement
+class NLEBBE2D
 {
+private:
     int NMAT;
-
-    int NBODIES;
-
     int NDOF;
-
     int NLS;
-
-    int NDM;
-
-    Eigen::MatrixXd NODE;
-
-    Eigen::MatrixXd ELEM;
-
     int NNODE;
-
     int NELEM;
-
+    int NEN;
+    double E, nu, b, h, vf, af;
+    Eigen::MatrixXd NODE;
+    Eigen::MatrixXd ELEM;
     Eigen::MatrixXd CNODE;
-
-    Eigen::MatrixXd MAT;
-
-    CrossSection CS;
-
-    double vf;
-    double af;
+public:
+    NLEBBE2D();
+    int get_nnode();
+    int get_nelem();
+    int get_ndof();
+    int get_nls();
+    int get_nen();
+    int get_connectivity(int i, int j);
+    double get_coordinates(int i, int j);
+    double get_modelprop(std::string str);
+    double get_loadprop(std::string str);
+    void set_loadprop(std::string str, double val);
+    int get_cnode(int i, int j);
+    Eigen::MatrixXd StiffnessMatrix_NLEBBE(double xa, double xb, double E, double nu, double base, double height, Eigen::VectorXd& U, int a, int b);
+    Eigen::VectorXd LocalFoceVec_NLEBBE(double xa, double xb, int a, int b, double vf, double af, Eigen::VectorXd& U, double E, double nu);
+    Eigen::MatrixXd TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& k, double xa, double xb, double E, double nu, double base, double height, Eigen::VectorXd& U, int a, int b);
+    void ApplyConstraints_NLEBBE(Eigen::SparseMatrix<double, Eigen::ColMajor>& T, Eigen::VectorXd& U, int NNODE, Eigen::VectorXd& R);
+    void RearrangeElementStiffness_NLEBBE(Eigen::MatrixXd& k, Eigen::MatrixXd& t, Eigen::VectorXd& f);
 };
 
-struct NonLinearEulerBernouliBeamElement3D
+class NLEBBE3D
 {
+private:
     int NEN;
-
     int NDOF;
-
     int NNODE;
-
     int NELEM;
-
     int NLS;
-
+    int NBEAMS;
     Eigen::MatrixXd NODE;
-
     Eigen::MatrixXd ELEM;
-
     double E, nu, Bp, Hp, Zx, Zy, Zz;
+    int loadnode;
+    double DIA;
 
-    int load;
+public:
+    NLEBBE3D(int nbeams);
+    //getters
+    int get_nen();
+    int get_ndof();
+    int get_nnode();
+    int get_nelem();
+    int get_nls();
+    int get_coordinates(int i, int j);
+    int get_connectivity(int i, int j);
+    int get_nbeams();
+    double get_matprop(std::string str);
+    int get_loadnode();
+    void RKt(double D[7], double X[3][3], double U[3][6], double** T, double* R);
+    void RKtLin(double D[7], double X[2][3], double U[2][6], double** T, double* R);
+    double get_diameter();
+};
 
-    double D;
-
+class BeamContact
+{
+private:
     double epsilon;
+    double NEN;
+    Eigen::MatrixXd ELEM;
+    int NBEAMS;
+    Eigen::MatrixXd GlobalELEM;
+public:
+    double get_penaltyparameter();
+    int get_nen();
+    Eigen::MatrixXd get_Globalelem();
+    void LocalContactSearch(NLEBBE3D* EBBE3D);
+    int get_slavesegment();
+    BeamContact(const int nbeams, std::string str);
+    void Contact_NTN(double D[4], double X1[3], double X2[3], double u1[6], double u2[6], double* CR, double** CT, double* g);
+    void GlobalContactSearch(NLEBBE3D* EBBE3D);
 };
 
 struct VAMBeamElement
@@ -177,10 +208,25 @@ struct VAMBeamElement
     Boundary B;
 };
 
+class VTKGrid
+{
+private:
+    Eigen::MatrixXd Points;
+    Eigen::MatrixXd Cells;
+    int nelem, nnode, ntype, eletype;
+    std::string dim;
+
+public:
+    VTKGrid(NLEBBE3D EBBE3D, int refine, double load, std::string BeamName, Eigen::MatrixXd GU, int ndim, int eletype, int ndof, int ncells);
+    VTKGrid(NLEBBE2D EBBE2D, double load, std::string BeamName, Eigen::MatrixXd GU, int ndim, int eletype, int ndof, int ncells);
+    void WriteVTK(int load, std::string BeamName, std::string filepath);
+    Eigen::MatrixXd FindSurfacePoints(Eigen::VectorXd n1, Eigen::VectorXd node, double radius, int refine);
+    Eigen::MatrixXd FindCells(int p1, int p2, int refine);
+};
+
 //Functions in ReadInpFile.cpp
 LinearBarElement ReadLBEFile();
 NonLinearBarElement ReadNLBEFile();
-NonLinearEulerBernouliBeamElement ReadNLEBBEFile();
 VAMBeamElement ReadVAMBEFile();
 
 //Functions in BarElement_Linear_1D.cpp
@@ -196,15 +242,9 @@ void LocalForceVec_NLBE(Eigen::VectorXd& f, int StartNode, int EndNode, double h
 void ApplyConstraints_NLBE(Eigen::SparseMatrix<double, Eigen::RowMajor>& T, Eigen::VectorXd& U, Eigen::VectorXd& R, int NNODE, Eigen::MatrixXd CNODE);
 
 //Functions in EulerBernoulli2D.cpp
-Eigen::MatrixXd StiffnessMatrix_NLEBBE(double xa, double xb, double E, double nu, double base, double height, Eigen::VectorXd& U, int a, int b);
-Eigen::VectorXd LocalFoceVec_NLEBBE(double xa, double xb, int a, int b, double vf, double af, Eigen::VectorXd& U, double E, double nu);
-Eigen::MatrixXd TangentStiffnessMatrix_NLEBBE(Eigen::MatrixXd& k, double xa, double xb, double E, double nu, double base, double height, Eigen::VectorXd& U, int a, int b);
-void ApplyConstraints_NLEBBE(Eigen::SparseMatrix<double, Eigen::ColMajor>& T, Eigen::VectorXd& U, Eigen::MatrixXd& CNODE,
-    int NNODE, Eigen::VectorXd& R);
-void RearrangeElementStiffness_NLEBBE(Eigen::MatrixXd& k, Eigen::MatrixXd& t, Eigen::VectorXd& f);
-double Area(struct CrossSection* CS);
-double MomentOfInertia(struct CrossSection* CS);
-void PostProcessing(Eigen::VectorXd U, NonLinearEulerBernouliBeamElement NLEBBE, int fiter);
+
+
+
 
 //Functions for VAM Beam Element
 Eigen::MatrixXd Equivalent_StiffnessMatrix_FirstOrder(Eigen::VectorXd Strain, Eigen::VectorXd inittwist, double b, std::fstream& file1);
@@ -223,19 +263,19 @@ Eigen::VectorXd Update_Strains(VAMBeamElement VAMBE, Eigen::VectorXd* U, std::fs
 // VARIABLES_H
 
 //Functions from 3DBeamElement_Contact_NodeToNode.cpp
-void ContactSearch(NonLinearEulerBernouliBeamElement3D EBBE3D1, NonLinearEulerBernouliBeamElement3D EBBE3D2, int** ContactPairs, std::string choice);
+void ContactSearch(NLEBBE3D EBBE3D1, NLEBBE3D EBBE3D2, int** ContactPairs, std::string choice);
 void Contact_NTN(double D[4], double X1[3], double X2[3], double u1[6], double u2[6], double* CR, double** CT, double* g);
 void PostProcessing(Eigen::MatrixXd X, Eigen::VectorXd U, double load, std::string BeamElement, int nnode, int ndm, int ndof);
-void Contact_STS(double D[5], double X1[3], double X2[3]
-    , double X3[3], double X4[3], double u1[6], double u2[6], double u3[6], double u4[6]
-    , double* CR, double** CT, double* g);
-void CPP_STS(double D[3], double X1[3], double X2[3]
-    , double X3[3], double X4[3], double u1[6], double u2[6], double u3[6]
-    , double u4[6], double* RP, double** TP);
+
+//Functions from 3DBeamElement_EulerBernouli_Contact_STS
+void Contact_STS(double D[6], double X1[3], double X2[3]
+    , double X3[3], double X4[3], double u1[6], double u2[6], double u3[6], double u4[6],
+    Eigen::SparseMatrix<double, Eigen::ColMajor>* GT, Eigen::VectorXd* GR, int mnode1, int mnode2,
+    int snode1, int snode2);
+void Contact_STS_Endpoints(double D[5], double X1[3]
+    , double X2[3], double u1[6], double u2[6],
+    Eigen::SparseMatrix<double, Eigen::ColMajor>* GT, Eigen::VectorXd* GR, int mnode, int snode);
 
 
 //Functions from 3DBeamElement_NonLinear_EulerBernoulli_QuadraticInterpolation
-void RKt(double D[7], double X[3][3], double U[3][6], double** T, double* R);
 double GaussIntegrationPoints(int i, int j);
-NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement();
-NonLinearEulerBernouliBeamElement3D ReadEBBE3DElement(double ms);
