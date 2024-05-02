@@ -169,6 +169,15 @@ public:
     VAMBeamElement(int nls, int ndof, int ndim, int nnode, int nelem, std::vector<std::vector<double>>& node,
         std::vector<std::vector<int>>& conn, double dia, Eigen::VectorXd axis);
 
+    //WovenComposite case
+    Eigen::VectorXd Element_Residual(Eigen::VectorXd U1, Eigen::VectorXd U2, Eigen::VectorXd F1, Eigen::VectorXd F2, double h,
+        Eigen::MatrixXd S1, Eigen::MatrixXd S2, double Theta, Eigen::VectorXd xa, Eigen::VectorXd xb, Eigen::VectorXd axis);
+    Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd U2, Eigen::VectorXd F1, Eigen::VectorXd F2, double h,
+        Eigen::MatrixXd S1, Eigen::MatrixXd S2, double Theta, Eigen::VectorXd xa, Eigen::VectorXd xb, Eigen::VectorXd axis, std::fstream& file1);
+    Eigen::VectorXd Element_Residual(Eigen::VectorXd U1, Eigen::VectorXd F1, double h,
+        Eigen::MatrixXd S1, double Theta, int nodenum, Eigen::VectorXd U0, Eigen::VectorXd xa, Eigen::VectorXd xb, Eigen::VectorXd axis);
+    Eigen::MatrixXd Element_Jacobian(Eigen::VectorXd U1, Eigen::VectorXd F1, double h, Eigen::MatrixXd S1,
+        double Theta, int nodenum, Eigen::VectorXd xa, Eigen::VectorXd xb, Eigen::VectorXd axis, std::fstream& file1);
 };
 
 class NLEBBE3D
@@ -218,6 +227,8 @@ public:
     void RKt_NH(double D[6], double X[3][3], double U[3][6], double** T, double* R);
     void RKt_MooneyRivlin(double D[7], double X[3][3], double U[3][6], double **T, double *R);
     void RKt_Orthotropic(double D[14], double X[3][3], double U[3][6], double** T, double *R);
+    void RKt_Reduced(double D[7], double X[3][3], double U[3][6]
+        , double** T, double* R);
 
 };
 
@@ -328,5 +339,13 @@ void Contact_STS_Endpoints(double D[5], double X1[3]
 double GaussIntegrationPoints(int i, int j);
 
 //Textile microstructure 
-void TextileMicrostructureGen(NLEBBE3D* EBBE3D, int nbeams);
+void TextileMicrostructureGen(NLEBBE3D* EBBE3D, int nbeams, Eigen::VectorXd GU);
 void ReadTextileInp(VAMBeamElement* VAMBE, int nls, int ndof, int ndim);
+void ReadDisplacements(Eigen::VectorXd* U, int nnode);
+
+//GEBT Multibeam
+Eigen::MatrixXd Rot_Mat(Eigen::VectorXd theta);
+Eigen::MatrixXd Dyadic(Eigen::VectorXd x);
+Eigen::MatrixXd Transform_Mat(double theta);
+Eigen::MatrixXd dCdtheta(Eigen::VectorXd theta, int k);
+Eigen::MatrixXd Dyadic(Eigen::VectorXd x);

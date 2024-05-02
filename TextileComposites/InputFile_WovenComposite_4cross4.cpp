@@ -10,7 +10,7 @@
 //}
 
 //post contact loading
-Loading::Loading(int beamnum)
+/*Loading::Loading(int beamnum)
 {
     if (beamnum == 1)
     {
@@ -182,7 +182,7 @@ Boundary::Boundary(int beamnum)
     }
     else if (beamnum == 7)
     {
-        this->ELEM = Eigen::MatrixXd::Zero(2, 2);
+        this->ELEM = Eigen::MatrixXd::Zero(1, 2);
         this->ELEM(0, 0) = 1;
         //type
         this->ELEM(0, 1) = -1;
@@ -503,7 +503,7 @@ BeamContact::BeamContact(const int nbeams, std::string str)
 {
     this->NBEAMS = nbeams;
 
-    this->epsilon = 10000;
+    this->epsilon = 2000000;
 
     if (str == "STS")
         this->NEN = 4;
@@ -518,4 +518,4 @@ BeamContact::BeamContact(const int nbeams, std::string str)
     this->start = 0;
 
     this->precontactiter = 10;
-}
+}*/

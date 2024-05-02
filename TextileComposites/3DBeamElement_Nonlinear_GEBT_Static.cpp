@@ -61,12 +61,14 @@ Eigen::MatrixXd Transform_Mat(double theta)
 
     C_ab(0, 0) = cos(theta);
     C_ab(1, 0) = -sin(theta);
-    C_ab(0, 1) = sin(theta);
+    C_ab(0, 1) = -sin(theta);
     C_ab(1, 1) = cos(theta);
     C_ab(2, 2) = 1;
 
     return C_ab;
 }
+
+
 
 //Rotation matrix for beams with initial pretwist/curvature
 Eigen::MatrixXd Transform_Mat(double theta, Eigen::VectorXd k, double x1)

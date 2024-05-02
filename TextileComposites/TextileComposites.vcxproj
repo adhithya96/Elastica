@@ -145,12 +145,16 @@
     <ClCompile Include="2DBeamElement_Nonlinear_EulerBernouli.cpp" />
     <ClCompile Include="3DBeamElement_Boundary_Loading.cpp" />
     <ClCompile Include="3DBeamElement_EulerBernouli_Contact_STS.cpp" />
+    <ClCompile Include="3DBeamElement_Nonlinear_GEBT_Mutlibeam.cpp" />
     <ClCompile Include="3DBeamElement_NonLinear_EulerBernouli_LinearInterpolation.cpp" />
     <ClCompile Include="3DBeamElement_NonLinear_EulerBernouli_QuadraticInterpolation.cpp" />
     <ClCompile Include="3DBeamElement_Nonlinear_GEBT_Static.cpp" />
     <ClCompile Include="3DBeamElement_EulerBernouli_Contact_NTN.cpp" />
     <ClCompile Include="3DBeamElement_Nonlinear_Hyperelastic.cpp" />
     <ClCompile Include="InpFile_GEBT_2Beam.cpp" />
+    <ClCompile Include="InpFile_WovenComposite_8cross8.cpp" />
+    <ClCompile Include="InpFile_WovenComposite_GEBT_4cross4.cpp" />
+    <ClCompile Include="InpFile_WovenComposite_PictureFrameTest_2cross2.cpp" />
     <ClCompile Include="InpFile_WovenComposite_GEBT_2Cross2.cpp" />
     <ClCompile Include="InpFile_GEBT_SingleBeam.cpp" />
     <ClCompile Include="PatchTest_2Beam.cpp" />
@@ -161,6 +165,7 @@
     <ClCompile Include="PostProcessing.cpp" />
     <ClCompile Include="ReadInp.cpp" />
     <ClCompile Include="TextileGeometry.cpp" />
+    <ClCompile Include="InputFile_WovenComposite_3cross3.cpp" />
     <ClCompile Include="VAM.cpp" />
   </ItemGroup>
   <ItemGroup>

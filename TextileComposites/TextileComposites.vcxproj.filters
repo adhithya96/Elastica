@@ -81,6 +81,21 @@
     <ClCompile Include="InpFile_WovenComposite_GEBT_2Cross2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InpFile_WovenComposite_PictureFrameTest_2cross2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InpFile_WovenComposite_8cross8.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputFile_WovenComposite_3cross3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InpFile_WovenComposite_GEBT_4cross4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3DBeamElement_Nonlinear_GEBT_Mutlibeam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Variables.h">

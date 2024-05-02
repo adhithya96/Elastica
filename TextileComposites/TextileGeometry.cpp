@@ -43,7 +43,7 @@ NLEBBE3D::NLEBBE3D(int yn, double ys, double yd, int refine, std::string str, in
         }
         else
         {
-            xcoord = (beamnum - (yn + 1) / 4) * delh;
+            xcoord = (beamnum - (yn) / 2 + 1) * ys;
         }
 
         for (int i = 0; i < nnode; i++)
@@ -77,7 +77,7 @@ NLEBBE3D::NLEBBE3D(int yn, double ys, double yd, int refine, std::string str, in
         }
         else
         {
-            ycoord = 0 - (beamnum - (yn + 1) / 4) * delh;
+            ycoord = (beamnum - 3 - (yn) / 2 + 1) * ys;
         }
 
         for (int i = 0; i < nnode; i++)
@@ -96,14 +96,16 @@ NLEBBE3D::NLEBBE3D(int yn, double ys, double yd, int refine, std::string str, in
     }
 }
 
-void TextileMicrostructureGen(NLEBBE3D* EBBE3D, int nbeams)
+void TextileMicrostructureGen(NLEBBE3D* EBBE3D, int nbeams, Eigen::VectorXd GU)
 {
-    std::fstream file1;
+    std::fstream file1, file2;
     file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/TextileMicrostructure.txt", std::fstream::in | std::fstream::out);
+    file2.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Displacements.txt", std::fstream::in | std::fstream::out);
     if (file1.is_open())
     {
         file1 << "NBEAMS" << std::endl;
         file1 << nbeams << std::endl;
+        int size = 0;
         for (int i = 0; i < nbeams; i++)
         {
             file1 << "BEAM " << i + 1 << std::endl;
@@ -120,12 +122,25 @@ void TextileMicrostructureGen(NLEBBE3D* EBBE3D, int nbeams)
     {
         std::cout << "Textile microstructure file is not open" << std::endl;
     }
+    if (file2.is_open())
+    {
+        int size = 0;
+        for(int i = 0; i < nbeams; i++)
+            size += EBBE3D[i].get_nnode() * EBBE3D[i].get_ndof();
+        file2 << "U " << size << std::endl;
+        for (int j = 0; j < size; j++)
+            file2 << GU(j) << std::endl;
+    }
+    else
+    {
+        std::cout << "Displacements are not printed" << std::endl;
+    }
 }
 
 void ReadTextileInp(VAMBeamElement* VAMBE, int nls, int ndof, int ndim)
 {
     std::fstream file1;
-    file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/TextileMicrostructure.txt", std::fstream::in | std::fstream::out);
+    file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/TextileMicrostructure_2cross2.txt", std::fstream::in | std::fstream::out);
     int beamnum = 0;
     double dia = 0;
     int nbeams, nelem = 0, nnode = 0;
@@ -201,6 +216,10 @@ void ReadTextileInp(VAMBeamElement* VAMBE, int nls, int ndof, int ndim)
             }
             continue;
         }
+        if (!std::strcmp(str.c_str(), "U"))
+        {
+            getline(file1, str);
+        }
         if (!std::strcmp(str.c_str(), "END"))
         {
             VAMBE[beamnum] = VAMBeamElement(nls, ndof, ndim, nnode, nelem, node, conn, dia, axis);
@@ -209,6 +228,30 @@ void ReadTextileInp(VAMBeamElement* VAMBE, int nls, int ndof, int ndim)
             conn.resize(0);
         }
     }
+}
+
+void ReadDisplacements(Eigen::VectorXd* U, int nnode)
+{
+    std::fstream file1;
+    file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Displacements_2cross2.txt", std::fstream::in | std::fstream::out);
+    std::string str;
+    getline(file1, str);
+    std::stringstream s(str);
+    s >> str;
+    int i = 0;
+    if (!std::strcmp(str.c_str(), "U"))
+    {
+        while (!(file1.eof()))
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                getline(file1, str);
+                (*U)(i * 12 + 6 + j) = stod(str);
+            }
+            i++;
+        }
+    }
+    std::cout << *U << std::endl;
 }
 
 VAMBeamElement::VAMBeamElement(int nls, int ndof, int ndim, int nnode, int nelem, std::vector<std::vector<double>>& node,

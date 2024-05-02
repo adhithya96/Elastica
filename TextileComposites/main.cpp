@@ -16,7 +16,7 @@ int main()
     // 6 - Nonlinear Euler Bernouli Beam Element with contact using Node to Node (n bodies)
     // 7 - Nonlinear Euler Bernouli Beam Element with contact using Segment to Segment (2 bodies)
     // 8 - GEBT(Geometrically Exact Beam theory) based beam element with contact using Node to Node (n bodies)
-    int choice = 6;
+    int choice = 8;
     //LoadVector(M.LOAD,M.ELSET,LOAD,M.NNODE);
     // -------------------------------------//
     //--------------------------------------//
@@ -431,7 +431,7 @@ int main()
             do
             {
                 iter = 0;
-                VAMBE.set_load(3, 3, fiter * 400/ VAMBE.get_nls());
+                VAMBE.set_load(3, 3, fiter * 10/ VAMBE.get_nls());
                 //std::cout << VAMBE.get_load(3) << std::endl;
                 do
                 {
@@ -618,7 +618,7 @@ int main()
                 if (iter < maxiter)
                 {
                     fiter++;
-                    file2 << VAMBE.get_load(3)[2] / pow(10, 6) << "     " << U(VAMBE.get_nnode() * 12 - 4) << "    " << U(VAMBE.get_nnode() * 12 - 6) << "   " << U(VAMBE.get_nnode() * 12 - 2) << std::endl;
+                    file2 << VAMBE.get_load(3)[2] << "     " << U(VAMBE.get_nnode() * 12 - 4) << "    " << U(VAMBE.get_nnode() * 12 - 6) << "   " << U(VAMBE.get_nnode() * 12 - 2) << std::endl;
                     //std::cout << VAMBE.get_load(3) << "     " << U(12 * (VAMBE.get_nnode() - 2) + 6 + 2) << "    " << iter << std::endl;
                     //file2 << "Converged Displacements for load " << VAMBE.get_load(3) / pow(10, 6) << std::endl;
                     for (int j = 0; j < VAMBE.get_nnode() * VAMBE.get_ndof(); j++)
@@ -906,14 +906,14 @@ int main()
     else if (choice == 6)
     {
 
-        const int nbeams = 8;
+        const int nbeams = 4;
 
         NLEBBE3D* EBBE3D = new NLEBBE3D[nbeams];
 
         for (int i = 0; i < nbeams; i++)
         {
             //Textile simulation
-            EBBE3D[i] = NLEBBE3D(nbeams, 4.5, 1, 4, "LINELAS", i + 1, 21, 3, 3);
+            EBBE3D[i] = NLEBBE3D(nbeams, 4.5, 1, 4, "LINELAS", i + 1, 31, 3, 3);
             //Patch test
             //EBBE3D[i] = NLEBBE3D(40, 0.5, 10, 40, 3, 3, pow(10, 7), 0.001, i);
             //Benchmark problem
@@ -960,8 +960,8 @@ int main()
         double max = 0;
         int iter = 1;
         int fiter = 0;
-        int maxiter = 300;
-        double conv = pow(10, -6);
+        int maxiter = 1000;
+        double conv = pow(10, -3);
 
         std::fstream file1, file2;
         file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Result_Log.txt", std::fstream::in | std::fstream::out);
@@ -1100,11 +1100,6 @@ int main()
                             LOAD[i].SetLoad(&GR, EBBE3D, i, fiter - BCon.get_precontiter() + 1, EBBE3D[i].get_nls());
                     }
 
-                    //std::cout << "Residual vector after applying load" << std::endl;
-                    //std::cout << GR << std::endl;
-                    //std::cout << "Before applying boundary condition" << std::endl;
-                    //std::cout << GU << std::endl;
-
                     Boundary* BOUND = new Boundary[nbeams];
 
                     if (BCon.get_startingpoint() == 0)
@@ -1117,7 +1112,7 @@ int main()
                         for (int i = 0; i < nbeams; i++)
                             BOUND[i] = Boundary(i + 1);
                     }
-                    
+
                     if (BCon.get_startingpoint() == 0)
                     {
                         for (int i = 0; i < nbeams; i++)
@@ -1129,6 +1124,11 @@ int main()
                             BOUND[i].SetBoundary(&GT, &GR, EBBE3D, i, fiter - BCon.get_precontiter() + 1, EBBE3D[i].get_nls(), &GU);
                     }
 
+                    //std::cout << "Residual vector after applying load" << std::endl;
+                    //std::cout << GR << std::endl;
+                    //std::cout << "Before applying boundary condition" << std::endl;
+                    //std::cout << GU << std::endl;
+                    
                     if (BCon.get_startingpoint() == 1)
                     {
                         //-------------------------------------------------//
@@ -1143,7 +1143,7 @@ int main()
                         if (ConPair.size() == 0)
                             conv = pow(10, -6);
                         else
-                            conv = 0.0008;
+                            conv = 0.001;
 
                         for (int i = 0; i < ConPair.size(); i++)
                         {
@@ -1206,8 +1206,10 @@ int main()
                             double D[6];
                             D[0] = BCon.get_penaltyparameter() / (iter + 1);
                             //std::cout << D[0] << std::endl;
-                            //Eigen::VectorXd n = BCon.set_normal(X1, Y1, BCon.get_normal());
-                            Eigen::VectorXd n = BCon.set_normal(x1, y1);
+                            Eigen::VectorXd n = BCon.set_normal(X1, Y1, BCon.get_normal());
+                            
+                            //Eigen::VectorXd n = BCon.set_normal(x1, y1);
+                            //Eigen::VectorXd n = BCon.get_normal();
                             //std::cout << n << std::endl;
                             //Eigen::VectorXd n(3);
                             //n(0) = 0;
@@ -1233,18 +1235,18 @@ int main()
                             gap[mbeam][mnode1] = g;
                             gap[sbeam][snode1] = g;
                             //std::cout << g << std::endl;
-                            /*std::cout << "Contact tangent matrix" << std::endl;
-                            for (int l = 0; l < EBBE3D[mbeam].get_ndof() * BCon.get_nen(); l++)
-                            {
-                                for (int m = 0; m < EBBE3D[mbeam].get_ndof() * BCon.get_nen(); m++)
-                                    std::cout << CT[l][m] << " ";
-                                std::cout << std::endl;
-                            }
-                            std::cout << "Contact residual" << std::endl;
-                            for (int l = 0; l < EBBE3D[mbeam].get_ndof() * BCon.get_nen(); l++)
-                            {
-                                std::cout << CR[l] << std::endl;
-                            }*/
+                            //std::cout << "Contact tangent matrix" << std::endl;
+                            //for (int l = 0; l < EBBE3D[mbeam].get_ndof() * BCon.get_nen(); l++)
+                            //{
+                            //    for (int m = 0; m < EBBE3D[mbeam].get_ndof() * BCon.get_nen(); m++)
+                            //        std::cout << CT[l][m] << " ";
+                            //    std::cout << std::endl;
+                            //}
+                            //std::cout << "Contact residual" << std::endl;
+                            //for (int l = 0; l < EBBE3D[mbeam].get_ndof() * BCon.get_nen(); l++)
+                            //{
+                            //    std::cout << CR[l] << std::endl;
+                            //}
                             //Assembly
                             if (g < 0)
                             {
@@ -1263,6 +1265,9 @@ int main()
                             }
                         }
                     }
+
+
+
 
                     //std::cout << "Residual Vector after applying boundary conditions" << std::endl;
                     //std::cout << GR << std::endl;
@@ -1334,6 +1339,10 @@ int main()
                             double sum = 0;
                             for (int j = 0; j < 3; j++)
                                 sum += pow(GU(size + EBBE3D[i].get_ndof() * (EBBE3D[i].get_nnode() - 1) + j), 2);
+                            file2 << "dofs of beam " << nbeams << std::endl;
+                            for (int j = 0; j < 3; j++)
+                                file2 << GU(size + EBBE3D[i].get_ndof() * (EBBE3D[i].get_nnode() - 1) + j) << "  ";
+                            file2 << std::endl;
                             file2 << sqrt(sum) << std::endl;
                             size += EBBE3D[i].get_ndof() * EBBE3D[i].get_nnode();
                         }
@@ -1351,18 +1360,18 @@ int main()
                         BCon.set_startingpoint(1);
                         for (int i = 0; i < nbeams; i++)
                             EBBE3D[i].UpdateNodes(EBBE3D, &GU, i);
-                        for (int i = 0; i < nbeams; i++)
-                        {
-                            std::cout << "New coordinates of beam " << i << std::endl;
-                            for (int j = 0; j < EBBE3D[i].get_nnode(); j++)
-                            {
-                                for (int k = 0; k < EBBE3D[i].get_ndim(); k++)
-                                    std::cout << EBBE3D[i].get_coordinates(j, k) << " ";
-                                std::cout << std::endl;
-                            }
-                        }
+                        //for (int i = 0; i < nbeams; i++)
+                        //{
+                        //    std::cout << "New coordinates of beam " << i << std::endl;
+                        //    for (int j = 0; j < EBBE3D[i].get_nnode(); j++)
+                        //    {
+                        //        for (int k = 0; k < EBBE3D[i].get_ndim(); k++)
+                        //            std::cout << EBBE3D[i].get_coordinates(j, k) << " ";
+                        //        std::cout << std::endl;
+                        //    }
+                        //}
                       
-                        TextileMicrostructureGen(EBBE3D, nbeams);
+                        TextileMicrostructureGen(EBBE3D, nbeams, GU);
                         conv = pow(10, -3);
                         GU.setZero();
                     }
@@ -1374,6 +1383,12 @@ int main()
                     break;
                 }
             } while (fiter < EBBE3D[0].get_nls() + BCon.get_precontiter());
+
+            file2 << "X " << "Y "  << std::endl;
+            for (int i = 0; i < EBBE3D[0].get_nnode(); i++)
+            {
+                file2 << EBBE3D[0].get_coordinates(i, 0) / 2.5 << " " << GU(EBBE3D[0].get_ndof() * i + 1) / 2.5 << std::endl;
+            }
         }
         //delete[] D1, D2;
     }
@@ -1820,11 +1835,11 @@ int main()
     //----------------Node to Node contact--------------------//
     else if (choice == 8)
     {
-        const int nbeams = 4;
+        const int nbeams = 1;
 
         VAMBeamElement* VAMBE = new VAMBeamElement[nbeams];
 
-        ReadTextileInp(VAMBE, 10, 12, 3);
+        ReadTextileInp(VAMBE, 11, 12, 3);
 
         for (int i = 0; i < nbeams; i++)
         {
@@ -1857,6 +1872,8 @@ int main()
         for (int i = 0; i < nbeams; i++)
             size += VAMBE[i].get_ndof() * VAMBE[i].get_nnode();
 
+        std::cout << size << std::endl;
+
         Eigen::VectorXd dU = Eigen::VectorXd::Zero(size);
         Eigen::VectorXd U = Eigen::VectorXd::Zero(size);
         Eigen::VectorXd error = Eigen::VectorXd::Zero(size);
@@ -1864,6 +1881,11 @@ int main()
         Eigen::VectorXd R = Eigen::VectorXd::Zero(size);
         Eigen::SparseMatrix<double, Eigen::ColMajor> J(size, size);
         Eigen::VectorXd Tau = Eigen::VectorXd::Zero(6 * size / 12);
+
+        ReadDisplacements(&U, VAMBE[0].get_nnode());
+
+        std::cout << "Displacements " << std::endl;
+        std::cout << U << std::endl;
 
         BeamContact BCon{ nbeams, "NTN" };
 
@@ -1879,7 +1901,7 @@ int main()
         double max;
         int iter = 1;
         int fiter = 0;
-        int maxiter = 100;
+        int maxiter = 5000;
         std::fstream file1, file2;
         file1.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Result_Log.txt", std::fstream::in | std::fstream::out);
         file2.open("E:/Adhithya/MTech_Res_Thesis/Cpp/ThesisCode/TextileComposites/TextileComposites/Results.txt", std::fstream::in | std::fstream::out);
@@ -1955,8 +1977,8 @@ int main()
 
                                     Seq_1 = VAMBE[l].Equivalent_StiffnessMatrix_FirstOrder(file1);
 
-                                    Element_R = VAMBE[l].Element_Residual(U1, F1, h, Seq_1, Theta, 0, U0);
-                                    Element_J = VAMBE[l].Element_Jacobian(U1, F1, h, Seq_1, Theta, 0, file1);
+                                    Element_R = VAMBE[l].Element_Residual(U1, F1, h, Seq_1, Theta, 0, U0, xa, xb, axis);
+                                    Element_J = VAMBE[l].Element_Jacobian(U1, F1, h, Seq_1, Theta, 0, xa, xb, axis, file1);
 
                                     //Assembly of Node 0 into Global Stiffness matrix
                                     //fu1 - F1 = 0
@@ -1988,9 +2010,9 @@ int main()
                                 Eigen::MatrixXd Element_J = Eigen::MatrixXd::Zero(12, 24);
 
                                 //Element Residual
-                                Element_R = VAMBE[l].Element_Residual(U1, U2, F1, F2, h, Seq_1, Seq_2, Theta);
+                                Element_R = VAMBE[l].Element_Residual(U1, U2, F1, F2, h, Seq_1, Seq_2, Theta, xa, xb, axis);
                                 //Element Jacobian
-                                Element_J = VAMBE[l].Element_Jacobian(U1, U2, F1, F2, h, Seq_1, Seq_2, Theta, file1);
+                                Element_J = VAMBE[l].Element_Jacobian(U1, U2, F1, F2, h, Seq_1, Seq_2, Theta, xa, xb, axis, file1);
 
                                 //Assembly
                                 //Solve for intermediate nodes
@@ -2022,8 +2044,8 @@ int main()
 
                                 Seq_1 = VAMBE[l].Equivalent_StiffnessMatrix_FirstOrder(file1);
 
-                                Element_R = VAMBE[l].Element_Residual(U1, F1, h, Seq_1, Theta, VAMBE[l].get_nnode() - 1, U0);
-                                Element_J = VAMBE[l].Element_Jacobian(U1, F1, h, Seq_1, Theta, VAMBE[l].get_nnode() - 1, file1);
+                                Element_R = VAMBE[l].Element_Residual(U1, F1, h, Seq_1, Theta, VAMBE[l].get_nnode() - 1, U0, xa, xb, axis);
+                                Element_J = VAMBE[l].Element_Jacobian(U1, F1, h, Seq_1, Theta, VAMBE[l].get_nnode() - 1, xa, xb, axis, file1);
 
                                 //fuN - FN+1 = 0
                                 //fpsiN - MN+1 = 0
@@ -2038,10 +2060,6 @@ int main()
                             }
                         }
                     }
-
-                    //std::cout << R << std::setprecision(3) << std::endl;
-
-                    //std::cout << J << std::setprecision(3) << std::endl;
 
                     Loading* LOAD = new Loading[nbeams];
 
@@ -2073,7 +2091,7 @@ int main()
                         if (ConPair.size() == 0)
                             conv = pow(10, -6);
                         else
-                            conv = 15;
+                            conv = 0.001;
 
                         for (int i = 0; i < ConPair.size(); i++)
                         {
@@ -2126,10 +2144,18 @@ int main()
                                 v1[j] = U.coeffRef(VAMBE[sbeam].get_ndof() * snode1 + j + temp2 + 6);
                             }
 
+                            double x1[3], y1[3];
+                            for (int j = 0; j < 3; j++)
+                            {
+                                x1[j] = X1[j] + u1[j];
+                                y1[j] = Y1[j] + v1[j];
+                            }
+
                             double D[6];
                             D[0] = BCon.get_penaltyparameter();
 
-                            Eigen::VectorXd n = BCon.set_normal(X1, Y1, BCon.get_normal());
+                            //Eigen::VectorXd n = BCon.set_normal(X1, Y1, BCon.get_normal());
+                            Eigen::VectorXd n = BCon.set_normal(x1, y1);
                             //std::cout << n << std::endl;
                             //Eigen::VectorXd n(3);
                             //n(0) = 0;
@@ -2229,6 +2255,8 @@ int main()
                         file1 << "                " << Tau(j) << std::endl;
                     }*/
                     std::cout << max << std::endl;
+                    if (iter > 50)
+                        conv = pow(10, -3);
                     /*for (int j = 0; j < size; j++)
                         std::cout << dU(j) << std::endl;*/
                 } while (max > pow(10, -6) && iter < maxiter);
